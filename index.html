@@ -1669,5 +1669,78 @@
       }, 6000);
     });
 </script>
+<!-- ⌨️ B2B SaaS 커맨드 팔레트 관리자 모달 (Ctrl + K / Cmd + K) -->
+<div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
+  <div class="w-full max-w-sm rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-2xl text-neutral-100">
+    <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 text-[11px] font-mono font-semibold bg-neutral-800 border border-neutral-700 text-neutral-300 rounded">Ctrl + K</span>
+        <h3 class="text-sm font-bold text-white tracking-tight">관리자 커맨드 모드</h3>
+      </div>
+      <button type="button" onclick="toggleAdminModal(false)" class="text-neutral-500 hover:text-neutral-300 text-xs">✕</button>
+    </div>
+
+    <div class="mt-4">
+      <label class="block text-xs font-medium text-neutral-400 mb-2">마스터 인증 비밀번호</label>
+      <input type="password" id="adminCommandInput" placeholder="••••" maxlength="20"
+        class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-center text-lg tracking-widest text-white font-mono focus:outline-none focus:border-neutral-400 transition" />
+    </div>
+
+    <div class="mt-5 flex gap-2">
+      <button type="button" onclick="toggleAdminModal(false)" class="flex-1 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition">닫기 (Esc)</button>
+      <button type="button" onclick="submitAdminAuth()" class="flex-1 py-2.5 bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-bold rounded-xl transition">진입하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Ctrl + K (맥북은 Cmd + K) 및 Esc 감지
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    toggleAdminModal(true);
+  }
+  if (e.key === 'Escape') {
+    toggleAdminModal(false);
+  }
+});
+
+function toggleAdminModal(show) {
+  const modal = document.getElementById('adminCommandModal');
+  const input = document.getElementById('adminCommandInput');
+  if (!modal) return;
+
+  if (show) {
+    modal.classList.remove('hidden');
+    input.value = '';
+    setTimeout(() => input.focus(), 50);
+  } else {
+    modal.classList.add('hidden');
+    input.value = '';
+  }
+}
+
+function submitAdminAuth() {
+  const input = document.getElementById('adminCommandInput');
+  const pw = input ? input.value : '';
+  
+  if (pw === '76057569') { // 👈 원하시는 비밀번호로 변경하세요
+    window.location.href = '/admin.html';
+  } else {
+    alert('인증 비밀번호가 일치하지 않습니다.');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  }
+}
+
+// 엔터키 입력 시 자동 확인
+document.getElementById('adminCommandInput')?.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    submitAdminAuth();
+  }
+});
+</script>
 </body>
 </html>
