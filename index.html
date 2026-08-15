@@ -51,6 +51,14 @@
     @keyframes liveBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
     .gnb-phone-badge .phone-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; color: #a3a3a3; }
     .gnb-phone-badge .phone-num { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em; color: #ffffff; }
+    /* 📱 [모바일 화면 자동 최적화] 스마트폰에서 메뉴 깨짐 완벽 방지 */
+    @media (max-width: 1024px) {
+      .gnb { height: 60px !important; padding: 0 16px !important; }
+      .gnb-nav { display: none !important; }
+      .gnb-phone-badge { padding: 6px 12px !important; }
+      .gnb-phone-badge .phone-label { display: none !important; }
+      body { word-break: keep-all; overflow-x: hidden; }
+    }
 
     .gnb.is-transparent { background-color: transparent !important; backdrop-filter: none !important; border-bottom: none !important; }
     .gnb.is-scrolled, .gnb.is-over-faq, .gnb.is-over-cta { background-color: rgba(10, 10, 10, 0.88) !important; backdrop-filter: blur(14px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
