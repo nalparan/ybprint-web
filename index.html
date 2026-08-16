@@ -51,26 +51,24 @@
     @keyframes liveBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
     .gnb-phone-badge .phone-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; color: #a3a3a3; }
     .gnb-phone-badge .phone-num { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em; color: #ffffff; }
-    /* 📱 [모바일 화면 자동 최적화] 스마트폰에서 메뉴 깨짐 완벽 방지 + 이미지 증발 해결 */
+
+    /* 📱 모바일 화면 자동 최적화 */
     @media (max-width: 1024px) {
       .gnb { height: 60px !important; padding: 0 16px !important; }
       .gnb-nav { display: none !important; }
       .gnb-phone-badge { padding: 6px 12px !important; }
       .gnb-phone-badge .phone-label { display: none !important; }
       body { word-break: keep-all; overflow-x: hidden; }
-      
-      /* 📸 갤러리 모바일 증발 방지 (정사각형 강제 지정) */
       .grid-frame { aspect-ratio: 1 / 1; min-height: 250px; }
-      /* 📸 아이폰(Safari) 배경 이미지 사라짐 버그 방지 */
       .slide { -webkit-transform-style: preserve-3d; -webkit-backface-visibility: hidden; }
     }
     .gnb.is-transparent { background-color: transparent !important; backdrop-filter: none !important; border-bottom: none !important; }
-    .gnb.is-scrolled, .gnb.is-over-faq, .gnb.is-over-cta { background-color: rgba(10, 10, 10, 0.88) !important; backdrop-filter: blur(14px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-    .gnb.is-over-white { background-color: #ffffff !important; backdrop-filter: none !important; border-bottom: 1px solid #e4e4e7 !important; }
-    .gnb.is-over-white .logo-img { filter: brightness(0); }
-    .gnb.is-over-white .gnb-nav a { color: #09090b; }
-    .gnb.is-over-white .gnb-phone-badge { border-color: #e4e4e7; }
-    .gnb.is-over-white .gnb-phone-badge .phone-num { color: #09090b; }
+    .gnb.is-scrolled, .gnb.is-over-faq { background-color: rgba(10, 10, 10, 0.88) !important; backdrop-filter: blur(14px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
+    .gnb.is-over-white, .gnb.is-over-cta { background-color: #ffffff !important; backdrop-filter: none !important; border-bottom: 1px solid #e4e4e7 !important; }
+    .gnb.is-over-white .logo-img, .gnb.is-over-cta .logo-img { filter: brightness(0); }
+    .gnb.is-over-white .gnb-nav a, .gnb.is-over-cta .gnb-nav a { color: #09090b; }
+    .gnb.is-over-white .gnb-phone-badge, .gnb.is-over-cta .gnb-phone-badge { border-color: #e4e4e7; }
+    .gnb.is-over-white .gnb-phone-badge .phone-num, .gnb.is-over-cta .gnb-phone-badge .phone-num { color: #09090b; }
 
     section { scroll-margin-top: 88px; }
 
@@ -125,16 +123,25 @@
     .faq-icon { transition: transform 0.3s ease; }
     .faq-item.active .faq-icon { transform: rotate(45deg); }
 
-    /* 📄 빠른 문의 섹션: 화이트 바탕화면 적용 */
+    /* ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스(배경 고정) & 화이트 톤 */
     .cta-section {
-      width: 100%; min-height: 420px; padding: 70px 5vw;
+      width: 100%; min-height: 440px; padding: 90px 5vw;
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
       position: relative; overflow: hidden;
-      background-color: #ffffff;
+      background-image: url('CONTACT.jpg');
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-top: 1px solid #e4e4e7;
     }
-    .cta-parallax-overlay { display: none; }
+    .cta-parallax-overlay {
+      position: absolute; inset: 0;
+      background: rgba(255, 255, 255, 0.88);
+      z-index: 1;
+    }
     .cta-content-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
-    .cta-content-wrap h2 { font-family: 'Noto Sans KR', sans-serif; font-weight: 900; font-size: clamp(1.875rem, 5vw, 3rem); color: #000000; margin-bottom: 2rem; letter-spacing: -0.025em; }
+    .cta-content-wrap h2 { font-family: 'Noto Sans KR', sans-serif; font-weight: 900; font-size: clamp(1.875rem, 5vw, 3rem); color: #09090b; margin-bottom: 2rem; letter-spacing: -0.025em; }
 
     .global-footer {
       width: 100%; background-color: #050507; color: #a1a1aa;
@@ -208,8 +215,8 @@
     .info-label { width: 90px; color: #a1a1aa; font-weight: 500; flex-shrink: 0; }
     .info-value { color: #ffffff; font-weight: 400; }
     
-   /* ========================================================
-       🎞️ [청년인쇄사 갤러리] 무한 롤링 & 모바일 터치 멈춤 완벽 해결본
+    /* ========================================================
+       🎞️ [청년인쇄사 갤러리] 무한 롤링 & 모바일 최적화
        ======================================================== */
     .mellow-gallery-section {
       width: 100%;
@@ -221,33 +228,19 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-   /* 🎞️ [청년인쇄사 갤러리] 모바일 파싱 버그 해결 및 무한 롤링 완결본 */
     @keyframes mellowMarquee {
-      0% {
-        transform: translate3d(0, 0, 0);
-        -webkit-transform: translate3d(0, 0, 0);
-      }
-      100% {
-        transform: translate3d(-50%, 0, 0);
-        -webkit-transform: translate3d(-50%, 0, 0);
-      }
+      0% { transform: translate3d(0, 0, 0); -webkit-transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0); }
     }
-
     @-webkit-keyframes mellowMarquee {
-      0% {
-        -webkit-transform: translate3d(0, 0, 0);
-      }
-      100% {
-        -webkit-transform: translate3d(-50%, 0, 0);
-      }
+      0% { -webkit-transform: translate3d(0, 0, 0); }
+      100% { -webkit-transform: translate3d(-50%, 0, 0); }
     }
 
     .mellow-marquee-track {
       display: flex;
       width: max-content;
       gap: 5px;
-      
-      /* 🚨 모바일 브라우저 단축속성 충돌 방지를 위한 개별 분리 선언 */
       animation-name: mellowMarquee;
       animation-duration: 70s;
       animation-timing-function: linear;
@@ -263,7 +256,6 @@
       will-change: transform;
     }
 
-    /* 📱 모바일: 슬림 세로 직사각형 (가로 160px, 세로 280px) */
     .mellow-card {
       position: relative;
       flex: 0 0 160px;
@@ -275,7 +267,6 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* 💻 PC 화면: 시원한 대형 직사각형 및 60초 속도 */
     @media (min-width: 768px) {
       .mellow-marquee-track {
         gap: 6px;
@@ -289,7 +280,6 @@
       }
     }
 
-    /* 🖥️ PC 마우스 호버 시에만 일시정지 (모바일 터치는 계속 재생) */
     @media (hover: hover) and (pointer: fine) {
       .mellow-gallery-section:hover .mellow-marquee-track {
         animation-play-state: paused;
@@ -340,7 +330,7 @@
     .cta-highlight {
       animation: highlightCta 0.8s ease-in-out;
     }
-    /* 서랍장 모션 */
+
     #drawer-panel.is-closed {
       transform: translateX(100%);
     }
@@ -609,8 +599,9 @@
     </div>
   </section>
 
-  <!-- 📄 빠른 문의 섹션: 화이트 바탕 & 일치된 폰트 크기/굵기 -->
+  <!-- ☎️ 빠른 문의 섹션: CONTACT.jpg 패럴랙스 & 화이트 톤 디자인 -->
   <section id="contact" class="cta-section">
+    <div class="cta-parallax-overlay"></div>
     <div class="cta-content-wrap max-w-4xl mx-auto flex flex-col items-center">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight text-zinc-950 mb-8">청년인쇄사에 문의하세요</h2>
       <button type="button" class="btn btn-primary" onclick="toggleDrawer(true)">
@@ -656,7 +647,6 @@
 
   <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-500 ease-out">
     
-    <!-- 서랍장 몸통과 완벽 결합된 일체형 인덱스 탭 손잡이 -->
     <button id="drawer-index-tab" 
             title="AI 원고 검수 및 빠른 견적 서랍장 열기 (클릭 또는 좌측으로 끌어당기세요)"
             class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
@@ -665,7 +655,6 @@
     
     <div class="px-8 py-5 flex justify-between items-center shrink-0 top-header-bg text-white z-20 shadow-md">
       <div class="flex items-center gap-3">
-        
         <h2 class="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight text-left">
           작성 중인 원고를 첨부하거나 문의사항을 남겨주세요
         </h2>
@@ -769,9 +758,7 @@
               <p id="rpt-summary-title" class="font-bold text-lg text-slate-900 leading-snug text-left">
                 [청년인쇄사 AI 원고 검수 완료]
               </p>
-              <div id="rpt-summary-body" class="text-slate-700 leading-relaxed font-normal pt-1 space-y-1.5 text-left">
-                <!-- JS Inject -->
-              </div>
+              <div id="rpt-summary-body" class="text-slate-700 leading-relaxed font-normal pt-1 space-y-1.5 text-left"></div>
             </div>
           </div>
 
@@ -785,9 +772,7 @@
               </div>
               <span class="text-xs font-mono text-slate-300 font-semibold">[ REAL-TIME PARSING REPORT ]</span>
             </div>
-            <div id="terminal-console-body" class="p-4 overflow-x-auto whitespace-pre-wrap font-mono text-white leading-relaxed text-left">
-              <!-- JS Inject -->
-            </div>
+            <div id="terminal-console-body" class="p-4 overflow-x-auto whitespace-pre-wrap font-mono text-white leading-relaxed text-left"></div>
           </div>
 
         </div>
@@ -844,7 +829,6 @@
       <button id="cta-button" disabled onclick="handleCtaClick()" class="w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md">
         <span id="cta-btn-text">원고/문의 및 연락처를 입력해 주세요</span>
       </button>
-      
     </div>
 
   </aside>
@@ -852,7 +836,6 @@
   <script>
     lucide.createIcons();
 
-    // Prevent default drag/drop behavior on entire window
     window.addEventListener('dragover', function(e) { e.preventDefault(); e.stopPropagation(); }, false);
     window.addEventListener('drop', function(e) {
       e.preventDefault(); e.stopPropagation();
@@ -1038,7 +1021,6 @@
         return;
       }
 
-      // 1. Show immediate Labor Illusion (loading state)
       cardContainer.innerHTML = `
         <div class="mt-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-600 text-xs flex items-center gap-2.5 text-left transition-all">
           <i data-lucide="loader-2" class="w-4 h-4 text-blue-600 animate-spin shrink-0"></i>
@@ -1049,11 +1031,8 @@
 
       if (inquiryDebounceTimer) clearTimeout(inquiryDebounceTimer);
 
-      // 2. Extended 1.2s Debounce (Gives user natural thinking time)
       inquiryDebounceTimer = setTimeout(() => {
         parseInquiryTextAndRenderCard(el.value);
-        
-        // 3. Move focus ONLY if sentence ended (?, .) or on blur, avoiding focus theft while typing
         const isSentenceEnded = /[?\.!\n]$/.test(text);
         if (isSentenceEnded) {
           setTimeout(() => {
@@ -1077,17 +1056,14 @@
         return;
       }
 
-      // Extended Keyword Dictionaries
       let detectedTime = text.match(/(\d{1,2}시|오늘|당일|오전|오후|내일|금일)/);
       let detectedQty = text.match(/(\d+\s*부|\d+\s*장|\d+\s*개|\d+\s*권|\d+\s*세트)/);
       let detectedType = text.match(/(스프링제본|스프링|링제본|와이어제본|트윈링|돼지꼬리|크리스탈링|무선제본|무선|떡제본|풀제본|평제본|중철제본|중철|중철책자|스테플제본|하드커버|양장제본|양장|싸바리|책제본|바인딩|리플릿|포스터|카탈로그|보고서|제본)/);
 
       let hasSpec = detectedTime || detectedQty || detectedType;
-
       let itemText = detectedType ? detectedType[0] : '미지정';
       let qtyText = detectedQty ? detectedQty[0] : '미지정';
 
-      // 🌟 [현장 실무 맞춤 제작 가능 범위 판정 로직]
       let rawQtyNum = 0;
       if (detectedQty) {
         let digits = detectedQty[0].replace(/\D/g, '');
@@ -1095,8 +1071,6 @@
       }
 
       let rawType = detectedType ? detectedType[0] : '';
-      
-      // 현장 유의어 -> 표준 제본 용어 정밀 매핑
       let isSpring = /(스프링|링제본|와이어제본|트윈링|돼지꼬리|크리스탈링)/.test(rawType);
       let isPerfectBinding = /(무선제본|무선|떡제본|풀제본|평제본)/.test(rawType);
       let isSaddleStitch = /(중철제본|중철|중철책자|스테플제본)/.test(rawType);
@@ -1104,7 +1078,6 @@
 
       let isRequireConsult = isPerfectBinding || isSaddleStitch || isHardcover;
 
-      // 화면 표시용 명칭 정돈 (현장 용어 기입 시 표준명 함께 병기)
       if (isPerfectBinding) {
         itemText = (rawType === '무선제본' || rawType === '무선') ? '무선제본' : `무선제본(${rawType})`;
       } else if (isSpring) {
@@ -1117,7 +1090,6 @@
 
       let currentHour = new Date().getHours();
       let isBeforeNoon = currentHour < 12;
-
       let timeText = '';
 
       if (isSpring) {
@@ -1253,7 +1225,6 @@
           }
         } else {
           btn.disabled = true;
-          // [제안2 반영] - 파일업로드 여부에 따른 CTA 동적 텍스트 강조
           btn.className = hasUploadedFile 
             ? "w-full py-4 rounded-2xl bg-white/40 text-white font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md cta-highlight"
             : "w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md";
@@ -1711,22 +1682,21 @@
         startX = getClientX(e);
         draggedDistance = 0;
         
-        panel.style.transition = 'none'; // 실시간 마우스 추적을 위해 트랜지션 해제
+        panel.style.transition = 'none';
         panel.classList.remove('animate-drawer-wiggle');
       };
 
       const onMove = (e) => {
         if (!isDragging) return;
         const currentX = getClientX(e);
-        const deltaX = startX - currentX; // 좌측으로 끌면 양수
+        const deltaX = startX - currentX;
 
         if (Math.abs(deltaX) > 5) {
-          isClickCandidate = false; // 5px 이상 움직이면 순수 드래그로 판정
+          isClickCandidate = false;
         }
 
         if (deltaX > 0) {
           draggedDistance = Math.min(deltaX, panel.offsetWidth);
-          // 실시간 마우스 위치와 서랍장 우측 축 밀착 반응
           panel.style.transform = `translateX(calc(100% - ${draggedDistance}px))`;
         }
       };
@@ -1734,13 +1704,11 @@
       const onEnd = () => {
         if (!isDragging) return;
         isDragging = false;
-        panel.style.transition = ''; // 트랜지션 복원
+        panel.style.transition = '';
 
         if (isClickCandidate) {
-          // 가볍게 클릭만 한 경우 -> 바로 오픈
           toggleDrawer(true);
         } else {
-          // 마우스로 당긴 경우 -> 90px 이상 당겼으면 완벽 오픈, 미달 시 자석 스냅 복귀
           if (draggedDistance >= 90) {
             toggleDrawer(true);
           } else {
@@ -1750,7 +1718,6 @@
         draggedDistance = 0;
       };
 
-      // 마우스 이벤트
       tab.addEventListener('mousedown', onStart);
       window.addEventListener('mousemove', (e) => {
         if (isDragging) {
@@ -1760,7 +1727,6 @@
       });
       window.addEventListener('mouseup', onEnd);
 
-      // 모바일 터치 이벤트
       tab.addEventListener('touchstart', onStart, { passive: true });
       window.addEventListener('touchmove', (e) => {
         if (isDragging) {
@@ -1769,7 +1735,6 @@
       }, { passive: false });
       window.addEventListener('touchend', onEnd);
 
-      // 진입 3초 후 서랍장 전체 사선 3D 덜컹임 유도
       setTimeout(() => {
         if (panel.classList.contains('is-closed') && !isDragging) {
           panel.classList.add('animate-drawer-wiggle');
@@ -1777,7 +1742,6 @@
         }
       }, 2000);
 
-      // 15초마다 주기적 리마인더 들썩임
       setInterval(() => {
         if (panel.classList.contains('is-closed') && !isDragging) {
           panel.classList.add('animate-drawer-wiggle');
@@ -1811,7 +1775,6 @@
 </div>
 
 <script>
-// Ctrl + K (맥북은 Cmd + K) 및 Esc 감지
 document.addEventListener('keydown', function(e) {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault();
@@ -1841,7 +1804,7 @@ function submitAdminAuth() {
   const input = document.getElementById('adminCommandInput');
   const pw = input ? input.value : '';
   
-  if (pw === '76057569') { // 👈 원하시는 비밀번호로 변경하세요
+  if (pw === '76057569') {
     window.location.href = '/admin.html';
   } else {
     alert('인증 비밀번호가 일치하지 않습니다.');
@@ -1852,7 +1815,6 @@ function submitAdminAuth() {
   }
 }
 
-// 엔터키 입력 시 자동 확인
 document.getElementById('adminCommandInput')?.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') {
     submitAdminAuth();
