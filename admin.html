@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>청년인쇄사</title>
+  <title>청년인쇄사 관리자 센터</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -150,7 +150,7 @@
   </main>
 
   <footer class="py-6 border-t border-slate-800 text-center text-xs text-slate-500">
-    2026 청년인쇄사 GEMS AI Management System • 24시간 실시간 클라우드 자동화
+    2026 청년인쇄사 관리 시스템 • 24시간 실시간 클라우드 자동화
   </footer>
 
   <script>
@@ -230,7 +230,6 @@
 
       if (totalBadge) totalBadge.innerText = `${list.length}건`;
 
-      // 최신 접수건이 맨 위로 오도록 역순 정렬
       const reversed = [...list].reverse();
 
       tbody.innerHTML = reversed.map((item, idx) => {
@@ -243,7 +242,6 @@
         const inquiry = item.inquiry || "(작성 내용 없음)";
         const hasFile = file && file !== "첨부파일 없음";
 
-        // 첨부파일 다운로드 URL 설정
         const fileUrl = item.file_url || (hasFile ? `${RENDER_BACKEND_URL}/download/${encodeURIComponent(file)}` : null);
 
         return `
