@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700;900&family=Urbanist:wght@500;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -28,19 +29,20 @@
     ::-webkit-scrollbar-thumb { background: #D1D6DB; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #B0B8C1; }
 
-    /* 견적서 엑셀 서식 전용 스타일 */
+    /* 엑셀 서식 1:1 완벽 재현 스타일 */
     .quote-paper {
       background: #FFFFFF;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
       font-family: "Pretendard Variable", 'Noto Sans KR', sans-serif;
+      color: #000000;
     }
-    .excel-table {
-      border: 1.5px solid #1E293B;
+    .excel-grid-table {
+      border: 1.5px solid #000000;
       border-collapse: collapse;
       width: 100%;
     }
-    .excel-table th, .excel-table td {
-      border: 1px solid #94A3B8;
+    .excel-grid-table th, .excel-grid-table td {
+      border: 1px solid #475569;
       padding: 6px 8px;
     }
   </style>
@@ -215,7 +217,7 @@
     </div>
   </div>
 
-  <!-- 🧮 견적서 자동 작성 / 검증 / 발송 모달 -->
+  <!-- 🧮 견적서 자동 작성 / 검증(엑셀 3종 원본 1:1) / 발송 모달 -->
   <div id="quote-modal" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-2 sm:p-6">
     <div class="bg-white border border-[#E5E8EB] w-full max-w-5xl rounded-3xl flex flex-col shadow-2xl h-[94vh] sm:h-[90vh] overflow-hidden">
       
@@ -240,12 +242,12 @@
         </div>
         <div class="flex-1 flex items-center">
           <div id="step-dot-2" class="w-7 h-7 rounded-full bg-[#F2F4F6] text-[#8B95A1] flex items-center justify-center font-bold text-xs">2</div>
-          <span id="step-text-2" class="ml-2 font-bold text-[#8B95A1] text-sm hidden sm:inline">② 견적검증(엑셀뷰)</span>
+          <span id="step-text-2" class="ml-2 font-bold text-[#8B95A1] text-sm hidden sm:inline">② 견적검증(엑셀 3종 원본뷰)</span>
           <div class="flex-1 h-px bg-[#E5E8EB] mx-3"></div>
         </div>
         <div class="flex items-center">
           <div id="step-dot-3" class="w-7 h-7 rounded-full bg-[#F2F4F6] text-[#8B95A1] flex items-center justify-center font-bold text-xs">3</div>
-          <span id="step-text-3" class="ml-2 font-bold text-[#8B95A1] text-sm hidden sm:inline">③ 고객 발송</span>
+          <span id="step-text-3" class="ml-2 font-bold text-[#8B95A1] text-sm hidden sm:inline">③ 고객 발송 & 다운로드</span>
         </div>
       </div>
 
@@ -269,7 +271,7 @@
               <span class="text-[11px] font-bold text-[#8B95A1] block mb-1">원고 분석 감지 페이지</span>
               <div class="flex items-center gap-1.5">
                 <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono-code font-bold text-xs" id="quote-detected-page">1 p</span>
-                <span class="text-xs text-[#8B95A1]">(자동 수량 계산 반영)</span>
+                <span class="text-xs text-[#8B95A1]">(원고 페이지수)</span>
               </div>
             </div>
           </div>
@@ -280,11 +282,11 @@
               <label class="text-xs font-bold text-[#191F28] block mb-1">견적서 양식 선택 <span class="text-red-500">*</span></label>
               <select id="quote-template-select" onchange="onTemplateChange()" class="w-full bg-[#F9FAFB] border border-[#D1D6DB] rounded-xl px-3 py-2 text-sm font-bold text-[#191F28] focus:border-[#3182F6] focus:outline-none focus:bg-white transition-all">
                 <option value="디지털일반">📄 디지털일반 (가장 표준적인 기본 견적서)</option>
-                <option value="디지탈상세">🏛️ 디지탈상세 (국가공무원인재개발원 전용 양식)</option>
-                <option value="옵셋일반">🖨️ 옵셋일반 (옵셋 대량인쇄 및 판비 산출용)</option>
+                <option value="디지탈상세">🏛️ 디지탈상세 (국가공무원인재개발원 전용 산출식)</option>
+                <option value="옵셋일반">🖨️ 옵셋일반 (옵셋 대량인쇄 및 지대·판비 분리형)</option>
               </select>
             </div>
-            <div class="w-full sm:w-56">
+            <div class="w-full sm:w-60">
               <label class="text-xs font-bold text-[#191F28] block mb-1">제작 요청 부수 (권/부)</label>
               <div class="flex items-center gap-2">
                 <input type="number" id="quote-book-qty" min="1" value="1" oninput="onBookQtyChange()" class="w-full bg-[#F9FAFB] border border-[#D1D6DB] rounded-xl px-3 py-2 text-sm font-bold font-mono-code text-[#191F28] focus:border-[#3182F6] focus:outline-none focus:bg-white" />
@@ -293,13 +295,13 @@
             </div>
           </div>
 
-          <!-- 항목별 상세내역 테이블 -->
+          <!-- 항목별 상세내역 테이블 (비고란 포함) -->
           <div class="bg-white p-4 sm:p-5 rounded-2xl border border-[#E5E8EB] shadow-2xs space-y-3">
             <div class="flex items-center justify-between">
               <div>
                 <h4 class="text-sm font-extrabold text-[#191F28] flex items-center gap-2">
                   <span>항목별 상세 산출 내역</span>
-                  <span class="text-[11px] font-normal text-[#8B95A1]">단가와 수량을 자유롭게 수정할 수 있습니다.</span>
+                  <span class="text-[11px] font-normal text-[#8B95A1]">수량, 단가, 비고를 자유롭게 수정할 수 있습니다.</span>
                 </h4>
               </div>
               <button type="button" onclick="addQuoteCustomRow()" class="px-3 py-1.5 bg-[#E8F3FF] hover:bg-[#D5E9FF] text-[#1B64DA] rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
@@ -309,15 +311,16 @@
             </div>
             
             <div class="overflow-x-auto border border-[#E5E8EB] rounded-xl">
-              <table class="w-full text-left min-w-[700px]">
+              <table class="w-full text-left min-w-[780px]">
                 <thead class="bg-[#F9FAFB] border-b border-[#E5E8EB] text-[#6B7684] text-xs font-bold">
                   <tr>
-                    <th class="py-2.5 px-3 w-28 text-center">분류</th>
+                    <th class="py-2.5 px-3 w-24 text-center">분류</th>
                     <th class="py-2.5 px-3">내역 및 규격</th>
                     <th class="py-2.5 px-3 w-28 text-center">수량(면/부)</th>
-                    <th class="py-2.5 px-3 w-32 text-right">단가(원/VAT별도)</th>
-                    <th class="py-2.5 px-3 w-36 text-right">공급가액(원)</th>
-                    <th class="py-2.5 px-3 w-12 text-center">삭제</th>
+                    <th class="py-2.5 px-3 w-28 text-right">단가(원)</th>
+                    <th class="py-2.5 px-3 w-32 text-right">공급가액(원)</th>
+                    <th class="py-2.5 px-3 w-44">비고</th>
+                    <th class="py-2.5 px-3 w-10 text-center">삭제</th>
                   </tr>
                 </thead>
                 <tbody id="quote-items-tbody" class="divide-y divide-[#E5E8EB] text-sm">
@@ -350,33 +353,33 @@
             <i data-lucide="shield-check" class="w-5 h-5 shrink-0 mt-0.5 text-[#3182F6]"></i>
             <div>
               <p class="font-bold text-[#191F28] mb-0.5">사장님, 고객에게 전송될 실제 견적서 서식을 최종 검증해 주세요.</p>
-              <p class="text-xs text-[#4E5968]">선택하신 <strong id="preview-template-title" class="text-[#1B64DA] font-bold">디지털일반</strong> 양식과 입력하신 단가/총액이 아래 공식 인쇄용 견적서에 완벽히 기입되었습니다.</p>
+              <p class="text-xs text-[#4E5968]">선택하신 <strong id="preview-template-title" class="text-[#1B64DA] font-bold">디지털일반</strong> 원본 서식 그대로 데이터가 1:1 매핑되었습니다.</p>
             </div>
           </div>
 
-          <!-- 실제 엑셀 1:1 렌더링 페이퍼 박스 -->
-          <div class="quote-paper p-6 sm:p-10 rounded-2xl border border-slate-300 max-w-3xl mx-auto text-slate-900 text-xs">
+          <!-- 실제 엑셀 3종 원본 1:1 렌더링 페이퍼 박스 (PDF 변환 타깃) -->
+          <div id="quote-printable-area" class="quote-paper p-6 sm:p-10 rounded-2xl border border-slate-300 max-w-3xl mx-auto text-slate-900 text-xs">
             
             <!-- 문서 헤더 -->
             <div class="text-center mb-6">
-              <h2 class="text-2xl sm:text-3xl font-black tracking-[0.3em] border-b-2 border-slate-900 pb-2 inline-block px-8">견 &nbsp; 적 &nbsp; 서</h2>
+              <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-slate-900 pb-2 inline-block px-10">견 &nbsp; 적 &nbsp; 서</h2>
             </div>
 
-            <!-- 발신/수신 2단 테이블 -->
+            <!-- 발신/수신 2단 테이블 (엑셀 서식 동일) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <!-- 수신처 정보 -->
-              <div class="space-y-1.5 border border-slate-300 p-3.5 rounded-lg bg-slate-50/50">
-                <div class="flex items-center"><span class="w-16 font-bold text-slate-500">수 &nbsp; &nbsp; 신 :</span> <strong id="paper-receiver-org" class="text-sm font-black text-blue-900"></strong></div>
-                <div class="flex items-center"><span class="w-16 font-bold text-slate-500">연 락 처 :</span> <span id="paper-receiver-phone" class="font-mono-code font-semibold"></span></div>
-                <div class="flex items-center"><span class="w-16 font-bold text-slate-500">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 16일</span></div>
-                <div class="flex items-center"><span class="w-16 font-bold text-slate-500">제 &nbsp; &nbsp; 목 :</span> <span id="paper-quote-title" class="font-bold">인쇄 및 제본 제작 건</span></div>
+              <div class="space-y-1.5 border border-slate-400 p-3.5 rounded-lg bg-slate-50/40">
+                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">수 &nbsp; &nbsp; 신 :</span> <strong id="paper-receiver-org" class="text-sm font-black text-blue-900"></strong></div>
+                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">연 락 처 :</span> <span id="paper-receiver-phone" class="font-mono-code font-bold"></span></div>
+                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 16일</span></div>
+                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">제 &nbsp; &nbsp; 목 :</span> <span id="paper-quote-title" class="font-bold">인쇄 및 제본 제작 건</span></div>
               </div>
 
-              <!-- 공급자(청년인쇄사) 고정 정보 -->
-              <div class="border border-slate-300 p-3.5 rounded-lg text-[11px] leading-relaxed relative bg-slate-50/50">
+              <!-- 공급자(청년인쇄사) 고정 정보 (사업자등록증 일치) -->
+              <div class="border border-slate-400 p-3.5 rounded-lg text-[11px] leading-relaxed relative bg-slate-50/40">
                 <div class="font-extrabold text-xs text-slate-900 mb-1 flex items-center justify-between">
                   <span>공 급 자 (청년인쇄사)</span>
-                  <span class="text-[10px] font-mono-code text-slate-500 font-normal">등록번호: 119-22-03638</span>
+                  <span class="text-[10px] font-mono-code text-slate-600 font-bold">등록번호: 119-22-03638</span>
                 </div>
                 <div><strong>상 &nbsp; &nbsp; 호 :</strong> 청년인쇄사 &nbsp; | &nbsp; <strong>대 표 :</strong> 임형택</div>
                 <div><strong>소 재 지 :</strong> 세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</div>
@@ -385,7 +388,7 @@
               </div>
             </div>
 
-            <!-- 합계금액 바 -->
+            <!-- 합계금액 바 (한글 금액 및 숫자 금액) -->
             <div class="bg-slate-900 text-white px-4 py-3 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 mb-6 font-bold">
               <div class="text-xs flex items-center gap-2">
                 <span>합계금액 :</span>
@@ -396,10 +399,10 @@
               </div>
             </div>
 
-            <!-- 견적 세부 내역 테이블 (엑셀 서식 재현) -->
+            <!-- 견적 세부 내역 테이블 (엑셀 3종 원본 1:1 매핑) -->
             <div class="overflow-x-auto">
-              <table class="excel-table text-[11.5px] text-left">
-                <thead id="paper-table-thead" class="bg-slate-100 text-slate-700 text-center font-bold">
+              <table class="excel-grid-table text-[11px] text-left">
+                <thead id="paper-table-thead" class="bg-slate-100 text-slate-800 text-center font-bold">
                   <!-- 양식에 따라 동적 변경 -->
                 </thead>
                 <tbody id="paper-table-tbody" class="divide-y divide-slate-300 text-slate-800">
@@ -407,22 +410,22 @@
                 </tbody>
                 <tfoot class="bg-slate-50 font-bold">
                   <tr>
-                    <td colspan="3" class="text-center py-2 text-slate-600">공급가액 소계</td>
-                    <td colspan="2" class="text-right py-2 px-3 font-mono-code" id="paper-foot-subtotal">0</td>
+                    <td colspan="4" class="text-center py-2 text-slate-700">공급가액 소계</td>
+                    <td colspan="2" class="text-right py-2 px-3 font-mono-code font-bold" id="paper-foot-subtotal">0</td>
                   </tr>
                   <tr>
-                    <td colspan="3" class="text-center py-2 text-slate-600">부가가치세 (10%)</td>
-                    <td colspan="2" class="text-right py-2 px-3 font-mono-code text-slate-600" id="paper-foot-vat">0</td>
+                    <td colspan="4" class="text-center py-2 text-slate-700">부가가치세 (10%)</td>
+                    <td colspan="2" class="text-right py-2 px-3 font-mono-code font-bold text-slate-600" id="paper-foot-vat">0</td>
                   </tr>
                   <tr class="bg-slate-100 text-slate-900">
-                    <td colspan="3" class="text-center py-2.5 font-black">총 견적합계 (VAT 포함)</td>
+                    <td colspan="4" class="text-center py-2.5 font-black text-xs">총 견적합계 (VAT 포함)</td>
                     <td colspan="2" class="text-right py-2.5 px-3 font-mono-code font-black text-blue-700 text-sm" id="paper-foot-total">0</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
 
-            <div class="mt-4 text-[10.5px] text-slate-500 space-y-0.5">
+            <div class="mt-5 text-[10px] text-slate-500 space-y-0.5">
               <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
               <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
             </div>
@@ -430,7 +433,7 @@
           </div>
         </div>
 
-        <!-- STEP 3: 최종 발송 화면 -->
+        <!-- STEP 3: 최종 발송 화면 & PDF 다운로드 옵션 -->
         <div id="quote-step-3-content" class="space-y-5 hidden">
           <div class="text-center py-3">
             <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2 text-emerald-600">
@@ -441,18 +444,18 @@
           </div>
 
           <div class="max-w-xl mx-auto space-y-4">
-            <!-- 발송 옵션 탭 -->
+            <!-- 발송 옵션 탭 라디오 버튼 (선택 시 즉시 하단 버튼 전환) -->
             <div class="grid grid-cols-2 gap-3">
-              <label class="border-2 border-[#3182F6] bg-blue-50/50 p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="send_channel" value="auto" checked class="text-[#3182F6]" />
+              <label id="label-channel-auto" onclick="switchSendChannel('auto')" class="border-2 border-[#3182F6] bg-blue-50/50 p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all">
+                <input type="radio" name="send_channel" id="radio-channel-auto" value="auto" checked class="text-[#3182F6]" />
                 <div>
                   <span class="font-bold text-sm text-[#191F28] block">스마트 자동 발송</span>
                   <span class="text-[11px] text-[#4E5968]">이메일/문자 최적 채널 감지</span>
                 </div>
               </label>
 
-              <label class="border border-[#E5E8EB] bg-white p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-slate-300">
-                <input type="radio" name="send_channel" value="pdf_only" class="text-[#3182F6]" />
+              <label id="label-channel-pdf" onclick="switchSendChannel('pdf_only')" class="border border-[#E5E8EB] bg-white p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:border-slate-300">
+                <input type="radio" name="send_channel" id="radio-channel-pdf" value="pdf_only" class="text-[#3182F6]" />
                 <div>
                   <span class="font-bold text-sm text-[#191F28] block">PDF 다운로드만</span>
                   <span class="text-[11px] text-[#4E5968]">인쇄용 PDF 즉시 저장</span>
@@ -460,8 +463,8 @@
               </label>
             </div>
 
-            <!-- 발송 메시지 미리보기 -->
-            <div class="bg-white border border-[#E5E8EB] rounded-2xl p-5 shadow-2xs space-y-2 text-left font-mono-code text-xs leading-relaxed text-[#333D4B]">
+            <!-- 발송 메시지 미리보기 (스마트 발송 시 표출) -->
+            <div id="smart-preview-card" class="bg-white border border-[#E5E8EB] rounded-2xl p-5 shadow-2xs space-y-2 text-left font-mono-code text-xs leading-relaxed text-[#333D4B]">
               <div class="text-[11px] font-bold text-[#8B95A1] font-sans pb-2 border-b border-[#E5E8EB]">발송 메시지 프리뷰</div>
               <p><strong>[청년인쇄사 견적서 발송]</strong></p>
               <p><span id="msg-target-org" class="font-bold text-[#1B64DA]"></span> 님, 요청하신 인쇄 및 제본 견적서가 생성되었습니다.</p>
@@ -469,6 +472,16 @@
               <p>■ 선택서식 : <span id="msg-target-template"></span></p>
               <p class="pt-2 text-slate-500 font-sans text-[11px]">※ 아래 링크를 클릭하시면 공식 서식 PDF 및 공공기관 4대 필수 서류를 열람하실 수 있습니다.</p>
               <p class="text-blue-600 font-bold truncate">https://ybprint.co.kr/quote/v2_view?id=auto_gen</p>
+            </div>
+
+            <!-- PDF 전용 안내 (PDF 다운로드만 선택 시 표출) -->
+            <div id="pdf-only-card" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left text-xs space-y-1.5 text-slate-700">
+              <div class="font-bold text-sm text-slate-900 flex items-center gap-1.5 mb-1">
+                <i data-lucide="download" class="w-4 h-4 text-blue-600"></i>
+                <span>고객 발송 없이 PDF 파일만 즉시 저장합니다</span>
+              </div>
+              <p>• 2단계에서 검증하신 엑셀 원본 서식 그대로 A4 인쇄용 규격 PDF 파일이 생성됩니다.</p>
+              <p>• 하단의 <strong>[견적서 PDF 다운로드]</strong> 버튼을 누르시면 관리자 PC의 다운로드 폴더에 자동 저장됩니다.</p>
             </div>
           </div>
         </div>
@@ -485,9 +498,17 @@
           <span>다음 단계 (검증)</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
-        <button id="btn-submit-step" onclick="submitQuoteFinal()" class="hidden px-6 py-2.5 bg-[#00B46B] hover:bg-[#009256] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+        
+        <!-- 발송 버튼 (스마트 발송 모드) -->
+        <button id="btn-submit-smart" onclick="submitQuoteSmartSend()" class="hidden px-6 py-2.5 bg-[#00B46B] hover:bg-[#009256] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="check-circle-2" class="w-4 h-4"></i>
           <span>고객에게 견적서 전송하기</span>
+        </button>
+
+        <!-- 다운로드 버튼 (PDF 다운로드 모드) -->
+        <button id="btn-submit-download" onclick="submitQuotePdfDownload()" class="hidden px-6 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>견적서 PDF 다운로드</span>
         </button>
       </div>
 
@@ -504,9 +525,7 @@
     const RENDER_BACKEND_URL = "https://ybprint-backend-1.onrender.com";
     let allInquiries = [];
 
-    // ----------------------------------------------------------------
-    // 🧮 청년인쇄사 기본 단가표 정의 (VAT 제외 표준 단가)
-    // ----------------------------------------------------------------
+    // 청년인쇄사 기본 단가표 정의 (VAT 제외)
     const BASE_PRICES = {
       print_bw: 50,      // 흑백출력 (page당)
       print_color: 500,  // 칼라출력 (page당)
@@ -520,6 +539,7 @@
     let currentQuoteStep = 1;
     let detectedPageCount = 1;
     let currentBookCount = 1;
+    let selectedChannel = 'auto'; // 'auto' 또는 'pdf_only'
 
     async function fetchInquiries() {
       const refreshIcon = document.getElementById('refresh-icon');
@@ -803,7 +823,7 @@
     }
 
     // ----------------------------------------------------------------
-    // 🧮 견적 발송 모달 자동화 및 엑셀 3종 서식 엔진
+    // 🧮 견적 발송 모달 자동화 및 엑셀 3종 원본 1:1 서식 엔진
     // ----------------------------------------------------------------
     function openQuoteModal(org, phone, inquiry, spec, fileName) {
       activeInquiry = {
@@ -817,7 +837,7 @@
       document.getElementById('quote-modal-org').innerText = activeInquiry.org;
       document.getElementById('quote-modal-phone').innerText = activeInquiry.phone;
       
-      // 문의 내용에서 부수 자동 추출 (예: 50부, 100부)
+      // 문의 내용에서 부수 자동 추출 (기본 1부)
       let parsedQty = 1;
       const qtyMatch = activeInquiry.inquiry.match(/(\d+)\s*부/);
       if (qtyMatch && parseInt(qtyMatch[1], 10) > 0) {
@@ -826,7 +846,7 @@
       currentBookCount = parsedQty;
       document.getElementById('quote-book-qty').value = parsedQty;
 
-      // 원고 스캔 spec에서 페이지 수 파싱 (기본 1p)
+      // 원고 스캔 spec에서 페이지 수 정확 파싱 (기본 1p)
       detectedPageCount = 1;
       const pageMatch = activeInquiry.spec.match(/(\d+)\s*p|페이지/i) || activeInquiry.inquiry.match(/(\d+)\s*페이지/);
       if (pageMatch && parseInt(pageMatch[1], 10) > 0) {
@@ -835,7 +855,10 @@
       document.getElementById('quote-detected-page').innerText = `${detectedPageCount} p`;
 
       currentQuoteStep = 1;
-      onTemplateChange();
+      selectedChannel = 'auto';
+      switchSendChannel('auto');
+
+      onTemplateChange(); // 선택된 템플릿 기본 행 구성 로드
       updateQuoteStepUI();
       document.getElementById('quote-modal').classList.remove('hidden');
     }
@@ -850,37 +873,48 @@
       onTemplateChange();
     }
 
-    // 양식 변경 시 기본 행 세팅
+    // 양식 변경 시 기본 행 세팅 (수량 = 페이지수 × 부수 정확 산정)
     function onTemplateChange() {
       const template = document.getElementById('quote-template-select').value;
       const tbody = document.getElementById('quote-items-tbody');
       tbody.innerHTML = '';
 
+      const totalPageImpressions = detectedPageCount * currentBookCount; // 예: 26p * 50부 = 1300면
+
       if (template === '디지털일반') {
-        addQuoteDataRow('제작', '본문 흑백 출력 (모조 80g)', detectedPageCount * currentBookCount, BASE_PRICES.print_bw);
-        addQuoteDataRow('제작', '표지 칼라 출력 (스노우 250g)', currentBookCount, BASE_PRICES.cover_print);
-        addQuoteDataRow('후가공', '표지 단면 무광코팅', currentBookCount, BASE_PRICES.cover_coat);
-        addQuoteDataRow('제본', '무선제본 가공', currentBookCount, BASE_PRICES.bind_perfect);
-        addQuoteDataRow('배송', '세종청사 / 관공서 직배송', 1, 0);
+        // 디지털일반 기본 구성 (비고란에 산출식 및 사양 명시)
+        addQuoteDataRow('제작', '본문 흑백 출력 (모조 80g)', totalPageImpressions, BASE_PRICES.print_bw, `${detectedPageCount}p × ${currentBookCount}부`);
+        addQuoteDataRow('제작', '표지 칼라 출력 (스노우 250g)', currentBookCount, BASE_PRICES.cover_print, `${currentBookCount}부`);
+        addQuoteDataRow('후가공', '표지 단면 무광코팅', currentBookCount, BASE_PRICES.cover_coat, '표지 단면 코팅');
+        addQuoteDataRow('제본', '무선제본 가공', currentBookCount, BASE_PRICES.bind_perfect, '무선 책제본');
+        addQuoteDataRow('배송', '세종청사 / 관공서 직배송', 1, 0, '당일 안전 직배송');
       } else if (template === '디지탈상세') {
-        const totalPrintCost = (currentBookCount * detectedPageCount) * BASE_PRICES.print_bw;
+        // 디지탈상세 (국가공무원인재개발원 전용 양식)
+        const totalPrintCost = totalPageImpressions * BASE_PRICES.print_bw;
         const totalBindCost = currentBookCount * BASE_PRICES.bind_perfect;
         const totalLineAmount = totalPrintCost + totalBindCost;
         
-        addQuoteDataRow('교재제작', `[(( ${currentBookCount}부 x ${detectedPageCount}p) x 50원) + (${currentBookCount}부 x 3,300원)]`, 1, totalLineAmount);
+        addQuoteDataRow(
+          '교재제작', 
+          `[(( ${currentBookCount}부 x ${detectedPageCount}페이지) x 50원) + (${currentBookCount}부 x 3,300원)]`, 
+          1, 
+          totalLineAmount, 
+          '표지칼라/본문흑백/무선제본'
+        );
       } else if (template === '옵셋일반') {
-        addQuoteDataRow('제작', '지대 (표지 420*297)', 0.5, 0);
-        addQuoteDataRow('제작', '지대 (내지 A4)', 3, 0);
-        addQuoteDataRow('제작', 'CTP 판비 (표지 8판)', 1, 0);
-        addQuoteDataRow('제작', '인쇄비 (표지 8도 / 내지 16도)', 1, 0);
-        addQuoteDataRow('기타', '표지 코팅 가공', currentBookCount, BASE_PRICES.cover_coat);
-        addQuoteDataRow('기타', '무선제본 가공', currentBookCount, BASE_PRICES.bind_perfect);
+        // 옵셋일반 기본 구성
+        addQuoteDataRow('제작', '지대 (표지 420*297)', 0.5, 0, '스노우 250g');
+        addQuoteDataRow('제작', '지대 (내지 A4)', 3, 0, '모조 80g');
+        addQuoteDataRow('제작', 'CTP 판비 (표지 8판)', 1, 0, 'CTP 8판');
+        addQuoteDataRow('제작', '인쇄비 (표지 8도 / 내지 16도)', 1, 0, '옵셋 본인쇄');
+        addQuoteDataRow('기타', '표지 코팅 가공', currentBookCount, BASE_PRICES.cover_coat, '단면 무광코팅');
+        addQuoteDataRow('기타', '무선제본 가공', currentBookCount, BASE_PRICES.bind_perfect, '옵셋 무선제본');
       }
 
       calculateQuoteTotals();
     }
 
-    function addQuoteDataRow(type, desc, qty, price) {
+    function addQuoteDataRow(type, desc, qty, price, remark = "") {
       const tbody = document.getElementById('quote-items-tbody');
       const tr = document.createElement('tr');
       tr.className = "quote-calc-row hover:bg-slate-50 transition-colors";
@@ -900,6 +934,9 @@
         <td class="py-2 px-2">
           <input type="text" readonly value="0" class="row-amt w-full bg-[#F2F4F6] border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-extrabold text-right text-[#191F28] cursor-not-allowed">
         </td>
+        <td class="py-2 px-2">
+          <input type="text" value="${remark}" placeholder="비고 입력" class="row-remark w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs text-slate-600 focus:border-[#3182F6] focus:outline-none">
+        </td>
         <td class="py-2 px-2 text-center">
           <button type="button" onclick="this.closest('tr').remove(); calculateQuoteTotals();" class="text-[#8B95A1] hover:text-[#F04452] transition-colors cursor-pointer">
             <i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i>
@@ -911,7 +948,7 @@
     }
 
     function addQuoteCustomRow() {
-      addQuoteDataRow('기타', '직접 입력 항목', 1, 0);
+      addQuoteDataRow('기타', '직접 입력 항목', 1, 0, '');
       calculateQuoteTotals();
     }
 
@@ -971,6 +1008,39 @@
       return result.trim() + "원";
     }
 
+    // 3단계 라디오 버튼 채널 전환 (스마트 발송 vs PDF 다운로드)
+    function switchSendChannel(channel) {
+      selectedChannel = channel;
+      const labelAuto = document.getElementById('label-channel-auto');
+      const labelPdf = document.getElementById('label-channel-pdf');
+      const smartCard = document.getElementById('smart-preview-card');
+      const pdfCard = document.getElementById('pdf-only-card');
+      const btnSmart = document.getElementById('btn-submit-smart');
+      const btnDownload = document.getElementById('btn-submit-download');
+
+      if (channel === 'auto') {
+        document.getElementById('radio-channel-auto').checked = true;
+        labelAuto.className = "border-2 border-[#3182F6] bg-blue-50/50 p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all";
+        labelPdf.className = "border border-[#E5E8EB] bg-white p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:border-slate-300";
+        if (smartCard) smartCard.classList.remove('hidden');
+        if (pdfCard) pdfCard.classList.add('hidden');
+        if (currentQuoteStep === 3) {
+          if (btnSmart) btnSmart.classList.remove('hidden');
+          if (btnDownload) btnDownload.classList.add('hidden');
+        }
+      } else {
+        document.getElementById('radio-channel-pdf').checked = true;
+        labelPdf.className = "border-2 border-[#3182F6] bg-blue-50/50 p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all";
+        labelAuto.className = "border border-[#E5E8EB] bg-white p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:border-slate-300";
+        if (smartCard) smartCard.classList.add('hidden');
+        if (pdfCard) pdfCard.classList.remove('hidden');
+        if (currentQuoteStep === 3) {
+          if (btnSmart) btnSmart.classList.add('hidden');
+          if (btnDownload) btnDownload.classList.remove('hidden');
+        }
+      }
+    }
+
     function updateQuoteStepUI() {
       document.getElementById('quote-step-1-content').classList.toggle('hidden', currentQuoteStep !== 1);
       document.getElementById('quote-step-2-content').classList.toggle('hidden', currentQuoteStep !== 2);
@@ -978,7 +1048,22 @@
 
       document.getElementById('btn-prev-step').classList.toggle('hidden', currentQuoteStep === 1);
       document.getElementById('btn-next-step').classList.toggle('hidden', currentQuoteStep === 3);
-      document.getElementById('btn-submit-step').classList.toggle('hidden', currentQuoteStep !== 3);
+
+      const btnSmart = document.getElementById('btn-submit-smart');
+      const btnDownload = document.getElementById('btn-submit-download');
+
+      if (currentQuoteStep === 3) {
+        if (selectedChannel === 'auto') {
+          btnSmart.classList.remove('hidden');
+          btnDownload.classList.add('hidden');
+        } else {
+          btnSmart.classList.add('hidden');
+          btnDownload.classList.remove('hidden');
+        }
+      } else {
+        btnSmart.classList.add('hidden');
+        btnDownload.classList.add('hidden');
+      }
 
       for (let i = 1; i <= 3; i++) {
         const dot = document.getElementById(`step-dot-${i}`);
@@ -1002,6 +1087,7 @@
 
     function nextQuoteStep() {
       if (currentQuoteStep === 1) {
+        // STEP 1 -> 2: 엑셀 3종 원본 1:1 서식 렌더링
         const template = document.getElementById('quote-template-select').value;
         document.getElementById('preview-template-title').innerText = template;
         document.getElementById('paper-receiver-org').innerText = activeInquiry.org;
@@ -1013,23 +1099,39 @@
         tbody.innerHTML = '';
 
         if (template === '디지탈상세') {
+          // 디지탈상세 (인재원 서식)
           thead.innerHTML = `
             <tr>
-              <th class="py-2 px-3 w-28 text-center">항목</th>
+              <th class="py-2 px-2 w-28 text-center">항목</th>
               <th class="py-2 px-3 text-center">산출내역</th>
-              <th class="py-2 px-3 w-20 text-center">수량</th>
-              <th class="py-2 px-3 w-28 text-right">단가</th>
-              <th class="py-2 px-3 w-32 text-right">금액(원)</th>
+              <th class="py-2 px-2 w-16 text-center">수량</th>
+              <th class="py-2 px-2 w-24 text-right">단가</th>
+              <th class="py-2 px-2 w-28 text-right">금액(원)</th>
+              <th class="py-2 px-3 w-36 text-center">비고</th>
+            </tr>
+          `;
+        } else if (template === '옵셋일반') {
+          // 옵셋일반 서식
+          thead.innerHTML = `
+            <tr>
+              <th class="py-2 px-2 w-20 text-center">항목</th>
+              <th class="py-2 px-3 text-center">내역 및 규격</th>
+              <th class="py-2 px-2 w-16 text-center">수량</th>
+              <th class="py-2 px-2 w-24 text-right">단가</th>
+              <th class="py-2 px-2 w-28 text-right">공급가액(원)</th>
+              <th class="py-2 px-3 w-36 text-center">비고</th>
             </tr>
           `;
         } else {
+          // 디지털일반 서식
           thead.innerHTML = `
             <tr>
-              <th class="py-2 px-3 w-24 text-center">항목</th>
+              <th class="py-2 px-2 w-20 text-center">항목</th>
               <th class="py-2 px-3 text-center">내역 및 규격</th>
-              <th class="py-2 px-3 w-20 text-center">수량</th>
-              <th class="py-2 px-3 w-28 text-right">단가</th>
-              <th class="py-2 px-3 w-32 text-right">공급가액(원)</th>
+              <th class="py-2 px-2 w-16 text-center">수량</th>
+              <th class="py-2 px-2 w-24 text-right">단가</th>
+              <th class="py-2 px-2 w-28 text-right">공급가액(원)</th>
+              <th class="py-2 px-3 w-36 text-center">비고</th>
             </tr>
           `;
         }
@@ -1040,6 +1142,7 @@
           const qty = row.querySelector('.row-qty').value;
           const price = parseFloat(row.querySelector('.row-price').value || 0).toLocaleString();
           const amt = row.querySelector('.row-amt').value;
+          const remark = row.querySelector('.row-remark').value || "-";
 
           tbody.innerHTML += `
             <tr>
@@ -1048,6 +1151,7 @@
               <td class="text-center font-mono-code">${qty}</td>
               <td class="text-right font-mono-code">${price}</td>
               <td class="text-right font-mono-code font-bold">${amt}</td>
+              <td class="text-center text-slate-600">${remark}</td>
             </tr>
           `;
         });
@@ -1072,8 +1176,9 @@
       }
     }
 
-    async function submitQuoteFinal() {
-      const btn = document.getElementById('btn-submit-step');
+    // 스마트 자동 발송 실행
+    async function submitQuoteSmartSend() {
+      const btn = document.getElementById('btn-submit-smart');
       const originalHtml = btn.innerHTML;
       btn.disabled = true;
       btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>고객 발송 중...</span>`;
@@ -1092,7 +1197,7 @@
       };
 
       try {
-        const res = await fetch(`${RENDER_BACKEND_URL}/send-quote`, {
+        await fetch(`${RENDER_BACKEND_URL}/send-quote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -1108,6 +1213,39 @@
         btn.disabled = false;
         btn.innerHTML = originalHtml;
       }
+    }
+
+    // 견적서 PDF 브라우저 즉시 다운로드 실행
+    function submitQuotePdfDownload() {
+      const btn = document.getElementById('btn-submit-download');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>PDF 생성 및 저장 중...</span>`;
+      lucide.createIcons();
+
+      const element = document.getElementById('quote-printable-area');
+      const clientName = (activeInquiry.org || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '_');
+      const fileName = `청년인쇄사_견적서_${clientName}.pdf`;
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        alert(`💾 [다운로드 완료]\n\n'${fileName}' 파일이 성공적으로 저장되었습니다.`);
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+        closeQuoteModal();
+      }).catch(err => {
+        console.error("PDF download error:", err);
+        window.print();
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      });
     }
 
     // ----------------------------------------------------------------
