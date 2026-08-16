@@ -888,7 +888,7 @@
       if (s2R.top <= hH && s2R.bottom >= hH) { mainHeader.classList.add('is-over-white'); }
       else if (s3R.top <= hH && s3R.bottom >= hH) { mainHeader.classList.add('is-transparent'); }
       else if (s4R.top <= hH && s4R.bottom >= hH) { mainHeader.classList.add('is-over-faq'); }
-      else if (s5R.top <= hH) { mainHeader.classList.add('is-over-cta'); }
+      else if (s5R.top <= hH && s5R.bottom >= hH) { mainHeader.classList.add('is-over-cta'); }
       else if (scrollY > 30) { mainHeader.classList.add('is-scrolled'); }
     }
     window.addEventListener('scroll', updateHeaderOnScroll);
@@ -983,7 +983,7 @@
       const digits = val.replace(/\D/g, '');
       if (digits.startsWith('02')) {
         if (digits.length <= 2) return digits;
-        if (digits.length <= 5) return `${digits.slice(0, 2)}`;
+        if (digits.length <= 5) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
         if (digits.length <= 9) return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5)}`;
         return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
       } else {
