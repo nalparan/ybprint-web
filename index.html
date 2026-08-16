@@ -61,6 +61,13 @@
       body { word-break: keep-all; overflow-x: hidden; }
       .grid-frame { aspect-ratio: 1 / 1; min-height: 250px; }
       .slide { -webkit-transform-style: preserve-3d; -webkit-backface-visibility: hidden; }
+      
+      /* 📱 모바일에서 CONTACT.jpg(유선전화) 정상 노출 처리 */
+      .cta-section {
+        background-attachment: scroll !important;
+        background-position: center center !important;
+        background-size: cover !important;
+      }
     }
     .gnb.is-transparent { background-color: transparent !important; backdrop-filter: none !important; border-bottom: none !important; }
     .gnb.is-scrolled, .gnb.is-over-faq, .gnb.is-over-cta { background-color: rgba(10, 10, 10, 0.88) !important; backdrop-filter: blur(14px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
@@ -881,7 +888,7 @@
       if (s2R.top <= hH && s2R.bottom >= hH) { mainHeader.classList.add('is-over-white'); }
       else if (s3R.top <= hH && s3R.bottom >= hH) { mainHeader.classList.add('is-transparent'); }
       else if (s4R.top <= hH && s4R.bottom >= hH) { mainHeader.classList.add('is-over-faq'); }
-      else if (s5R.top <= hH && s5R.bottom >= hH) { mainHeader.classList.add('is-over-cta'); }
+      else if (s5R.top <= hH) { mainHeader.classList.add('is-over-cta'); }
       else if (scrollY > 30) { mainHeader.classList.add('is-scrolled'); }
     }
     window.addEventListener('scroll', updateHeaderOnScroll);
@@ -976,7 +983,7 @@
       const digits = val.replace(/\D/g, '');
       if (digits.startsWith('02')) {
         if (digits.length <= 2) return digits;
-        if (digits.length <= 5) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+        if (digits.length <= 5) return `${digits.slice(0, 2)}`;
         if (digits.length <= 9) return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5)}`;
         return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
       } else {
