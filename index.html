@@ -125,16 +125,16 @@
     .faq-icon { transition: transform 0.3s ease; }
     .faq-item.active .faq-icon { transform: rotate(45deg); }
 
+    /* 📄 빠른 문의 섹션: 화이트 바탕화면 적용 */
     .cta-section {
       width: 100%; min-height: 420px; padding: 70px 5vw;
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
       position: relative; overflow: hidden;
-      background-image: url('CONTACT.jpg');
-      background-attachment: fixed; background-position: center; background-size: cover; background-repeat: no-repeat;
+      background-color: #ffffff;
     }
-    .cta-parallax-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); z-index: 1; }
+    .cta-parallax-overlay { display: none; }
     .cta-content-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
-    .cta-content-wrap h2 { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: clamp(1.8rem, 4vw, 3.2rem); color: #ffffff; margin-bottom: 2rem; letter-spacing: -0.03em; }
+    .cta-content-wrap h2 { font-family: 'Noto Sans KR', sans-serif; font-weight: 900; font-size: clamp(1.875rem, 5vw, 3rem); color: #000000; margin-bottom: 2rem; letter-spacing: -0.025em; }
 
     .global-footer {
       width: 100%; background-color: #050507; color: #a1a1aa;
@@ -609,10 +609,10 @@
     </div>
   </section>
 
+  <!-- 📄 빠른 문의 섹션: 화이트 바탕 & 일치된 폰트 크기/굵기 -->
   <section id="contact" class="cta-section">
-    <div class="cta-parallax-overlay"></div>
     <div class="cta-content-wrap max-w-4xl mx-auto flex flex-col items-center">
-      <h2>청년인쇄사에 문의하세요</h2>
+      <h2 class="text-3xl md:text-5xl font-black tracking-tight text-zinc-950 mb-8">청년인쇄사에 문의하세요</h2>
       <button type="button" class="btn btn-primary" onclick="toggleDrawer(true)">
         빠른 견적 요청하기
       </button>
@@ -1412,7 +1412,7 @@
       lucide.createIcons();
     }
 
-                function scrollToContactStep() {
+    function scrollToContactStep() {
       const contactSection = document.getElementById('contact-step-section') || document.getElementById('client-org');
       const orgInput = document.getElementById('client-org');
       
