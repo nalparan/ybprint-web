@@ -123,7 +123,7 @@
     .faq-icon { transition: transform 0.3s ease; }
     .faq-item.active .faq-icon { transform: rotate(45deg); }
 
-    /* ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스(배경 고정) & 다크 명암 오버레이 */
+    /* ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스 & 다크 명암 + 화이트 텍스트 */
     .cta-section {
       width: 100%; min-height: 440px; padding: 90px 5vw;
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
@@ -494,7 +494,7 @@
       <div class="mellow-card group">
         <img src="gallery01.jpg" alt="홍보 | 리플릿">
         <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">02 / LEAFLET</span>
+          <span class="text-[10px] font-mono동태 text-blue-400 mb-1">02 / LEAFLET</span>
           <h3 class="text-lg font-bold text-white">홍보 | 리플릿</h3>
         </div>
       </div>
@@ -656,6 +656,7 @@
 
   <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-500 ease-out">
     
+    <!-- 서랍장 몸통과 완벽 결합된 일체형 인덱스 탭 손잡이 -->
     <button id="drawer-index-tab" 
             title="AI 원고 검수 및 빠른 견적 서랍장 열기 (클릭 또는 좌측으로 끌어당기세요)"
             class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
@@ -797,6 +798,7 @@
         <div id="ai-inquiry-live-card-container"></div>
       </div>
 
+      <!-- 🔒 자동완성 꼬임 방지 (autocomplete="off" 적용) -->
       <div id="contact-step-section" class="space-y-4 pt-2 text-left scroll-mt-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -811,7 +813,7 @@
               <span>소속 / 이름 <span class="text-red-500">*</span></span>
               <span id="org-status-icon" class="text-xs font-bold text-slate-400"></span>
             </label>
-            <input type="text" id="client-org" oninput="validateForm()" onblur="validateForm(true)" placeholder="예: 기획홍보팀 홍길동" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs text-left" />
+            <input type="text" id="client-org" name="inquiry_org_contact" autocomplete="off" oninput="validateForm()" onblur="validateForm(true)" placeholder="예: 기획홍보팀 홍길동" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs text-left" />
             <p id="org-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1 text-left">
               <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
               <span id="org-error-text">소속 및 이름을 최소 2자 이상 정확히 입력해 주세요.</span>
@@ -823,10 +825,10 @@
               <span>직통 연락처 또는 이메일 <span class="text-red-500">*</span></span>
               <span id="phone-status-icon" class="text-xs font-bold text-slate-400"></span>
             </label>
-            <input type="text" id="client-phone" oninput="handlePhoneOrEmailInput(this)" onblur="validateForm(true)" placeholder="예: 01012345678 또는 admin@ybprint.co.kr" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs text-left" />
+            <input type="text" id="client-phone" name="inquiry_phone_contact" autocomplete="off" oninput="handlePhoneOrEmailInput(this)" onblur="validateForm(true)" placeholder="예: 01012345678 또는 inquiry@domain.com" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs text-left" />
             <p id="phone-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1 text-left">
               <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
-              <span id="phone-error-text">이메일 형식이 올바르지 않습니다. (예: admin@ybprint.co.kr)</span>
+              <span id="phone-error-text">이메일 형식이 올바르지 않습니다.</span>
             </p>
           </div>
         </div>
@@ -1675,6 +1677,14 @@
     window.addEventListener('DOMContentLoaded', () => {
       const panel = document.getElementById('drawer-panel');
       const tab = document.getElementById('drawer-index-tab');
+      
+      // 🔒 페이지 로드 시 크롬 자동완성 값 강제 비우기
+      const phoneInput = document.getElementById('client-phone');
+      const orgInput = document.getElementById('client-org');
+      if (phoneInput) phoneInput.value = '';
+      if (orgInput) orgInput.value = '';
+      if (typeof validateForm === 'function') validateForm();
+
       if (!panel || !tab) return;
 
       let isDragging = false;
@@ -1772,7 +1782,7 @@
 
     <div class="mt-4">
       <label class="block text-xs font-medium text-neutral-400 mb-2">마스터 인증 비밀번호</label>
-      <input type="password" id="adminCommandInput" placeholder="••••" maxlength="20"
+      <input type="password" id="adminCommandInput" autocomplete="new-password" placeholder="••••" maxlength="20"
         class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-center text-lg tracking-widest text-white font-mono focus:outline-none focus:border-neutral-400 transition" />
     </div>
 
