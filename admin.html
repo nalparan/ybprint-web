@@ -31,8 +31,8 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
 
-  <!-- 🌐 상단 네비게이션 바 (토스 라이트 테마) -->
-  <header class="h-20 bg-white/95 backdrop-blur-md border-b border-[#E5E8EB] px-6 sm:px-10 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+  <!-- 🌐 상단 네비게이션 바 (고객용 웹페이지와 동일한 px-[5vw] 적용) -->
+  <header class="h-20 bg-white/95 backdrop-blur-md border-b border-[#E5E8EB] px-[5vw] flex items-center justify-between sticky top-0 z-40 shadow-xs">
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-3.5">
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#3182F6] to-[#60A5FA] flex items-center justify-center text-white font-black text-base shadow-md shadow-blue-500/20 font-urbanist">
@@ -67,10 +67,10 @@
     </div>
   </header>
 
-  <!-- 📊 메인 대시보드 컨테이너 (와이드 그리드: max-w-7xl) -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-6 sm:p-10 space-y-7">
+  <!-- 📊 메인 대시보드 컨테이너 (고객용 웹페이지와 동일한 풀 와이드 그리드: px-[5vw]) -->
+  <main class="flex-1 w-full px-[5vw] py-8 space-y-7">
     
-    <!-- 지표 카드 섹션 -->
+    <!-- 지표 카드 섹션 (3분할 와이드 그리드) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
       <div class="bg-white border border-[#E5E8EB] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)]">
         <div class="flex items-center justify-between text-[#8B95A1] mb-3">
@@ -111,8 +111,8 @@
       </div>
     </div>
 
-    <!-- 📋 메인 테이블 카드 (토스 서랍장 스타일 화이트 카드) -->
-    <div class="bg-white border border-[#E5E8EB] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+    <!-- 📋 메인 테이블 카드 (화면 가로폭에 맞춰 꽉 찬 와이드 서랍장) -->
+    <div class="bg-white border border-[#E5E8EB] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] w-full">
       
       <!-- 상단 툴바 -->
       <div class="p-6 sm:p-7 border-b border-[#E5E8EB] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
@@ -126,23 +126,23 @@
 
         <!-- 실시간 검색 바 -->
         <div class="flex items-center gap-3">
-          <div class="relative flex-1 sm:w-72">
+          <div class="relative flex-1 sm:w-80">
             <i data-lucide="search" class="w-4 h-4 text-[#8B95A1] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
             <input type="text" id="search-input" oninput="filterInquiries()" placeholder="소속, 연락처, 원고명 검색..." class="w-full bg-[#F2F4F6] border border-[#E5E8EB] rounded-2xl pl-10 pr-4 py-2.5 text-sm text-[#191F28] placeholder-[#8B95A1] focus:outline-none focus:bg-white focus:border-[#3182F6] focus:ring-2 focus:ring-blue-100 transition-all font-medium" />
           </div>
         </div>
       </div>
 
-      <!-- 반응형 고정 테이블 (table-fixed 및 편안한 폰트/패딩) -->
-      <div class="overflow-x-auto">
+      <!-- 반응형 고정 테이블 (테이블 컬럼 비율 최적화) -->
+      <div class="overflow-x-auto w-full">
         <table class="w-full text-left border-collapse table-fixed min-w-[1150px]">
           <thead>
             <tr class="bg-[#F9FAFB] text-[#6B7684] text-[13.5px] font-bold border-b border-[#E5E8EB] select-none">
               <th class="py-4 px-5 font-mono-code w-16 text-center">NO</th>
-              <th class="py-4 px-5 w-32">접수 시간</th>
+              <th class="py-4 px-5 w-36">접수 시간</th>
               <th class="py-4 px-5 w-44">소속 / 성함</th>
-              <th class="py-4 px-5 w-40">연락처</th>
-              <th class="py-4 px-6 w-[360px]">첨부 원고 / 규격</th>
+              <th class="py-4 px-5 w-44">연락처</th>
+              <th class="py-4 px-6 w-[380px]">첨부 원고 / 규격</th>
               <th class="py-4 px-6 w-auto">문의 및 요청사항</th>
               <th class="py-4 px-5 text-center w-28">관리</th>
             </tr>
@@ -162,7 +162,7 @@
     </div>
   </main>
 
-  <!-- 🔍 상세 모달 (토스 스타일 라운드 팝업) -->
+  <!-- 🔍 상세 모달 -->
   <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white border border-[#E5E8EB] w-full max-w-lg rounded-3xl p-7 shadow-2xl space-y-5">
       <div class="flex items-center justify-between border-b border-[#E5E8EB] pb-4">
@@ -326,7 +326,7 @@
               </a>
             </td>
             <td class="py-5 px-6">
-              <div class="space-y-2 flex flex-col items-start max-w-[340px]">
+              <div class="space-y-2 flex flex-col items-start max-w-[380px]">
                 ${fileChipsHtml}
                 ${spec && spec !== '-' ? `<div class="text-[12px] font-semibold text-[#6B7684] bg-[#F2F4F6] px-2.5 py-1 rounded-lg border border-[#E5E8EB] w-full truncate" title="${spec}">${spec}</div>` : ''}
               </div>
