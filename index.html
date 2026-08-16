@@ -252,29 +252,54 @@
     .animate-drawer-wiggle {
       animation: wholeDrawerWiggle 1.1s cubic-bezier(0.25, 1, 0.5, 1) 1;
     }
-  /* 📱 [모바일 전용] 갤러리 롤링 완벽 제어 & 버그 픽스 */
-    @media (max-width: 1024px) {
-      .mellow-marquee-track {
-        /* 1. 속도 120초 아주 느리게 강제 고정 (애플/안드로이드 호환) */
-        animation-duration: 120s !important;
-        -webkit-animation-duration: 120s !important;
-        
-        /* 2. 무한 반복 멈춤 방지 */
-        animation-iteration-count: infinite !important;
-        -webkit-animation-iteration-count: infinite !important;
-        
-        /* 3. 모바일 레이아웃 찌그러짐 방지 */
-        width: max-content !important;
-        display: flex !important;
-      }
-      
-      /* 🚨 4. 모바일 화면 터치 시 영원히 멈추는 버그(Hover 정지) 강제 해제 */
-      .mellow-gallery-section:hover .mellow-marquee-track,
-      .mellow-marquee-track:hover,
-      .mellow-card:hover .mellow-marquee-track {
-        animation-play-state: running !important;
-        -webkit-animation-play-state: running !important;
-      }
+    /* ========================================================
+       📱 [모바일 갤러리 무한 롤링 & 속도 정상화 특효약]
+       ======================================================== */
+    @keyframes customMarqueeSlow {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    /* 1. 바깥 영역 화면 밖으로 넘침 방지 */
+    .mellow-gallery-section {
+      width: 100% !important;
+      overflow: hidden !important;
+      position: relative !important;
+    }
+
+    /* 2. 트랙을 80초 동안 부드럽게 무한 반복 */
+    .mellow-marquee-track {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      width: max-content !important;
+      animation: customMarqueeSlow 80s linear infinite !important;
+      -webkit-animation: customMarqueeSlow 80s linear infinite !important;
+      will-change: transform !important;
+    }
+
+    /* 3. 모바일에서 카드가 찌그러지지 않도록 크기 강제 고정 (핵심) */
+    .mellow-card {
+      flex-shrink: 0 !important;
+      width: 220px !important;
+      height: 280px !important;
+      margin-right: 16px !important;
+      position: relative !important;
+    }
+
+    .mellow-card img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
+
+    /* 4. 모바일 터치 시 멈춤 버그 방지 */
+    .mellow-gallery-section:hover .mellow-marquee-track,
+    .mellow-marquee-track:hover,
+    .mellow-card:hover .mellow-marquee-track {
+      animation-play-state: running !important;
+      -webkit-animation-play-state: running !important;
     }
   </style>
 </head>
