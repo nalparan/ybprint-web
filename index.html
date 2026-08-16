@@ -77,7 +77,18 @@
     .gnb.is-over-white .gnb-phone-badge { border-color: #e4e4e7; }
     .gnb.is-over-white .gnb-phone-badge .phone-num { color: #09090b; }
 
-    section { scroll-margin-top: 88px; }
+    /* 🎯 [GNB 헤더 높이만큼 스크롤 위치 완벽 보정] */
+    html {
+      scroll-behavior: smooth;
+    }
+    section, .processor-section, .mellow-gallery-section, .cta-section {
+      scroll-margin-top: 88px;
+    }
+    @media (max-width: 1024px) {
+      section, .processor-section, .mellow-gallery-section, .cta-section {
+        scroll-margin-top: 60px;
+      }
+    }
 
     .hero { position: relative; width: 100%; height: 100vh; display: flex; justify-content: start; align-items: center; overflow: hidden; padding-left: 5vw; padding-top: 88px; background-color: #050508; }
     .slideshow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -878,18 +889,27 @@
 
     function updateHeaderOnScroll() {
       if (!mainHeader || !sec2 || !sec3 || !sec4 || !sec5) return;
-      const hH = mainHeader.offsetHeight;
+      const hH = mainHeader.offsetHeight || 88;
+      const checkY = hH + 8; // 헤더 바로 하단 지점을 기준으로 현재 활성 섹션 정확 판정
       const s2R = sec2.getBoundingClientRect();
       const s3R = sec3.getBoundingClientRect();
       const s4R = sec4.getBoundingClientRect();
       const s5R = sec5.getBoundingClientRect();
       const scrollY = window.scrollY || document.documentElement.scrollTop;
+
       mainHeader.classList.remove('is-over-white', 'is-scrolled', 'is-over-faq', 'is-over-cta', 'is-transparent');
-      if (s2R.top <= hH && s2R.bottom >= hH) { mainHeader.classList.add('is-over-white'); }
-      else if (s3R.top <= hH && s3R.bottom >= hH) { mainHeader.classList.add('is-transparent'); }
-      else if (s4R.top <= hH && s4R.bottom >= hH) { mainHeader.classList.add('is-over-faq'); }
-      else if (s5R.top <= hH && s5R.bottom >= hH) { mainHeader.classList.add('is-over-cta'); }
-      else if (scrollY > 30) { mainHeader.classList.add('is-scrolled'); }
+
+      if (s2R.top <= checkY && s2R.bottom > checkY) {
+        mainHeader.classList.add('is-over-white');
+      } else if (s3R.top <= checkY && s3R.bottom > checkY) {
+        mainHeader.classList.add('is-transparent');
+      } else if (s4R.top <= checkY && s4R.bottom > checkY) {
+        mainHeader.classList.add('is-over-faq');
+      } else if (s5R.top <= checkY && s5R.bottom > checkY) {
+        mainHeader.classList.add('is-over-cta');
+      } else if (scrollY > 30) {
+        mainHeader.classList.add('is-scrolled');
+      }
     }
     window.addEventListener('scroll', updateHeaderOnScroll);
 
