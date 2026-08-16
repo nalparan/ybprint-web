@@ -31,7 +31,7 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
 
-  <!-- 🌐 상단 네비게이션 바 (고객용 웹페이지와 동일한 px-[5vw] 적용) -->
+  <!-- 🌐 상단 네비게이션 바 (고객용 웹페이지와 동일한 px-[5vw] 풀 와이드) -->
   <header class="h-20 bg-white/95 backdrop-blur-md border-b border-[#E5E8EB] px-[5vw] flex items-center justify-between sticky top-0 z-40 shadow-xs">
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-3.5">
@@ -67,7 +67,7 @@
     </div>
   </header>
 
-  <!-- 📊 메인 대시보드 컨테이너 (고객용 웹페이지와 동일한 풀 와이드 그리드: px-[5vw]) -->
+  <!-- 📊 메인 대시보드 컨테이너 (와이드 그리드: px-[5vw]) -->
   <main class="flex-1 w-full px-[5vw] py-8 space-y-7">
     
     <!-- 지표 카드 섹션 (3분할 와이드 그리드) -->
@@ -111,7 +111,7 @@
       </div>
     </div>
 
-    <!-- 📋 메인 테이블 카드 (화면 가로폭에 맞춰 꽉 찬 와이드 서랍장) -->
+    <!-- 📋 메인 테이블 카드 (토스 서랍장 스타일 화이트 카드) -->
     <div class="bg-white border border-[#E5E8EB] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] w-full">
       
       <!-- 상단 툴바 -->
@@ -133,18 +133,18 @@
         </div>
       </div>
 
-      <!-- 반응형 고정 테이블 (테이블 컬럼 비율 최적화) -->
+      <!-- 완벽한 비율의 반응형 테이블 -->
       <div class="overflow-x-auto w-full">
-        <table class="w-full text-left border-collapse table-fixed min-w-[1150px]">
+        <table class="w-full text-left border-collapse table-fixed min-w-[1180px]">
           <thead>
             <tr class="bg-[#F9FAFB] text-[#6B7684] text-[13.5px] font-bold border-b border-[#E5E8EB] select-none">
-              <th class="py-4 px-5 font-mono-code w-16 text-center">NO</th>
-              <th class="py-4 px-5 w-36">접수 시간</th>
-              <th class="py-4 px-5 w-44">소속 / 성함</th>
-              <th class="py-4 px-5 w-44">연락처</th>
-              <th class="py-4 px-6 w-[380px]">첨부 원고 / 규격</th>
-              <th class="py-4 px-6 w-auto">문의 및 요청사항</th>
-              <th class="py-4 px-5 text-center w-28">관리</th>
+              <th class="py-4 pl-6 pr-3 font-mono-code w-16 text-center">NO</th>
+              <th class="py-4 px-4 w-36">접수 시간</th>
+              <th class="py-4 px-5 w-48">소속 / 성함</th>
+              <th class="py-4 px-4 w-44">연락처</th>
+              <th class="py-4 px-5 w-[360px]">첨부 원고 / 규격</th>
+              <th class="py-4 px-5 w-auto">문의 및 요청사항</th>
+              <th class="py-4 pl-3 pr-7 text-center w-36">관리</th>
             </tr>
           </thead>
           <tbody id="inquiry-table-body" class="divide-y divide-[#E5E8EB] text-[#333D4B] text-[14px]">
@@ -279,7 +279,7 @@
 
       tbody.innerHTML = reversed.map((item, idx) => {
         const no = list.length - idx;
-        const time = item.timestamp || item.created_at || item.time || "-";
+        const timeRaw = item.timestamp || item.created_at || item.time || "-";
         const org = item.org || item.name || "-";
         const phone = item.phone || "-";
         const rawFile = item.file_name || item.filename || "";
@@ -287,6 +287,23 @@
         const inquiry = item.inquiry || "(작성 내용 없음)";
         const hasFile = rawFile && rawFile !== "첨부파일 없음";
 
+        // 📅 접수 시간: 날짜와 시간을 2줄로 분리하여 겹침 원천 차단
+        let timeHtml = '-';
+        if (timeRaw && timeRaw !== '-') {
+          const timeParts = timeRaw.split(' ');
+          if (timeParts.length >= 2) {
+            timeHtml = `
+              <div class="flex flex-col">
+                <span class="font-bold text-[#191F28] text-[13px] tracking-tight">${timeParts[0]}</span>
+                <span class="text-[12px] font-mono-code font-semibold text-[#8B95A1]">${timeParts[1]}</span>
+              </div>
+            `;
+          } else {
+            timeHtml = `<span class="font-mono-code text-[13px] font-semibold text-[#4E5968]">${timeRaw}</span>`;
+          }
+        }
+
+        // 📎 다중 첨부파일 칩 분리
         let fileChipsHtml = '';
         if (hasFile) {
           const files = rawFile.split(',').map(f => f.trim()).filter(Boolean);
@@ -315,32 +332,32 @@
         const safeInquiry = encodeURIComponent(inquiry);
 
         return `
-          <tr class="table-row-hover transition-colors align-top">
-            <td class="py-5 px-5 font-mono-code font-bold text-[#8B95A1] text-center text-[13px]">${String(no).padStart(2, '0')}</td>
-            <td class="py-5 px-5 font-mono-code text-[#4E5968] font-semibold whitespace-nowrap text-[13.5px]">${time}</td>
+          <tr class="table-row-hover transition-colors align-middle">
+            <td class="py-5 pl-6 pr-3 font-mono-code font-bold text-[#8B95A1] text-center text-[13px]">${String(no).padStart(2, '0')}</td>
+            <td class="py-5 px-4 whitespace-nowrap">${timeHtml}</td>
             <td class="py-5 px-5 font-bold text-[#191F28] text-[15px] truncate" title="${org}">${org}</td>
-            <td class="py-5 px-5 font-mono-code text-[#1B64DA] font-bold whitespace-nowrap text-[14px]">
+            <td class="py-5 px-4 font-mono-code text-[#1B64DA] font-bold whitespace-nowrap text-[14px]">
               <a href="tel:${phone.replace(/[^0-9]/g, '')}" class="hover:underline flex items-center gap-1.5">
                 <i data-lucide="phone" class="w-3.5 h-3.5 text-[#3182F6] shrink-0"></i>
                 <span>${phone}</span>
               </a>
             </td>
-            <td class="py-5 px-6">
-              <div class="space-y-2 flex flex-col items-start max-w-[380px]">
+            <td class="py-5 px-5">
+              <div class="space-y-2 flex flex-col items-start max-w-[340px]">
                 ${fileChipsHtml}
                 ${spec && spec !== '-' ? `<div class="text-[12px] font-semibold text-[#6B7684] bg-[#F2F4F6] px-2.5 py-1 rounded-lg border border-[#E5E8EB] w-full truncate" title="${spec}">${spec}</div>` : ''}
               </div>
             </td>
-            <td class="py-5 px-6 text-[#333D4B]">
+            <td class="py-5 px-5 text-[#333D4B]">
               <div onclick="openDetailModal('${safeOrg}', '${safePhone}', '${safeSpec}', '${safeInquiry}')" class="bg-[#F9FAFB] hover:bg-white p-3 rounded-2xl border border-[#E5E8EB] hover:border-[#3182F6] hover:shadow-xs transition-all cursor-pointer group" title="클릭 시 전체 내용 보기">
                 <p class="line-clamp-2 leading-relaxed text-[13.5px] text-[#333D4B] group-hover:text-[#191F28] font-medium">${inquiry}</p>
-                <div class="mt-1.5 flex items-center gap-1 text-[11px] text-[#3182F6] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="mt-1 flex items-center gap-1 text-[11px] text-[#3182F6] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                   <i data-lucide="maximize-2" class="w-3 h-3"></i>
                   <span>상세보기</span>
                 </div>
               </div>
             </td>
-            <td class="py-5 px-5 text-center whitespace-nowrap">
+            <td class="py-5 pl-3 pr-7 text-center whitespace-nowrap">
               <a href="tel:${phone.replace(/[^0-9]/g, '')}" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-[#E8F8F0] hover:bg-[#D3F5E4] text-[#008A50] hover:text-[#006C3E] rounded-xl text-[13px] font-extrabold border border-[#B7F0D4] transition-all whitespace-nowrap shadow-2xs">
                 <i data-lucide="phone-call" class="w-3.5 h-3.5 text-[#00B46B] shrink-0"></i>
                 <span>전화상담</span>
