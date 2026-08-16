@@ -63,12 +63,12 @@
       .slide { -webkit-transform-style: preserve-3d; -webkit-backface-visibility: hidden; }
     }
     .gnb.is-transparent { background-color: transparent !important; backdrop-filter: none !important; border-bottom: none !important; }
-    .gnb.is-scrolled, .gnb.is-over-faq { background-color: rgba(10, 10, 10, 0.88) !important; backdrop-filter: blur(14px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-    .gnb.is-over-white, .gnb.is-over-cta { background-color: #ffffff !important; backdrop-filter: none !important; border-bottom: 1px solid #e4e4e7 !important; }
-    .gnb.is-over-white .logo-img, .gnb.is-over-cta .logo-img { filter: brightness(0); }
-    .gnb.is-over-white .gnb-nav a, .gnb.is-over-cta .gnb-nav a { color: #09090b; }
-    .gnb.is-over-white .gnb-phone-badge, .gnb.is-over-cta .gnb-phone-badge { border-color: #e4e4e7; }
-    .gnb.is-over-white .gnb-phone-badge .phone-num, .gnb.is-over-cta .gnb-phone-badge .phone-num { color: #09090b; }
+    .gnb.is-scrolled, .gnb.is-over-faq, .gnb.is-over-cta { background-color: rgba(10, 10, 10, 0.88) !important; backdrop-filter: blur(14px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
+    .gnb.is-over-white { background-color: #ffffff !important; backdrop-filter: none !important; border-bottom: 1px solid #e4e4e7 !important; }
+    .gnb.is-over-white .logo-img { filter: brightness(0); }
+    .gnb.is-over-white .gnb-nav a { color: #09090b; }
+    .gnb.is-over-white .gnb-phone-badge { border-color: #e4e4e7; }
+    .gnb.is-over-white .gnb-phone-badge .phone-num { color: #09090b; }
 
     section { scroll-margin-top: 88px; }
 
@@ -123,7 +123,7 @@
     .faq-icon { transition: transform 0.3s ease; }
     .faq-item.active .faq-icon { transform: rotate(45deg); }
 
-    /* ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스(배경 고정) & 화이트 톤 */
+    /* ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스(배경 고정) & 다크 명암 오버레이 */
     .cta-section {
       width: 100%; min-height: 440px; padding: 90px 5vw;
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
@@ -133,15 +133,24 @@
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
-      border-top: 1px solid #e4e4e7;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .cta-parallax-overlay {
       position: absolute; inset: 0;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(0, 0, 0, 0.72);
       z-index: 1;
     }
     .cta-content-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
-    .cta-content-wrap h2 { font-family: 'Noto Sans KR', sans-serif; font-weight: 900; font-size: clamp(1.875rem, 5vw, 3rem); color: #09090b; margin-bottom: 2rem; letter-spacing: -0.025em; }
+    .cta-content-wrap h2 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.875rem, 5vw, 3rem);
+      color: #ffffff;
+      margin-bottom: 2rem;
+      letter-spacing: -0.025em;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+    }
 
     .global-footer {
       width: 100%; background-color: #050507; color: #a1a1aa;
@@ -599,11 +608,11 @@
     </div>
   </section>
 
-  <!-- ☎️ 빠른 문의 섹션: CONTACT.jpg 패럴랙스 & 화이트 톤 디자인 -->
+  <!-- ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스 & 다크 명암 + 화이트 텍스트 -->
   <section id="contact" class="cta-section">
     <div class="cta-parallax-overlay"></div>
     <div class="cta-content-wrap max-w-4xl mx-auto flex flex-col items-center">
-      <h2 class="text-3xl md:text-5xl font-black tracking-tight text-zinc-950 mb-8">청년인쇄사에 문의하세요</h2>
+      <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mb-8">청년인쇄사에 문의하세요</h2>
       <button type="button" class="btn btn-primary" onclick="toggleDrawer(true)">
         빠른 견적 요청하기
       </button>
@@ -964,7 +973,7 @@
       const digits = val.replace(/\D/g, '');
       if (digits.startsWith('02')) {
         if (digits.length <= 2) return digits;
-        if (digits.length <= 5) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+        if (digits.length <= 5) return `${digits.slice(0, 2)}`;
         if (digits.length <= 9) return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5)}`;
         return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
       } else {
