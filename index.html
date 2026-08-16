@@ -494,7 +494,7 @@
       <div class="mellow-card group">
         <img src="gallery01.jpg" alt="홍보 | 리플릿">
         <div class="mellow-overlay">
-          <span class="text-[10px] font-mono동태 text-blue-400 mb-1">02 / LEAFLET</span>
+          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">02 / LEAFLET</span>
           <h3 class="text-lg font-bold text-white">홍보 | 리플릿</h3>
         </div>
       </div>
@@ -619,11 +619,12 @@
     </div>
   </section>
 
+  <!-- 🏢 하단 푸터 (모바일 관리자 5회 연속 탭 트리거 포함) -->
   <footer class="w-full bg-black text-white border-t border-neutral-800 py-16 px-[5vw] relative">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
       <div>
-        <a href="#" class="inline-block mt-0.5">
-          <img src="청년인쇄사.png" alt="청년인쇄사" class="h-9 sm:h-11 w-auto filter brightness-0 invert">
+        <a href="#" class="inline-block mt-0.5" id="footer-admin-trigger">
+          <img src="청년인쇄사.png" alt="청년인쇄사" class="h-9 sm:h-11 w-auto filter brightness-0 invert select-none">
         </a>
       </div>
       <div class="flex flex-col sm:flex-row items-start gap-8 sm:gap-16 text-sm">
@@ -645,7 +646,7 @@
           </div>
           <div class="flex items-center pt-2 text-neutral-400">
             <span class="info-label font-urbanist">Copyright</span>
-            <span class="font-urbanist text-neutral-300">2026 청년인쇄사. All Rights Reserved.</span>
+            <span id="copyright-admin-trigger" class="font-urbanist text-neutral-300 cursor-pointer select-none">2026 청년인쇄사. All Rights Reserved.</span>
           </div>
         </div>
       </div>
@@ -880,7 +881,7 @@
       if (s2R.top <= hH && s2R.bottom >= hH) { mainHeader.classList.add('is-over-white'); }
       else if (s3R.top <= hH && s3R.bottom >= hH) { mainHeader.classList.add('is-transparent'); }
       else if (s4R.top <= hH && s4R.bottom >= hH) { mainHeader.classList.add('is-over-faq'); }
-      else if (s5R.top <= hH) { mainHeader.classList.add('is-over-cta'); }
+      else if (s5R.top <= hH && s5R.bottom >= hH) { mainHeader.classList.add('is-over-cta'); }
       else if (scrollY > 30) { mainHeader.classList.add('is-scrolled'); }
     }
     window.addEventListener('scroll', updateHeaderOnScroll);
@@ -975,7 +976,7 @@
       const digits = val.replace(/\D/g, '');
       if (digits.startsWith('02')) {
         if (digits.length <= 2) return digits;
-        if (digits.length <= 5) return `${digits.slice(0, 2)}`;
+        if (digits.length <= 5) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
         if (digits.length <= 9) return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5)}`;
         return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
       } else {
@@ -1768,13 +1769,36 @@
         }
       }, 6000);
     });
+
+    // 📱 [모바일 전용] 하단 푸터 5회 연속 탭 시 관리자 비밀번호 창 팝업
+    let secretTapCount = 0;
+    let secretTapTimer = null;
+    function triggerMobileAdminSecret() {
+      secretTapCount++;
+      if (secretTapTimer) clearTimeout(secretTapTimer);
+      if (secretTapCount >= 5) {
+        secretTapCount = 0;
+        toggleAdminModal(true);
+      } else {
+        secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1800);
+      }
+    }
+
+    document.getElementById('footer-admin-trigger')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      triggerMobileAdminSecret();
+    });
+    document.getElementById('copyright-admin-trigger')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      triggerMobileAdminSecret();
+    });
 </script>
-<!-- ⌨️ B2B SaaS 커맨드 팔레트 관리자 모달 (Ctrl + K / Cmd + K) -->
-<div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
+<!-- ⌨️ B2B SaaS 커맨드 팔레트 관리자 모달 (Ctrl + K / Cmd + K / 모바일 5회 탭) -->
+<div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity p-4">
   <div class="w-full max-w-sm rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-2xl text-neutral-100">
     <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
       <div class="flex items-center gap-2">
-        <span class="px-2 py-0.5 text-[11px] font-mono font-semibold bg-neutral-800 border border-neutral-700 text-neutral-300 rounded">Ctrl + K</span>
+        <span class="px-2 py-0.5 text-[11px] font-mono font-semibold bg-neutral-800 border border-neutral-700 text-neutral-300 rounded">ADMIN</span>
         <h3 class="text-sm font-bold text-white tracking-tight">관리자 커맨드 모드</h3>
       </div>
       <button type="button" onclick="toggleAdminModal(false)" class="text-neutral-500 hover:text-neutral-300 text-xs">✕</button>
@@ -1787,7 +1811,7 @@
     </div>
 
     <div class="mt-5 flex gap-2">
-      <button type="button" onclick="toggleAdminModal(false)" class="flex-1 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition">닫기 (Esc)</button>
+      <button type="button" onclick="toggleAdminModal(false)" class="flex-1 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition">닫기</button>
       <button type="button" onclick="submitAdminAuth()" class="flex-1 py-2.5 bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-bold rounded-xl transition">진입하기</button>
     </div>
   </div>
