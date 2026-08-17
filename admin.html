@@ -371,7 +371,7 @@
               <div class="space-y-1.5 border border-slate-400 p-3.5 rounded-lg bg-slate-50/40">
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">수 &nbsp; &nbsp; 신 :</span> <strong id="paper-receiver-org" class="text-sm font-black text-blue-900"></strong></div>
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">연 락 처 :</span> <span id="paper-receiver-phone" class="font-mono-code font-bold"></span></div>
-                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 16일</span></div>
+                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 17일</span></div>
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">제 &nbsp; &nbsp; 목 :</span> <span id="paper-quote-title" class="font-bold">인쇄 및 제본 제작 건</span></div>
               </div>
 
@@ -440,17 +440,17 @@
               <i data-lucide="send" class="w-6 h-6"></i>
             </div>
             <h3 class="font-extrabold text-lg sm:text-xl text-[#191F28]">고객 발송 채널 선택 및 전송</h3>
-            <p class="text-[#8B95A1] text-xs mt-0.5">고객 연락처 형태에 따라 알림톡 또는 공식 이메일로 자동 전달됩니다.</p>
+            <p class="text-[#8B95A1] text-xs mt-0.5">고객 연락처 형태에 따라 공식 이메일로 자동 전달됩니다.</p>
           </div>
 
           <div class="max-w-xl mx-auto space-y-4">
-            <!-- 발송 옵션 탭 라디오 버튼 (선택 시 즉시 하단 버튼 전환) -->
+            <!-- 발송 옵션 탭 라디오 버튼 -->
             <div class="grid grid-cols-2 gap-3">
               <label id="label-channel-auto" onclick="switchSendChannel('auto')" class="border-2 border-[#3182F6] bg-blue-50/50 p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all">
                 <input type="radio" name="send_channel" id="radio-channel-auto" value="auto" checked class="text-[#3182F6]" />
                 <div>
-                  <span class="font-bold text-sm text-[#191F28] block">스마트 자동 발송</span>
-                  <span class="text-[11px] text-[#4E5968]">이메일/문자 최적 채널 감지</span>
+                  <span class="font-bold text-sm text-[#191F28] block">스마트 이메일 발송</span>
+                  <span class="text-[11px] text-[#4E5968]">SendGrid 공식 이메일 발송</span>
                 </div>
               </label>
 
@@ -465,13 +465,12 @@
 
             <!-- 발송 메시지 미리보기 (스마트 발송 시 표출) -->
             <div id="smart-preview-card" class="bg-white border border-[#E5E8EB] rounded-2xl p-5 shadow-2xs space-y-2 text-left font-mono-code text-xs leading-relaxed text-[#333D4B]">
-              <div class="text-[11px] font-bold text-[#8B95A1] font-sans pb-2 border-b border-[#E5E8EB]">발송 메시지 프리뷰</div>
-              <p><strong>[청년인쇄사 견적서 발송]</strong></p>
-              <p><span id="msg-target-org" class="font-bold text-[#1B64DA]"></span> 님, 요청하신 인쇄 및 제본 견적서가 생성되었습니다.</p>
+              <div class="text-[11px] font-bold text-[#8B95A1] font-sans pb-2 border-b border-[#E5E8EB]">발송 메일 내용 프리뷰</div>
+              <p><strong>[청년인쇄사 견적 안내]</strong></p>
+              <p><span id="msg-target-org" class="font-bold text-[#1B64DA]"></span> 님, 요청하신 인쇄 및 제본 견적서가 도착했습니다.</p>
               <p class="text-[#191F28] font-bold">■ 총 견적금액 : <span id="msg-target-total" class="text-blue-600"></span> 원 (VAT 포함)</p>
               <p>■ 선택서식 : <span id="msg-target-template"></span></p>
-              <p class="pt-2 text-slate-500 font-sans text-[11px]">※ 아래 링크를 클릭하시면 공식 서식 PDF 및 공공기관 4대 필수 서류를 열람하실 수 있습니다.</p>
-              <p class="text-blue-600 font-bold truncate">https://ybprint.co.kr/quote/v2_view?id=auto_gen</p>
+              <p class="pt-2 text-slate-500 font-sans text-[11px]">※ 공식 견적 내역과 필수 4대 증빙 서류 안내가 고객 이메일로 안전하게 전송됩니다.</p>
             </div>
 
             <!-- PDF 전용 안내 (PDF 다운로드만 선택 시 표출) -->
@@ -539,7 +538,7 @@
     let currentQuoteStep = 1;
     let detectedPageCount = 1;
     let currentBookCount = 1;
-    let selectedChannel = 'auto'; // 'auto' 또는 'pdf_only'
+    let selectedChannel = 'auto';
 
     async function fetchInquiries() {
       const refreshIcon = document.getElementById('refresh-icon');
@@ -591,7 +590,6 @@
       renderDesktopTable(list);
     }
 
-    // 📱 [모바일 뷰 렌더링]
     function renderMobileCards(list) {
       const container = document.getElementById('mobile-card-container');
       const totalBadge = document.getElementById('total-badge');
@@ -696,7 +694,6 @@
       lucide.createIcons();
     }
 
-    // 💻 [PC 데스크톱 뷰 렌더링]
     function renderDesktopTable(list) {
       const tbody = document.getElementById('inquiry-table-body');
       if (!tbody) return;
@@ -837,7 +834,6 @@
       document.getElementById('quote-modal-org').innerText = activeInquiry.org;
       document.getElementById('quote-modal-phone').innerText = activeInquiry.phone;
       
-      // 문의 내용에서 부수 자동 추출 (기본 1부)
       let parsedQty = 1;
       const qtyMatch = activeInquiry.inquiry.match(/(\d+)\s*부/);
       if (qtyMatch && parseInt(qtyMatch[1], 10) > 0) {
@@ -846,7 +842,6 @@
       currentBookCount = parsedQty;
       document.getElementById('quote-book-qty').value = parsedQty;
 
-      // 원고 스캔 spec에서 페이지 수 정확 파싱 (기본 1p)
       detectedPageCount = 1;
       const pageMatch = activeInquiry.spec.match(/(\d+)\s*p|페이지/i) || activeInquiry.inquiry.match(/(\d+)\s*페이지/);
       if (pageMatch && parseInt(pageMatch[1], 10) > 0) {
@@ -858,7 +853,7 @@
       selectedChannel = 'auto';
       switchSendChannel('auto');
 
-      onTemplateChange(); // 선택된 템플릿 기본 행 구성 로드
+      onTemplateChange();
       updateQuoteStepUI();
       document.getElementById('quote-modal').classList.remove('hidden');
     }
@@ -873,23 +868,20 @@
       onTemplateChange();
     }
 
-    // 양식 변경 시 기본 행 세팅 (수량 = 페이지수 × 부수 정확 산정)
     function onTemplateChange() {
       const template = document.getElementById('quote-template-select').value;
       const tbody = document.getElementById('quote-items-tbody');
       tbody.innerHTML = '';
 
-      const totalPageImpressions = detectedPageCount * currentBookCount; // 예: 26p * 50부 = 1300면
+      const totalPageImpressions = detectedPageCount * currentBookCount;
 
       if (template === '디지털일반') {
-        // 디지털일반 기본 구성 (비고란에 산출식 및 사양 명시)
         addQuoteDataRow('제작', '본문 흑백 출력 (모조 80g)', totalPageImpressions, BASE_PRICES.print_bw, `${detectedPageCount}p × ${currentBookCount}부`);
         addQuoteDataRow('제작', '표지 칼라 출력 (스노우 250g)', currentBookCount, BASE_PRICES.cover_print, `${currentBookCount}부`);
         addQuoteDataRow('후가공', '표지 단면 무광코팅', currentBookCount, BASE_PRICES.cover_coat, '표지 단면 코팅');
         addQuoteDataRow('제본', '무선제본 가공', currentBookCount, BASE_PRICES.bind_perfect, '무선 책제본');
         addQuoteDataRow('배송', '세종청사 / 관공서 직배송', 1, 0, '당일 안전 직배송');
       } else if (template === '디지탈상세') {
-        // 디지탈상세 (국가공무원인재개발원 전용 양식)
         const totalPrintCost = totalPageImpressions * BASE_PRICES.print_bw;
         const totalBindCost = currentBookCount * BASE_PRICES.bind_perfect;
         const totalLineAmount = totalPrintCost + totalBindCost;
@@ -902,7 +894,6 @@
           '표지칼라/본문흑백/무선제본'
         );
       } else if (template === '옵셋일반') {
-        // 옵셋일반 기본 구성
         addQuoteDataRow('제작', '지대 (표지 420*297)', 0.5, 0, '스노우 250g');
         addQuoteDataRow('제작', '지대 (내지 A4)', 3, 0, '모조 80g');
         addQuoteDataRow('제작', 'CTP 판비 (표지 8판)', 1, 0, 'CTP 8판');
@@ -969,18 +960,15 @@
       document.getElementById('quote-vat').innerText = vat.toLocaleString() + " 원";
       document.getElementById('quote-total').innerText = total.toLocaleString() + " 원";
 
-      // 엑셀 서식 풋터 및 한글 금액 업데이트
       document.getElementById('paper-foot-subtotal').innerText = subtotal.toLocaleString();
       document.getElementById('paper-foot-vat').innerText = vat.toLocaleString();
       document.getElementById('paper-foot-total').innerText = total.toLocaleString();
       document.getElementById('paper-number-total').innerText = total.toLocaleString();
       document.getElementById('paper-hangul-total').innerText = "일금 " + numberToKorean(total) + " 정";
 
-      // 메시지 프리뷰 업데이트
       document.getElementById('msg-target-total').innerText = total.toLocaleString();
     }
 
-    // 한글 금액 변환 함수
     function numberToKorean(number) {
       if (number === 0) return "영원";
       const units = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
@@ -1008,7 +996,6 @@
       return result.trim() + "원";
     }
 
-    // 3단계 라디오 버튼 채널 전환 (스마트 발송 vs PDF 다운로드)
     function switchSendChannel(channel) {
       selectedChannel = channel;
       const labelAuto = document.getElementById('label-channel-auto');
@@ -1087,7 +1074,6 @@
 
     function nextQuoteStep() {
       if (currentQuoteStep === 1) {
-        // STEP 1 -> 2: 엑셀 3종 원본 1:1 서식 렌더링
         const template = document.getElementById('quote-template-select').value;
         document.getElementById('preview-template-title').innerText = template;
         document.getElementById('paper-receiver-org').innerText = activeInquiry.org;
@@ -1099,7 +1085,6 @@
         tbody.innerHTML = '';
 
         if (template === '디지탈상세') {
-          // 디지탈상세 (인재원 서식)
           thead.innerHTML = `
             <tr>
               <th class="py-2 px-2 w-28 text-center">항목</th>
@@ -1111,7 +1096,6 @@
             </tr>
           `;
         } else if (template === '옵셋일반') {
-          // 옵셋일반 서식
           thead.innerHTML = `
             <tr>
               <th class="py-2 px-2 w-20 text-center">항목</th>
@@ -1123,7 +1107,6 @@
             </tr>
           `;
         } else {
-          // 디지털일반 서식
           thead.innerHTML = `
             <tr>
               <th class="py-2 px-2 w-20 text-center">항목</th>
@@ -1176,7 +1159,7 @@
       }
     }
 
-    // 스마트 자동 발송 실행
+    // 🚀 SendGrid API 연동 발송 함수 (/api/send-estimate 호출)
     async function submitQuoteSmartSend() {
       const btn = document.getElementById('btn-submit-smart');
       const originalHtml = btn.innerHTML;
@@ -1186,43 +1169,68 @@
 
       const template = document.getElementById('quote-template-select').value;
       const totalAmount = document.getElementById('quote-total').innerText;
+      const printableElement = document.getElementById('quote-printable-area');
+      const quoteHtml = printableElement ? printableElement.innerHTML : '';
 
-      const payload = {
-        org: activeInquiry.org,
-        phone: activeInquiry.phone,
-        template: template,
-        total_amount: totalAmount,
-        detected_pages: detectedPageCount,
-        book_count: currentBookCount
-      };
+      const isCustomerEmail = /[a-zA-Z@]/.test(activeInquiry.phone);
+      const recipientEmail = isCustomerEmail ? activeInquiry.phone : 'admin@ybprint.co.kr';
+
+      const emailBodyHtml = `
+        <div style="font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; max-width: 680px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px; color: #1f2937;">
+          <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 16px;">[청년인쇄사] 견적서 안내</h2>
+          <p style="font-size: 16px; line-height: 1.6;">안녕하세요, <strong>${activeInquiry.org}</strong> 고객님!</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4b5563;">
+            청년인쇄사에 문의해주셔서 진심으로 감사드립니다.<br>
+            요청하신 견적서를 안내해 드립니다.
+          </p>
+
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 20px 0;">
+            <p style="margin: 4px 0; font-size: 14px;"><strong>■ 수신처 :</strong> ${activeInquiry.org}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>■ 견적서 양식 :</strong> ${template}</p>
+            <p style="margin: 4px 0; font-size: 16px; color: #2563eb;"><strong>■ 총 견적금액 : ${totalAmount}</strong> (VAT 포함)</p>
+          </div>
+
+          <div style="margin: 20px 0; padding: 16px; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+            ${quoteHtml}
+          </div>
+
+          <div style="background-color: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 13px; color: #475569; line-height: 1.5;">
+            <p style="margin: 0 0 4px 0;"><strong>※ 공공기관 결제 및 정산 안내</strong></p>
+            <p style="margin: 0;">• 세종청사 및 국책연구원 행정 규격에 맞추어 법인카드 결제 및 세금계산서 후불 정산이 가능합니다.</p>
+            <p style="margin: 0;">• 필수 4대 서류(사업자등록증, 통장사본 등)가 기본 동봉됩니다.</p>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0 16px 0;">
+          <p style="font-size: 13px; color: #9ca3af; margin: 0;">
+            <strong>청년인쇄사</strong> | 문의전화: 044-862-4803 | admin@ybprint.co.kr
+          </p>
+        </div>
+      `;
 
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초 제한
-
-        const res = await fetch(`${RENDER_BACKEND_URL}/send-quote`, {
+        const res = await fetch('/api/send-estimate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: controller.signal
+          body: JSON.stringify({
+            to: recipientEmail,
+            subject: `[청년인쇄사] ${activeInquiry.org}님, 요청하신 견적서가 도착했습니다.`,
+            html: emailBodyHtml,
+            customerName: activeInquiry.org,
+            estimateData: totalAmount
+          })
         });
-        clearTimeout(timeoutId);
 
         const result = await res.json();
-        
-        if (res.ok && result.status === 'success') {
-          alert(`🎉 [발송 완료]\n\n수신처: ${activeInquiry.org} (${result.target})\n총 견적금액: ${totalAmount}\n양식: ${template}\n\n고객에게 공식 견적서가 안전하게 발송되었습니다.`);
+
+        if (res.ok && result.success) {
+          alert(`🎉 [발송 성공]\n\n수신처: ${activeInquiry.org} (${recipientEmail})\n총 견적금액: ${totalAmount}\n\n고객에게 공식 견적서 메일이 안전하게 전송되었습니다.`);
           closeQuoteModal();
         } else {
-          alert(`⚠️ [발송 확인 필요]\n\n결과: ${result.message || '메일 발송에 실패했습니다.'}\n\n메일플러그 환경변수(SENDER_PW) 또는 수신처 이메일을 확인해 주세요.`);
+          alert(`⚠️ [발송 실패]\n\n${result.error || '이메일 발송에 실패했습니다.'}\nSendGrid 환경변수 설정을 확인해 주세요.`);
         }
       } catch (err) {
         console.error("Quote send error:", err);
-        if (err.name === 'AbortError') {
-          alert("⚠️ [발송 시간 초과]\n\n메일 서버 응답이 지연되었습니다. Render 대시보드의 SENDER_PW 설정 및 메일플러그 설정을 확인해 주세요.");
-        } else {
-          alert("⚠️ [통신 오류]\n\n서버 통신 중 오류가 발생했습니다: " + err.message);
-        }
+        alert("⚠️ [통신 오류]\n\n견적서 메일 발송 중 오류가 발생했습니다: " + err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = originalHtml;
