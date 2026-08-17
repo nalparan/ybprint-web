@@ -220,7 +220,7 @@
 
     @keyframes diagnosticBlink {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { transform: scale(0.98); opacity: 0.35; }
+      50% { opacity: 0.35; transform: scale(0.98); }
     }
     .badge-blink {
       animation: diagnosticBlink 1.5s infinite ease-in-out;
@@ -496,10 +496,11 @@
             <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md text-[11px]">STEP 01</span>
             <label class="text-lg font-black text-title tracking-tight">원고 파일 첨부 <span class="text-muted font-normal text-base">(선택)</span></label>
           </div>
-          <span class="text-xs sm:text-sm text-slate-400 font-normal text-xs">※ 01 또는 02 중 하나만 작성하셔도 됩니다</span>
+          <!-- 🎯 1. 문구 변경 (부담 없는 단계형 안내) -->
+          <span class="text-xs sm:text-sm text-slate-400 font-normal text-xs">※ 파일이 준비되지 않으셨다면 STEP 02에 바로 작성해 주셔도 됩니다</span>
         </div>
         
-        <!-- 🎯 드래그 앤 드롭 영역 시각 효과 복구 -->
+        <!-- 드래그 앤 드롭 영역 -->
         <div id="file-dropzone" 
              onmouseenter="wakeUpBackend()" 
              onclick="document.getElementById('file-input').click()" 
@@ -598,9 +599,10 @@
       </div>
     </div>
 
+    <!-- 🎯 3. 동적 단일 CTA 버튼 -->
     <div class="px-6 py-5 border-t border-[#5E3F21] brand-key-bg shrink-0 absolute bottom-0 left-0 right-0 z-30 shadow-[0_-12px_35px_rgba(37,99,235,0.35)] flex items-center justify-center text-center h-[90px]">
       <button id="cta-button" disabled onclick="handleCtaClick()" class="w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md">
-        <span id="cta-btn-text">원고/문의 및 연락처를 입력해 주세요</span>
+        <span id="cta-btn-text">원고 첨부 또는 문의내용을 입력해 주세요 ➔</span>
       </button>
     </div>
   </aside>
@@ -768,6 +770,7 @@
         </div>`;
     }
 
+    // 🎯 3. 동적 단일 CTA 버튼 메시지 세분화 및 입력 검증
     function validateForm(isBlur = false) {
       const orgInput = document.getElementById('client-org');
       const phoneInput = document.getElementById('client-phone');
@@ -786,8 +789,10 @@
 
       const isOrgValid = checkOrgValid(orgVal);
       const phoneResult = checkPhoneOrEmailValid(phoneVal);
-      const hasInquiryContent = inquiryVal.length >= 2 || hasUploadedFile;
+      const isContactValid = isOrgValid && phoneResult.isValid;
+      const hasInquiryText = inquiryVal.length >= 2;
 
+      // 1. 소속/이름 상태
       if (orgVal.trim() === '') {
         if (orgErrorMsg) orgErrorMsg.classList.add('hidden');
         orgInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
@@ -806,6 +811,7 @@
         if (orgStatusIcon) orgStatusIcon.innerHTML = '<span class="text-emerald-600 font-bold">✓ 올바름</span>';
       }
 
+      // 2. 연락처/이메일 상태
       if (phoneVal.trim() === '') {
         if (phoneErrorMsg) phoneErrorMsg.classList.add('hidden');
         phoneInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
@@ -829,26 +835,50 @@
         }
       }
 
+      // 3. 단일 CTA 버튼 동적 텍스트 및 활성화 처리
       const btn = document.getElementById('cta-button');
       const btnText = document.getElementById('cta-btn-text');
       if (btn && btnText) {
-        if (hasInquiryContent && isOrgValid && phoneResult.isValid) {
-          btn.disabled = false;
-          btn.className = "w-full py-4 rounded-2xl bg-white hover:bg-slate-50 text-[#7A5734] font-black text-lg shadow-xl cursor-pointer flex items-center justify-center";
-          btnText.innerHTML = hasUploadedFile ? `첨부한 원고로 견적 요청하기` : `작성한 내용으로 견적 문의하기`;
+        if (isContactValid) {
+          if (hasUploadedFile) {
+            btn.disabled = false;
+            btn.className = "w-full py-4 rounded-2xl bg-white hover:bg-slate-50 text-[#7A5734] font-black text-lg shadow-xl cursor-pointer flex items-center justify-center transition-all active:scale-[0.98]";
+            btnText.innerHTML = "첨부 원고 사양으로 견적 요청하기 ➔";
+          } else if (hasInquiryText) {
+            btn.disabled = false;
+            btn.className = "w-full py-4 rounded-2xl bg-white hover:bg-slate-50 text-[#7A5734] font-black text-lg shadow-xl cursor-pointer flex items-center justify-center transition-all active:scale-[0.98]";
+            btnText.innerHTML = "작성하신 내용으로 빠른 견적 문의하기 ➔";
+          } else {
+            btn.disabled = true;
+            btn.className = "w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg cursor-not-allowed shadow-md transition-all";
+            btnText.innerText = "원고 첨부 또는 문의내용을 입력해 주세요 ➔";
+          }
         } else {
           btn.disabled = true;
-          btn.className = "w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg cursor-not-allowed shadow-md";
-          if (!hasInquiryContent) {
-            btnText.innerText = "원고 첨부 또는 문의내용을 입력해 주세요 ➔";
-          } else if (hasUploadedFile && !isOrgValid && !phoneResult.isValid) {
-            btnText.innerText = "원고 검수 완료! 소속 및 연락처를 입력해 주세요";
-          } else if (orgVal && !isOrgValid) {
-            btnText.innerText = "소속/이름을 정확히 입력해 주세요";
-          } else if (phoneVal && !phoneResult.isValid) {
-            btnText.innerText = "올바른 연락처 형식을 입력해 주세요";
+          btn.className = hasUploadedFile 
+            ? "w-full py-4 rounded-2xl bg-white/40 text-white font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md cta-highlight"
+            : "w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md";
+          
+          if (hasUploadedFile) {
+            if (!hasInquiryText && !orgVal && !phoneVal) {
+              btnText.innerText = "수량/문의내용과 연락처를 입력해 주세요";
+            } else if (!orgVal || !isOrgValid) {
+              btnText.innerText = "소속/이름을 정확히 입력해 주세요";
+            } else if (!phoneVal || !phoneResult.isValid) {
+              btnText.innerText = "올바른 연락처 형식을 입력해 주세요";
+            } else {
+              btnText.innerText = "수량/문의내용과 연락처를 입력해 주세요";
+            }
+          } else if (hasInquiryText) {
+            if (!orgVal || !isOrgValid) {
+              btnText.innerText = "소속/이름을 정확히 입력해 주세요";
+            } else if (!phoneVal || !phoneResult.isValid) {
+              btnText.innerText = "올바른 연락처 형식을 입력해 주세요";
+            } else {
+              btnText.innerText = "소속 및 연락처를 입력해 주세요";
+            }
           } else {
-            btnText.innerText = "원고/문의 및 연락처를 입력해 주세요";
+            btnText.innerText = "원고 첨부 또는 문의내용을 입력해 주세요 ➔";
           }
         }
       }
@@ -860,7 +890,6 @@
       if (files.length > 0) processFiles(files);
     }
 
-    // 🎯 [1. 드래그 오버 시 파란색 하이라이트 효과 복구]
     function handleDragOver(e) { 
       e.preventDefault(); 
       e.stopPropagation(); 
@@ -870,7 +899,6 @@
       }
     }
 
-    // 🎯 [드래그 벗어날 시 원래 스타일 복구]
     function handleDragLeave(e) { 
       e.preventDefault(); 
       e.stopPropagation(); 
@@ -886,7 +914,6 @@
       if (files.length > 0) processFiles(files);
     }
 
-    // 🎯 [첨부 완료 시 에메랄드 초록색 체크 상태 전환 복구]
     function processFiles(files) {
       if (!files || files.length === 0) return;
       hasUploadedFile = true;
@@ -928,20 +955,20 @@
       lucide.createIcons();
     }
 
-    // 🎯 [2. 분석 완료 후 연락처 섹션 자동 스크롤 & 펄스 포커스 복구]
-    function scrollToContactStep() {
-      const contactSection = document.getElementById('contact-step-section') || document.getElementById('client-org');
-      const orgInput = document.getElementById('client-org');
+    // 🎯 2. 파일 분석 완료 후 STEP 02(문의내용)로 부드럽게 이동 & 펄스 포커스
+    function scrollToInquiryStep() {
+      const inquirySection = document.getElementById('inquiry-step-section') || document.getElementById('text-inquiry');
+      const inquiryInput = document.getElementById('text-inquiry');
       
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (inquirySection) {
+        inquirySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
         setTimeout(() => {
-          if (orgInput) {
-            orgInput.classList.add('focus-pulse');
-            try { orgInput.focus({ preventScroll: true }); } catch(e) { orgInput.focus(); }
+          if (inquiryInput) {
+            inquiryInput.classList.add('focus-pulse');
+            try { inquiryInput.focus({ preventScroll: true }); } catch(e) { inquiryInput.focus(); }
             setTimeout(() => {
-              orgInput.classList.remove('focus-pulse');
+              inquiryInput.classList.remove('focus-pulse');
             }, 1500);
           }
         }, 500);
@@ -1269,19 +1296,18 @@
       if (stepBoxesWrapper) stepBoxesWrapper.classList.add('hidden');
       if (dualContainer) dualContainer.classList.remove('hidden');
 
+      // 🎯 2. STEP 02 플레이스홀더를 요청 문구로 교체
       const inquiryInput = document.getElementById('text-inquiry');
       if (inquiryInput) {
-        inquiryInput.placeholder = totalFileCount > 1 
-          ? `청년인쇄사 AI가 첨부된 [총 ${totalFileCount}개 원고]의 분석을 마쳤습니다.\n자세한 제작사양과 완료요청일을 남겨주세요` 
-          : `청년인쇄사 AI가 첨부된 [${filesArr[0].name}] 원고의 분석을 마쳤습니다.\n자세한 제작사양과 완료요청일을 남겨주세요`;
+        inquiryInput.placeholder = "AI 규격 검수 완료! 필요하신 수량(부수)과 희망 납기일을 남겨주세요.";
       }
 
       validateForm();
       isScanning = false;
 
-      // 🎯 분석 완료 후 연락처로 자동 이동 & 펄스 포커스 발동
+      // 🎯 2. 분석 완료 후 STEP 02로 부드럽게 스크롤 & 포커스
       setTimeout(() => {
-        scrollToContactStep();
+        scrollToInquiryStep();
       }, 500);
     }
 
