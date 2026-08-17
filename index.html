@@ -245,27 +245,12 @@
       0% { transform: translate3d(0, 0, 0); -webkit-transform: translate3d(0, 0, 0); }
       100% { transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0); }
     }
-    @-webkit-keyframes mellowMarquee {
-      0% { -webkit-transform: translate3d(0, 0, 0); }
-      100% { -webkit-transform: translate3d(-50%, 0, 0); }
-    }
 
     .mellow-marquee-track {
       display: flex;
       width: max-content;
       gap: 5px;
-      animation-name: mellowMarquee;
-      animation-duration: 70s;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      animation-play-state: running;
-
-      -webkit-animation-name: mellowMarquee;
-      -webkit-animation-duration: 70s;
-      -webkit-animation-timing-function: linear;
-      -webkit-animation-iteration-count: infinite;
-      -webkit-animation-play-state: running;
-
+      animation: mellowMarquee 70s linear infinite;
       will-change: transform;
     }
 
@@ -281,49 +266,27 @@
     }
 
     @media (min-width: 768px) {
-      .mellow-marquee-track {
-        gap: 6px;
-        animation-duration: 60s;
-        -webkit-animation-duration: 60s;
-      }
-      .mellow-card {
-        flex: 0 0 320px;
-        width: 320px;
-        height: 460px;
-      }
+      .mellow-marquee-track { gap: 6px; animation-duration: 60s; }
+      .mellow-card { flex: 0 0 320px; width: 320px; height: 460px; }
     }
 
     @media (hover: hover) and (pointer: fine) {
-      .mellow-gallery-section:hover .mellow-marquee-track {
-        animation-play-state: paused;
-        -webkit-animation-play-state: paused;
-      }
+      .mellow-gallery-section:hover .mellow-marquee-track { animation-play-state: paused; }
     }
 
     .mellow-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover;
       filter: grayscale(0.25) brightness(0.7) contrast(1.1);
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform, filter;
     }
 
-    .mellow-card:hover img {
-      filter: grayscale(0) brightness(1.02);
-      transform: scale(1.06);
-    }
+    .mellow-card:hover img { filter: grayscale(0) brightness(1.02); transform: scale(1.06); }
 
     .mellow-overlay {
-      position: absolute;
-      inset: 0;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+      position: absolute; inset: 0; padding: 16px;
+      display: flex; flex-direction: column; justify-content: flex-end;
       background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
-      opacity: 0.9;
-      transition: opacity 0.3s ease;
+      opacity: 0.9; transition: opacity 0.3s ease;
     }
 
     @keyframes subtlePulseBorder {
@@ -331,34 +294,23 @@
       70% { box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); }
       100% { box-shadow: 0 0 0 0px rgba(59, 130, 246, 0); }
     }
-    .focus-pulse {
-      animation: subtlePulseBorder 1.5s ease-out;
-      border-color: #3b82f6 !important;
-    }
+    .focus-pulse { animation: subtlePulseBorder 1.5s ease-out; border-color: #3b82f6 !important; }
 
     @keyframes highlightCta {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.02); background-color: rgba(255,255,255,0.6); }
     }
-    .cta-highlight {
-      animation: highlightCta 0.8s ease-in-out;
-    }
+    .cta-highlight { animation: highlightCta 0.8s ease-in-out; }
 
-    #drawer-panel.is-closed {
-      transform: translateX(100%);
-    }
-    #drawer-panel.is-open {
-      transform: translateX(0);
-    }
+    #drawer-panel.is-closed { transform: translateX(100%); }
+    #drawer-panel.is-open { transform: translateX(0); }
 
     @keyframes wholeDrawerWiggle {
       0%, 100% { transform: translateX(100%) translateY(0) rotate(0deg); }
       30% { transform: translateX(calc(100% - 20px)) translateY(-2px) rotate(-0.8deg); }
       60% { transform: translateX(calc(100% - 8px)) translateY(1px) rotate(0.4deg); }
     }
-    .animate-drawer-wiggle {
-      animation: wholeDrawerWiggle 1.1s cubic-bezier(0.25, 1, 0.5, 1) 1;
-    }
+    .animate-drawer-wiggle { animation: wholeDrawerWiggle 1.1s cubic-bezier(0.25, 1, 0.5, 1) 1; }
   </style>
 </head>
 <body>
@@ -415,11 +367,7 @@
         <span id="giant-percent-num" class="text-7xl sm:text-9xl font-black tracking-tighter leading-none text-[#09090b]">0</span>
         <span class="text-5xl sm:text-7xl font-bold text-[#09090b] ml-1 sm:ml-2">%</span>
       </div>
-      
-      <div class="towards-line-track">
-        <div id="towards-line-progress" class="towards-line-progress"></div>
-      </div>
-      
+      <div class="towards-line-track"><div id="towards-line-progress" class="towards-line-progress"></div></div>
       <div class="px-[5vw] flex justify-between items-center mt-6">
         <span id="towards-status-text" class="font-bold tracking-tight text-zinc-900 text-base sm:text-xl">원고 확인 중</span>
         <button onclick="restartTowardsLine()" class="text-xs font-mono text-zinc-400 hover:text-black underline cursor-pointer">RE-RUN DEMO ↺</button>
@@ -429,62 +377,14 @@
 
   <section id="services" class="mellow-gallery-section">
     <div class="mellow-marquee-track">
-      <div class="mellow-card group">
-        <img src="gallery02.jpg" alt="책자 | 카탈로그">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">01 / BOOKLET</span>
-          <h3 class="text-lg font-bold text-white">책자 | 카탈로그</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery01.jpg" alt="홍보 | 리플릿">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">02 / LEAFLET</span>
-          <h3 class="text-lg font-bold text-white">홍보 | 리플릿</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery03.jpg" alt="포스터 | 대형출력">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">03 / POSTER</span>
-          <h3 class="text-lg font-bold text-white">포스터 | 대형출력</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery04.jpg" alt="기업 서식 | CI">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">04 / BRANDING</span>
-          <h3 class="text-lg font-bold text-white">기업 서식 | CI</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery08.jpg" alt="입체 패키지">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">05 / PACKAGE</span>
-          <h3 class="text-lg font-bold text-white">입체 패키지</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery06.jpg" alt="VIP 행택">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">06 / TAG</span>
-          <h3 class="text-lg font-bold text-white">VIP 행택</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery05.jpg" alt="패키지 스티커">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">07 / STICKER</span>
-          <h3 class="text-lg font-bold text-white">패키지 스티커</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery07.jpg" alt="행사 서식">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">08 / FORM</span>
-          <h3 class="text-lg font-bold text-white">행사 서식</h3>
-        </div>
-      </div>
+      <div class="mellow-card group"><img src="gallery02.jpg" alt="책자 | 카탈로그"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">01 / BOOKLET</span><h3 class="text-lg font-bold text-white">책자 | 카탈로그</h3></div></div>
+      <div class="mellow-card group"><img src="gallery01.jpg" alt="홍보 | 리플릿"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">02 / LEAFLET</span><h3 class="text-lg font-bold text-white">홍보 | 리플릿</h3></div></div>
+      <div class="mellow-card group"><img src="gallery03.jpg" alt="포스터 | 대형출력"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">03 / POSTER</span><h3 class="text-lg font-bold text-white">포스터 | 대형출력</h3></div></div>
+      <div class="mellow-card group"><img src="gallery04.jpg" alt="기업 서식 | CI"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">04 / BRANDING</span><h3 class="text-lg font-bold text-white">기업 서식 | CI</h3></div></div>
+      <div class="mellow-card group"><img src="gallery08.jpg" alt="입체 패키지"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">05 / PACKAGE</span><h3 class="text-lg font-bold text-white">입체 패키지</h3></div></div>
+      <div class="mellow-card group"><img src="gallery06.jpg" alt="VIP 행택"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">06 / TAG</span><h3 class="text-lg font-bold text-white">VIP 행택</h3></div></div>
+      <div class="mellow-card group"><img src="gallery05.jpg" alt="패키지 스티커"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">07 / STICKER</span><h3 class="text-lg font-bold text-white">패키지 스티커</h3></div></div>
+      <div class="mellow-card group"><img src="gallery07.jpg" alt="행사 서식"><div class="mellow-overlay"><span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">08 / FORM</span><h3 class="text-lg font-bold text-white">행사 서식</h3></div></div>
     </div>
   </section>
 
@@ -506,11 +406,8 @@
             </div>
             <span class="faq-icon text-2xl text-neutral-500 group-hover:text-white font-mono shrink-0">&plus;</span>
           </div>
-          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">
-            오전 원고 확정 시 정부세종청사 및 국책연구원 단지 전역 당일 직배송이 가능합니다. 회의용 보고서, 세미나 책자, 급한 포스터 및 리플릿 등 현장 납기 일정에 맞춰 전담 배송팀이 직접 안전 전달해 드립니다.
-          </div>
+          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">오전 원고 확정 시 정부세종청사 및 국책연구원 단지 전역 당일 직배송이 가능합니다. 회의용 보고서, 세미나 책자, 급한 포스터 및 리플릿 등 현장 납기 일정에 맞춰 전담 배송팀이 직접 안전 전달해 드립니다.</div>
         </div>
-
         <div class="faq-item border-b border-neutral-900 cursor-pointer py-8 group" onclick="toggleFaq(this)">
           <div class="flex justify-between items-center gap-6">
             <div class="flex items-center gap-6 text-left">
@@ -519,11 +416,8 @@
             </div>
             <span class="faq-icon text-2xl text-neutral-500 group-hover:text-white font-mono shrink-0">&plus;</span>
           </div>
-          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">
-            청년인쇄사 GEMS AI가 원고를 스캔하여 <strong class="text-neutral-200 font-semibold">정부표준문서 규격(상하좌우 여백 1mm 오차 검수), 저해상도 이미지(300DPI 미달), 재단선 벗어남, 폰트 깨짐 유무</strong>를 실시간 분석합니다. 인쇄 사고를 100% 예방하는 최적화 보정 리포트를 즉시 생성합니다.
-          </div>
+          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">청년인쇄사 GEMS AI가 원고를 스캔하여 정부표준문서 규격, 저해상도 이미지(300DPI 미달), 재단선 벗어남, 폰트 깨짐 유무를 실시간 분석합니다.</div>
         </div>
-
         <div class="faq-item border-b border-neutral-900 cursor-pointer py-8 group" onclick="toggleFaq(this)">
           <div class="flex justify-between items-center gap-6">
             <div class="flex items-center gap-6 text-left">
@@ -532,22 +426,7 @@
             </div>
             <span class="faq-icon text-2xl text-neutral-500 group-hover:text-white font-mono shrink-0">&plus;</span>
           </div>
-          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">
-            네, 소량 무선제본/중고제본부터 대형 포스터, 고급 카탈로그, 특수 후제작 행택까지 공공기관에서 필요한 모든 규격을 맞춤 대량/소량 제작해 드립니다.
-          </div>
-        </div>
-
-        <div class="faq-item border-b border-neutral-900 cursor-pointer py-8 group" onclick="toggleFaq(this)">
-          <div class="flex justify-between items-center gap-6">
-            <div class="flex items-center gap-6 text-left">
-              <span class="text-sm font-mono text-blue-500 font-bold tracking-widest">04</span>
-              <h3 class="text-lg sm:text-xl font-bold text-neutral-100 group-hover:text-white leading-snug">공공기관 법인카드 결제 및 나라장터·행정 후불 정산 절차는 어떻게 되나요?</h3>
-            </div>
-            <span class="faq-icon text-2xl text-neutral-500 group-hover:text-white font-mono shrink-0">&plus;</span>
-          </div>
-          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">
-            납품 및 현장 검수 완료 후, 기관 내부 회계 일정에 맞추어 <strong class="text-neutral-200 font-semibold">법인카드 현장/온라인 결제</strong> 또는 <strong class="text-neutral-200 font-semibold">후불 계좌 정산</strong>이 100% 보장됩니다. (비교견적서, 사업자등록증, 통장사본, 승낙서 등 필수 4종 서류 일체 기본 동봉)
-          </div>
+          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">네, 소량 무선제본/중고제본부터 대형 포스터, 고급 카탈로그, 특수 후제작 행택까지 모든 규격을 맞춤 제작해 드립니다.</div>
         </div>
       </div>
     </div>
@@ -557,9 +436,7 @@
     <div class="cta-parallax-overlay"></div>
     <div class="cta-content-wrap max-w-4xl mx-auto flex flex-col items-center">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mb-8">청년인쇄사에 문의하세요</h2>
-      <button type="button" class="btn btn-primary" onclick="toggleDrawer(true)">
-        빠른 견적 요청하기
-      </button>
+      <button type="button" class="btn btn-primary" onclick="toggleDrawer(true)">빠른 견적 요청하기</button>
     </div>
   </section>
 
@@ -571,26 +448,11 @@
         </a>
       </div>
       <div class="flex flex-col sm:flex-row items-start gap-8 sm:gap-16 text-sm">
-        <div class="font-urbanist font-black text-base tracking-widest text-white uppercase leading-none mt-1">
-          CONTACT
-        </div>
+        <div class="font-urbanist font-black text-base tracking-widest text-white uppercase leading-none mt-1">CONTACT</div>
         <div class="space-y-3.5 text-xs sm:text-sm">
-          <div class="flex items-center">
-            <span class="info-label font-urbanist">Address</span>
-            <span class="info-value">세종특별자치시 갈매로 364, 푸르지오시티 118호</span>
-          </div>
-          <div class="flex items-center">
-            <span class="info-label font-urbanist">Tel</span>
-            <span class="info-value font-urbanist">044.862.4803</span>
-          </div>
-          <div class="flex items-center">
-            <span class="info-label font-urbanist">E-mail</span>
-            <span class="info-value font-urbanist">admin@ybprint.co.kr</span>
-          </div>
-          <div class="flex items-center pt-2 text-neutral-400">
-            <span class="info-label font-urbanist">Copyright</span>
-            <span id="copyright-admin-trigger" class="font-urbanist text-neutral-300 cursor-pointer select-none">2026 청년인쇄사. All Rights Reserved.</span>
-          </div>
+          <div class="flex items-center"><span class="info-label font-urbanist">Address</span><span class="info-value">세종특별자치시 갈매로 364, 푸르지오시티 118호</span></div>
+          <div class="flex items-center"><span class="info-label font-urbanist">Tel</span><span class="info-value font-urbanist">044.862.4803</span></div>
+          <div class="flex items-center"><span class="info-label font-urbanist">E-mail</span><span class="info-value font-urbanist">admin@ybprint.co.kr</span></div>
         </div>
       </div>
     </div>
@@ -599,31 +461,22 @@
   <div id="drawer-backdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9990] hidden transition-opacity duration-300"></div>
 
   <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-500 ease-out">
-    
-    <button id="drawer-index-tab" 
-            title="AI 원고 검수 및 빠른 견적 서랍장 열기"
-            class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
+    <button id="drawer-index-tab" title="AI 원고 검수 및 빠른 견적 서랍장 열기" class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
       <span class="text-xs font-black [writing-mode:vertical-rl] tracking-widest text-slate-100 group-hover:text-white py-2 pointer-events-none">끌어당겨보세요</span>
     </button>
-    
     <div class="px-8 py-5 flex justify-between items-center shrink-0 top-header-bg text-white z-20 shadow-md">
       <div class="flex items-center gap-3">
-        <h2 class="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight text-left">
-          작성 중인 원고를 첨부하거나 문의사항을 남겨주세요
-        </h2>
+        <h2 class="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight text-left">작성 중인 원고를 첨부하거나 문의사항을 남겨주세요</h2>
       </div>
       <button type="button" onclick="toggleDrawer(false)" class="px-3 py-1.5 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors cursor-pointer shrink-0 ml-4 text-xs font-semibold flex items-center gap-1.5 border border-white/20">
-        <span>닫기</span>
-        <i data-lucide="x" class="w-4 h-4"></i>
+        <span>닫기</span><i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
 
     <div id="drawer-scroll-area" class="flex-1 overflow-y-auto px-8 py-6 space-y-8 pb-[200px] text-left scroll-smooth">
-      
       <div class="flex items-center justify-between bg-slate-50 border border-slate-200/80 px-5 py-3 rounded-2xl text-left">
         <p class="text-sm text-slate-600 font-medium flex items-center gap-2 text-left">
-          <i data-lucide="shield-check" class="w-4 h-4 text-slate-500 shrink-0"></i>
-          <span>첨부된 원고는 견적 안내 후 안전하게 파기됩니다</span>
+          <i data-lucide="shield-check" class="w-4 h-4 text-slate-500 shrink-0"></i><span>첨부된 원고는 견적 안내 후 안전하게 파기됩니다</span>
         </p>
         <span class="text-xs font-mono font-semibold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200 shrink-0">100% 파기 보장</span>
       </div>
@@ -631,108 +484,64 @@
       <div class="space-y-3 text-left">
         <div class="flex justify-between items-baseline">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md font-mono text-[11px]">STEP 01</span>
+            <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md text-[11px]">STEP 01</span>
             <label class="text-lg font-black text-title tracking-tight">원고 파일 첨부 <span class="text-muted font-normal text-base">(선택)</span></label>
           </div>
-          <span class="text-xs sm:text-sm text-slate-400 font-normal text-xs">※ 01 또는 02 중 하나만 작성하셔도 됩니다</span>
         </div>
-        
-        <div id="file-dropzone" onmouseenter="wakeUpBackend()" 
-             onclick="document.getElementById('file-input').click()"
-             ondragover="handleDragOver(event)"
-             ondragleave="handleDragLeave(event)"
-             ondrop="handleFileDrop(event)"
-             class="w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs hover:shadow-md group">
-          
+        <div id="file-dropzone" onmouseenter="wakeUpBackend()" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" class="w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs hover:shadow-md group">
           <input type="file" id="file-input" class="hidden" accept=".hwp,.hwpx,.pdf,.doc,.docx,.ppt,.pptx,.ai,.psd,.zip,.rar" multiple onchange="handleFileSelect(event)" />
-          
-          <div id="drop-icon-container" class="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-2.5 transition-colors">
-            <i data-lucide="upload-cloud" id="drop-icon" class="w-6 h-6 text-slate-500 group-hover:brand-key-text transition-colors"></i>
-          </div>
-          
-          <div id="drop-title" class="text-base sm:text-lg font-semibold text-slate-800 block mb-1">
-            여기에 원고 파일을 놓으세요
-          </div>
-          <span id="drop-sub" class="text-xs sm:text-sm text-slate-400 font-normal block">
-            PDF(1초 정밀실측), HWP, PPT, Word, AI 등 모든 포맷 지원 (복수 선택 가능)
-          </span>
+          <div id="drop-icon-container" class="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-2.5 transition-colors"><i data-lucide="upload-cloud" id="drop-icon" class="w-6 h-6 text-slate-500 group-hover:brand-key-text transition-colors"></i></div>
+          <div id="drop-title" class="text-base sm:text-lg font-semibold text-slate-800 block mb-1">여기에 원고 파일을 놓으세요</div>
+          <span id="drop-sub" class="text-xs sm:text-sm text-slate-400 font-normal block">PDF(1초 정밀실측), HWP, PPT, Word, AI 등 모든 포맷 지원</span>
         </div>
       </div>
 
       <div id="ai-response-module" class="py-2 space-y-4 transition-all text-left">
         <div class="flex items-center justify-between text-left">
           <div class="flex items-center gap-3 text-left">
-            <div class="relative w-16 h-16 shrink-0 flex items-center justify-center jarvis-mystic-glow">
-              <canvas id="mysticJarvisCanvas" class="w-16 h-16 aspect-square object-contain"></canvas>
-            </div>
-            
+            <div class="relative w-16 h-16 shrink-0 flex items-center justify-center jarvis-mystic-glow"><canvas id="mysticJarvisCanvas" class="w-16 h-16 aspect-square object-contain"></canvas></div>
             <div class="text-left flex-1 min-w-0">
               <span id="ai-status-text" class="text-lg sm:text-xl font-black text-slate-900 tracking-tight block truncate text-left">청년인쇄사 AI 실시간 원고 분석</span>
-              <div id="ai-diagnostic-signal" class="mt-1 text-left hidden">
-                <span class="inline-block whitespace-nowrap px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 badge-blink">진단완료</span>
-              </div>
+              <div id="ai-diagnostic-signal" class="mt-1 text-left hidden"><span class="inline-block whitespace-nowrap px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 badge-blink">진단완료</span></div>
               <p id="ai-sub-text" class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5 text-left">원고를 남겨주시면 정밀 서식 분석을 시작합니다</p>
             </div>
           </div>
           <span id="ai-percent-badge" class="text-base sm:text-lg font-mono font-black text-slate-400 px-3 py-1 rounded-xl bg-slate-50 border border-slate-200 shrink-0">0%</span>
         </div>
-
         <div class="space-y-3 pt-1 pl-1 text-left">
-          <div class="w-full bg-slate-200 h-[2px] relative overflow-hidden">
-            <div id="ai-progress-fill" class="bg-slate-900 h-full w-0 transition-all duration-500 ease-out"></div>
-          </div>
-          
+          <div class="w-full bg-slate-200 h-[2px] relative overflow-hidden"><div id="ai-progress-fill" class="bg-slate-900 h-full w-0 transition-all duration-500 ease-out"></div></div>
           <div id="ai-step-boxes-wrapper" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm font-semibold pt-1">
-            <div id="ai-step-box-1" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all">
-              <i data-lucide="circle-dashed" id="step-icon-1" class="w-4 h-4 text-slate-400 shrink-0"></i>
-              <span id="step-text-1">01. 문서 크기/여백 측정</span>
-            </div>
-            <div id="ai-step-box-2" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all">
-              <i data-lucide="circle-dashed" id="step-icon-2" class="w-4 h-4 text-slate-400 shrink-0"></i>
-              <span id="step-text-2">02. 이미지 선명도 검수</span>
-            </div>
-            <div id="ai-step-box-3" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all">
-              <i data-lucide="circle-dashed" id="step-icon-3" class="w-4 h-4 text-slate-400 shrink-0"></i>
-              <span id="step-text-3">03. 맞춤 제작 가이드 생성</span>
-            </div>
+            <div id="ai-step-box-1" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-1" class="w-4 h-4 shrink-0"></i><span id="step-text-1">01. 문서 크기/여백 측정</span></div>
+            <div id="ai-step-box-2" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-2" class="w-4 h-4 shrink-0"></i><span id="step-text-2">02. 이미지 선명도 검수</span></div>
+            <div id="ai-step-box-3" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-3" class="w-4 h-4 shrink-0"></i><span id="step-text-3">03. 맞춤 제작 가이드 생성</span></div>
           </div>
         </div>
 
         <div id="ai-report-dual-container" class="hidden space-y-4 pt-2 text-left">
           <div class="p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3 text-left">
             <div class="flex items-center justify-between border-b border-slate-300 pb-2 text-left">
-              <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">
-                [청년인쇄사 AI 원고 확인 및 요약]
-              </span>
-              <span class="text-xs font-mono text-slate-500">청년인쇄사 맞춤 제안</span>
+              <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">[청년인쇄사 AI 원고 확인 및 요약]</span>
             </div>
             <div class="report-summary-box text-slate-800 space-y-2.5 text-left">
-              <p id="rpt-summary-title" class="font-bold text-lg text-slate-900 leading-snug text-left">
-                [청년인쇄사 AI 원고 확인 완료]
-              </p>
+              <p id="rpt-summary-title" class="font-bold text-lg text-slate-900 leading-snug text-left">[청년인쇄사 AI 원고 확인 완료]</p>
               <div id="rpt-summary-body" class="text-slate-700 leading-relaxed font-normal pt-1 space-y-1.5 text-left"></div>
             </div>
           </div>
-
           <div class="terminal-box rounded-2xl overflow-hidden text-left">
             <div class="terminal-header px-4 py-2.5 flex items-center justify-between text-slate-300">
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
-                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
-                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                 <span class="text-xs font-mono font-bold text-slate-400 ml-2">YBPRINT_AI_ENGINE_TERMINAL_v3.7</span>
               </div>
-              <span class="text-xs font-mono text-slate-300 font-semibold">[ REAL-TIME PARSING REPORT ]</span>
             </div>
             <div id="terminal-console-body" class="p-4 overflow-x-auto whitespace-pre-wrap font-mono text-white leading-relaxed text-left"></div>
           </div>
         </div>
-
       </div>
 
       <div class="space-y-3 text-left scroll-mt-6" id="inquiry-step-section">
         <div class="flex items-center gap-2">
-          <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md font-mono text-[11px]">STEP 02</span>
+          <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md text-[11px]">STEP 02</span>
           <label class="text-lg font-black text-title tracking-tight">문의내용</label>
         </div>
         <textarea id="text-inquiry" oninput="handleTextInput(this)" rows="3" placeholder="예) 국책연구원 회의용 보고서 무선제본 50부 당일 직배송 가능한가요?" class="w-full bg-white border border-slate-300 rounded-2xl p-4 text-base text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:border-blue-500 transition-all leading-relaxed shadow-xs text-left"></textarea>
@@ -740,40 +549,27 @@
       </div>
 
       <div id="contact-step-section" class="space-y-4 pt-2 text-left scroll-mt-6">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md font-mono text-[11px]">STEP 03</span>
-            <label class="text-lg font-black text-title tracking-tight">연락처 <span class="text-red-500">*</span></label>
-          </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md text-[11px]">STEP 03</span>
+          <label class="text-lg font-black text-title tracking-tight">연락처 <span class="text-red-500">*</span></label>
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
           <div class="space-y-1.5 relative text-left">
             <label class="text-sm font-bold text-slate-700 flex justify-between items-center">
-              <span>소속 / 이름 <span class="text-red-500">*</span></span>
-              <span id="org-status-icon" class="text-xs font-bold text-slate-400"></span>
+              <span>소속 / 이름 <span class="text-red-500">*</span></span><span id="org-status-icon" class="text-xs font-bold text-slate-400"></span>
             </label>
-            <input type="text" id="client-org" name="inquiry_org_contact" autocomplete="off" oninput="validateForm()" onblur="validateForm(true)" placeholder="예: 기획홍보팀 홍길동" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs text-left" />
-            <p id="org-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1 text-left">
-              <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
-              <span id="org-error-text">소속 및 이름을 최소 2자 이상 정확히 입력해 주세요.</span>
-            </p>
+            <input type="text" id="client-org" name="inquiry_org_contact" autocomplete="off" oninput="validateForm()" onblur="validateForm(true)" placeholder="예: 기획홍보팀 홍길동" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs" />
+            <p id="org-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="org-error-text">소속/이름을 2자 이상 입력해 주세요.</span></p>
           </div>
-
           <div class="space-y-1.5 relative text-left">
             <label class="text-sm font-bold text-slate-700 flex justify-between items-center">
-              <span>직통 연락처 또는 이메일 <span class="text-red-500">*</span></span>
-              <span id="phone-status-icon" class="text-xs font-bold text-slate-400"></span>
+              <span>직통 연락처 또는 이메일 <span class="text-red-500">*</span></span><span id="phone-status-icon" class="text-xs font-bold text-slate-400"></span>
             </label>
-            <input type="text" id="client-phone" name="inquiry_phone_contact" autocomplete="off" oninput="handlePhoneOrEmailInput(this)" onblur="validateForm(true)" placeholder="예: 01012345678 또는 inquiry@domain.com" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs text-left" />
-            <p id="phone-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1 text-left">
-              <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
-              <span id="phone-error-text">이메일 형식이 올바르지 않습니다.</span>
-            </p>
+            <input type="text" id="client-phone" name="inquiry_phone_contact" autocomplete="off" oninput="handlePhoneOrEmailInput(this)" onblur="validateForm(true)" placeholder="예: 01012345678 또는 inquiry@domain.com" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs" />
+            <p id="phone-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="phone-error-text">이메일 형식이 올바르지 않습니다.</span></p>
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="px-6 py-5 border-t border-[#5E3F21] brand-key-bg shrink-0 absolute bottom-0 left-0 right-0 z-30 shadow-[0_-12px_35px_rgba(37,99,235,0.35)] flex items-center justify-center text-center h-[90px]">
@@ -781,7 +577,6 @@
         <span id="cta-btn-text">원고/문의 및 연락처를 입력해 주세요</span>
       </button>
     </div>
-
   </aside>
 
   <script>
@@ -801,40 +596,13 @@
       isWarmingUp = true;
       fetch(`${RENDER_BACKEND_URL}/`, { method: 'GET', mode: 'cors' }).catch(() => {}).finally(() => { isWarmingUp = false; });
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      wakeUpBackend();
-    });
-
-    const mainHeader = document.getElementById('mainHeader');
-    const sec2 = document.getElementById('ai-check');
-    const sec3 = document.getElementById('services');
-    const sec4 = document.getElementById('faq');
-    const sec5 = document.getElementById('contact');
+    window.addEventListener('DOMContentLoaded', wakeUpBackend);
 
     function updateHeaderOnScroll() {
-      if (!mainHeader || !sec2 || !sec3 || !sec4 || !sec5) return;
-      const hH = mainHeader.offsetHeight || 88;
-      const checkY = hH + 8;
-      const s2R = sec2.getBoundingClientRect();
-      const s3R = sec3.getBoundingClientRect();
-      const s4R = sec4.getBoundingClientRect();
-      const s5R = sec5.getBoundingClientRect();
-      const scrollY = window.scrollY || document.documentElement.scrollTop;
-
-      mainHeader.classList.remove('is-over-white', 'is-scrolled', 'is-over-faq', 'is-over-cta', 'is-transparent');
-
-      if (s2R.top <= checkY && s2R.bottom > checkY) {
-        mainHeader.classList.add('is-over-white');
-      } else if (s3R.top <= checkY && s3R.bottom > checkY) {
-        mainHeader.classList.add('is-scrolled');
-      } else if (s4R.top <= checkY && s4R.bottom > checkY) {
-        mainHeader.classList.add('is-over-faq');
-      } else if (s5R.top <= checkY && s5R.bottom > checkY) {
-        mainHeader.classList.add('is-over-cta');
-      } else if (scrollY > 30) {
-        mainHeader.classList.add('is-scrolled');
-      }
+      const mainHeader = document.getElementById('mainHeader');
+      if (!mainHeader) return;
+      if (window.scrollY > 30) mainHeader.classList.add('is-scrolled');
+      else mainHeader.classList.remove('is-scrolled');
     }
     window.addEventListener('scroll', updateHeaderOnScroll);
 
@@ -855,44 +623,6 @@
         slides[curIdx].classList.add('active');
       }
     }, 5000);
-
-    (function() {
-      const towardsLineProgress = document.getElementById('towards-line-progress');
-      const giantPercentNum = document.getElementById('giant-percent-num');
-      const towardsStatusText = document.getElementById('towards-status-text');
-      const steps = [
-        { threshold: 15, text: '원고 확인 중' },
-        { threshold: 45, text: '1mm 여백 오차 보정 중' },
-        { threshold: 80, text: '정부표준문서규격 확인 중' },
-        { threshold: 100, text: '정부표준문서규격 최적화 완료' }
-      ];
-      let progress = 0, timer = null;
-      window.runTowardsLine = function() {
-        if (!towardsLineProgress || !giantPercentNum) return;
-        if (progress < 100) {
-          let pauseChance = Math.random(), delay = 40;
-          if (pauseChance > 0.15) progress += Math.random() * 2.2;
-          else delay = Math.floor(Math.random() * 200) + 100;
-          progress = Math.min(progress, 100);
-          giantPercentNum.innerText = Math.floor(progress);
-          towardsLineProgress.style.width = progress + '%';
-          let curStep = steps.find(s => progress <= s.threshold);
-          if (curStep && towardsStatusText) towardsStatusText.innerText = curStep.text;
-          timer = setTimeout(runTowardsLine, delay);
-        } else {
-          giantPercentNum.innerText = '100';
-          towardsLineProgress.style.width = '100%';
-          if (towardsStatusText) towardsStatusText.innerText = steps[steps.length - 1].text;
-          timer = setTimeout(() => {
-            progress = 0; towardsLineProgress.style.width = '0%'; giantPercentNum.innerText = '0';
-            if (towardsStatusText) towardsStatusText.innerText = steps[0].text;
-            setTimeout(runTowardsLine, 600);
-          }, 2500);
-        }
-      };
-      window.restartTowardsLine = function() { clearTimeout(timer); progress = 0; runTowardsLine(); };
-      setTimeout(runTowardsLine, 400);
-    })();
 
     let hasUploadedFile = false;
     let uploadedFilesList = [];
@@ -949,9 +679,7 @@
 
     function checkOrgValid(val) {
       const trimmed = (val || '').trim();
-      if (trimmed.length < 2) return false;
-      if (/^([ㄱ-ㅎ가-힣a-zA-Z0-9]) {2,}$/.test(trimmed)) return false;
-      return true;
+      return trimmed.length >= 2;
     }
 
     function checkPhoneOrEmailValid(val) {
@@ -965,40 +693,27 @@
       } else {
         const digits = trimmed.replace(/\D/g, '');
         const phoneRegex = /^(01[016789]|02|0[3-6][1-5])-?\d{3,4}-?\d{4}$/;
-        const isValid = phoneRegex.test(trimmed) || (digits.length >= 9 && digits.length <= 11 && (digits.startsWith('02') || digits.startsWith('01') || digits.startsWith('0')));
+        const isValid = phoneRegex.test(trimmed) || (digits.length >= 9 && digits.length <= 11);
         return { isValid, mode: 'phone', msg: isValid ? '' : '전화번호 형식이 올바르지 않습니다.' };
       }
     }
 
     let inquiryDebounceTimer = null;
-
     function handleTextInput(el) {
       validateForm();
-      
       const cardContainer = document.getElementById('ai-inquiry-live-card-container');
       if (!cardContainer) return;
-
       const text = el.value.trim();
       if (!text || text.length < 2) {
-        if (inquiryDebounceTimer) clearTimeout(inquiryDebounceTimer);
         cardContainer.innerHTML = '';
         return;
       }
-
-      cardContainer.innerHTML = `
-        <div class="mt-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-600 text-xs flex items-center gap-2.5 text-left transition-all">
-          <i data-lucide="loader-2" class="w-4 h-4 text-blue-600 animate-spin shrink-0"></i>
-          <span class="font-semibold text-slate-700">AI가 작성하신 문의 내용을 정밀 분석 중입니다...</span>
-        </div>
-      `;
+      cardContainer.innerHTML = `<div class="mt-3 p-4 rounded-2xl bg-slate-50 text-slate-600 text-xs flex items-center gap-2.5"><i data-lucide="loader-2" class="w-4 h-4 text-blue-600 animate-spin"></i><span class="font-semibold text-slate-700">AI가 문의 내용을 분석 중입니다...</span></div>`;
       lucide.createIcons();
-
       if (inquiryDebounceTimer) clearTimeout(inquiryDebounceTimer);
-
       inquiryDebounceTimer = setTimeout(() => {
-        parseInquiryTextAndRenderCard(el.value);
-        const isSentenceEnded = /[?\.!\n]$/.test(text);
-        if (isSentenceEnded) {
+        parseInquiryTextAndRenderCard(text);
+        if (/[?\.!\n]$/.test(text)) {
           setTimeout(() => {
             const orgInput = document.getElementById('client-org');
             if (orgInput && document.activeElement === el) {
@@ -1010,112 +725,20 @@
       }, 1200);
     }
 
-    function parseInquiryTextAndRenderCard(val) {
-      const text = val.trim();
+    function parseInquiryTextAndRenderCard(text) {
       const cardContainer = document.getElementById('ai-inquiry-live-card-container');
-      if (!cardContainer) return;
-
-      if (!text || text.length < 2) {
-        cardContainer.innerHTML = '';
-        return;
-      }
-
-      let detectedTime = text.match(/(\d{1,2}시|오늘|당일|오전|오후|내일|금일)/);
-      let detectedQty = text.match(/(\d+\s*부|\d+\s*장|\d+\s*개|\d+\s*권|\d+\s*세트)/);
-      let detectedType = text.match(/(스프링제본|스프링|링제본|와이어제본|트윈링|돼지꼬리|크리스탈링|무선제본|무선|떡제본|풀제본|평제본|중철제본|중철|중철책자|스테플제본|하드커버|양장제본|양장|싸바리|책제본|바인딩|리플릿|포스터|카탈로그|보고서|제본)/);
-
-      let hasSpec = detectedTime || detectedQty || detectedType;
-      let itemText = detectedType ? detectedType[0] : '미지정';
-      let qtyText = detectedQty ? detectedQty[0] : '미지정';
-
-      let rawQtyNum = 0;
-      if (detectedQty) {
-        let digits = detectedQty[0].replace(/\D/g, '');
-        if (digits) rawQtyNum = parseInt(digits, 10);
-      }
-
-      let rawType = detectedType ? detectedType[0] : '';
-      let isSpring = /(스프링|링제본|와이어제본|트윈링|돼지꼬리|크리스탈링)/.test(rawType);
-      let isPerfectBinding = /(무선제본|무선|떡제본|풀제본|평제본)/.test(rawType);
-      let isSaddleStitch = /(중철제본|중철|중철책자|스테플제본)/.test(rawType);
-      let isHardcover = /(하드커버|양장제본|양장|싸바리)/.test(rawType);
-
-      let isRequireConsult = isPerfectBinding || isSaddleStitch || isHardcover;
-
-      if (isPerfectBinding) {
-        itemText = (rawType === '무선제본' || rawType === '무선') ? '무선제본' : `무선제본(${rawType})`;
-      } else if (isSpring) {
-        itemText = (rawType === '스프링제본' || rawType === '스프링') ? '스프링제본' : `스프링제본(${rawType})`;
-      } else if (isSaddleStitch) {
-        itemText = (rawType === '중철제본' || rawType === '중철') ? '중철제본' : `중철제본(${rawType})`;
-      } else if (isHardcover) {
-        itemText = (rawType === '하드커버') ? '하드커버' : `하드커버(${rawType})`;
-      }
-
-      let currentHour = new Date().getHours();
-      let isBeforeNoon = currentHour < 12;
-      let timeText = '';
-
-      if (isSpring) {
-        if (isBeforeNoon && (rawQtyNum === 0 || rawQtyNum <= 100)) {
-          timeText = '당일 제작 가능 (오전 접수건)';
-        } else if (!isBeforeNoon) {
-          timeText = '제작 일정 협의 필요 (오후 접수건)';
-        } else {
-          timeText = '제작 일정 협의 필요 (100부 초과 수량)';
-        }
-      } else if (isRequireConsult) {
-        timeText = '제작 일정 협의 필요 (공정 확인 후 안내)';
-      } else {
-        timeText = isBeforeNoon ? '당일 제작 가능' : '제작 일정 협의 필요 (오후 접수건)';
-      }
-
-      if (hasSpec) {
-        cardContainer.innerHTML = `
-          <div class="mt-3 p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3 text-left transition-all">
-            <div class="flex items-center justify-between border-b border-slate-300 pb-2 text-left">
-              <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">
-                [청년인쇄사 AI 문의 분석 요약]
-              </span>
-              <span class="text-xs font-mono text-slate-500">청년인쇄사 맞춤 제안</span>
-            </div>
-            <div class="report-summary-box text-slate-800 space-y-2.5 text-left">
-              <p class="font-bold text-lg text-slate-900 leading-snug text-left">
-                요청하신 제작사양이 확인되었습니다.
-              </p>
-              <div class="text-slate-700 leading-relaxed font-normal pt-1 space-y-1.5 text-left">
-                <div class="space-y-1 text-[#666666] font-normal text-left leading-tight text-[13px]">
-                  <div><strong>제본 / 수량</strong> : ${itemText} / ${qtyText}</div>
-                  <div><strong>제작 / 배송</strong> : ${timeText}</div>
-                  <div><strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자 확인 후 제작 일정 및 견적을 안내해 드립니다.</div>
-                </div>
-              </div>
+      cardContainer.innerHTML = `
+        <div class="mt-3 p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-300 pb-2">
+            <span class="text-xs font-mono font-bold text-slate-700">[청년인쇄사 AI 분석 요약]</span>
+          </div>
+          <div class="text-slate-800 space-y-2.5">
+            <p class="font-bold text-lg text-slate-900">문의 사항이 확인되었습니다.</p>
+            <div class="text-[#666666] text-[13px]">
+              <div><strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자가 즉시 확인 후 안내해 드립니다.</div>
             </div>
           </div>
-        `;
-      } else {
-        cardContainer.innerHTML = `
-          <div class="mt-3 p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3 text-left transition-all">
-            <div class="flex items-center justify-between border-b border-slate-300 pb-2 text-left">
-              <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">
-                [청년인쇄사 AI 문의 분석 요약]
-              </span>
-              <span class="text-xs font-mono text-slate-500">청년인쇄사 맞춤 제안</span>
-            </div>
-            <div class="report-summary-box text-slate-800 space-y-2.5 text-left">
-              <p class="font-bold text-lg text-slate-900 leading-snug text-left">
-                문의 사항이 확인되었습니다.
-              </p>
-              <div class="text-slate-700 leading-relaxed font-normal pt-1 space-y-1.5 text-left">
-                <div class="space-y-1 text-[#666666] font-normal text-left leading-tight text-[13px]">
-                  <div><strong>문의 분류</strong> : 기타 요청 및 서비스 문의</div>
-                  <div><strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자 확인 후 제작 일정 및 견적을 안내해 드립니다.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
+        </div>`;
     }
 
     function validateForm(isBlur = false) {
@@ -1127,183 +750,34 @@
       const orgVal = orgInput.value;
       const phoneVal = phoneInput.value;
       const inquiryVal = inquiryInput.value.trim();
-      
-      const orgErrorMsg = document.getElementById('org-error-msg');
-      const phoneErrorMsg = document.getElementById('phone-error-msg');
-      const phoneErrorText = document.getElementById('phone-error-text');
-      const orgStatusIcon = document.getElementById('org-status-icon');
-      const phoneStatusIcon = document.getElementById('phone-status-icon');
-
       const isOrgValid = checkOrgValid(orgVal);
       const phoneResult = checkPhoneOrEmailValid(phoneVal);
       const hasInquiryContent = inquiryVal.length >= 2 || hasUploadedFile;
 
-      if (orgVal.trim() === '') {
-        if (orgErrorMsg) orgErrorMsg.classList.add('hidden');
-        orgInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
-        if (orgStatusIcon) orgStatusIcon.innerHTML = '';
-      } else if (!isOrgValid) {
-        if (isBlur || orgVal.trim().length >= 1) {
-          if (orgErrorMsg) orgErrorMsg.classList.remove('hidden');
-          orgInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
-          orgInput.classList.remove('border-emerald-500');
-          if (orgStatusIcon) orgStatusIcon.innerHTML = '<span class="text-rose-500 font-bold">✕ 형식 안맞음</span>';
-        }
+      if (orgVal.trim() !== '' && !isOrgValid) {
+        orgInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
       } else {
-        if (orgErrorMsg) orgErrorMsg.classList.add('hidden');
         orgInput.classList.remove('border-rose-500', 'ring-1', 'ring-rose-500');
-        orgInput.classList.add('border-emerald-500');
-        if (orgStatusIcon) orgStatusIcon.innerHTML = '<span class="text-emerald-600 font-bold">✓ 올바름</span>';
       }
 
-      if (phoneVal.trim() === '') {
-        if (phoneErrorMsg) phoneErrorMsg.classList.add('hidden');
-        phoneInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
-        if (phoneStatusIcon) phoneStatusIcon.innerHTML = '';
-      } else if (!phoneResult.isValid) {
-        if (isBlur || phoneVal.trim().length >= 2) {
-          if (phoneErrorMsg) phoneErrorMsg.classList.remove('hidden');
-          if (phoneErrorText) phoneErrorText.innerText = phoneResult.msg;
-          phoneInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
-          phoneInput.classList.remove('border-emerald-500');
-          if (phoneStatusIcon) phoneStatusIcon.innerHTML = '<span class="text-rose-500 font-bold">✕ 형식 안맞음</span>';
-        }
+      if (phoneVal.trim() !== '' && !phoneResult.isValid) {
+        phoneInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
       } else {
-        if (phoneErrorMsg) phoneErrorMsg.classList.add('hidden');
         phoneInput.classList.remove('border-rose-500', 'ring-1', 'ring-rose-500');
-        phoneInput.classList.add('border-emerald-500');
-        if (phoneStatusIcon) phoneStatusIcon.innerHTML = phoneResult.mode === 'email' ? '<span class="text-emerald-600 font-bold">✓ 올바른 이메일</span>' : '<span class="text-emerald-600 font-bold">✓ 올바른 전화번호</span>';
       }
 
       const btn = document.getElementById('cta-button');
       const btnText = document.getElementById('cta-btn-text');
-
       if (btn && btnText) {
         if (hasInquiryContent && isOrgValid && phoneResult.isValid) {
           btn.disabled = false;
-          btn.className = "w-full py-4 rounded-2xl bg-white hover:bg-slate-50 text-[#7A5734] font-black text-lg shadow-xl shadow-black/20 transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2";
-          if (hasUploadedFile) {
-            btnText.innerHTML = `첨부한 원고로 견적 요청하기`;
-          } else {
-            btnText.innerHTML = `작성한 내용으로 견적 문의하기`;
-          }
+          btn.className = "w-full py-4 rounded-2xl bg-white hover:bg-slate-50 text-[#7A5734] font-black text-lg shadow-xl cursor-pointer flex items-center justify-center";
+          btnText.innerHTML = hasUploadedFile ? `첨부한 원고로 견적 요청하기` : `작성한 내용으로 견적 문의하기`;
         } else {
           btn.disabled = true;
-          btn.className = hasUploadedFile 
-            ? "w-full py-4 rounded-2xl bg-white/40 text-white font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md cta-highlight"
-            : "w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed shadow-md";
-          
-          if (!hasInquiryContent) {
-            btnText.innerText = "원고 첨부 또는 문의내용을 입력해 주세요 ➔";
-          } else if (hasUploadedFile && !isOrgValid && !phoneResult.isValid) {
-            btnText.innerText = "원고 검수 완료! 소속 및 연락처를 입력해 주세요";
-          } else if (orgVal && !isOrgValid) {
-            btnText.innerText = "소속/이름을 정확히 입력해 주세요";
-          } else if (phoneVal && !phoneResult.isValid) {
-            btnText.innerText = "올바른 연락처 형식을 입력해 주세요";
-          } else {
-            btnText.innerText = "원고/문의 및 연락처를 입력해 주세요";
-          }
+          btn.className = "w-full py-4 rounded-2xl bg-white/40 text-white/80 font-bold text-lg cursor-not-allowed shadow-md";
+          btnText.innerText = "원고/문의 및 연락처를 입력해 주세요";
         }
-      }
-      lucide.createIcons();
-    }
-
-    async function handleCtaClick() {
-      const orgInput = document.getElementById('client-org');
-      const phoneInput = document.getElementById('client-phone');
-      const inquiryInput = document.getElementById('text-inquiry');
-      const btn = document.getElementById('cta-button');
-      const btnText = document.getElementById('cta-btn-text');
-      if (!orgInput || !phoneInput || !btn || !btnText) return;
-
-      const isOrgValid = checkOrgValid(orgInput.value);
-      const phoneResult = checkPhoneOrEmailValid(phoneInput.value);
-
-      if (!isOrgValid) {
-        orgInput.focus();
-        document.getElementById('org-error-msg').classList.remove('hidden');
-        orgInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
-        return;
-      }
-      if (!phoneResult.isValid) {
-        phoneInput.focus();
-        document.getElementById('phone-error-msg').classList.remove('hidden');
-        phoneInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
-        return;
-      }
-
-      const prevBtnClass = btn.className;
-      const prevBtnText = btnText.innerHTML;
-      btn.disabled = true;
-      btnText.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin inline-block mr-2"></i>접수 처리 중...';
-      lucide.createIcons();
-
-      const contactVal = phoneInput.value.trim();
-      const isEmail = /[a-zA-Z@]/.test(contactVal);
-      const orgVal = orgInput.value.trim();
-      const inquiryVal = inquiryInput ? inquiryInput.value.trim() : "";
-      let fileNames = uploadedFilesList.map(f => f.name).join(", ");
-      const specVal = lastScannedSpecSummary || "직접 문의 접수";
-
-      const formData = new FormData();
-      formData.append("org", orgVal);
-      formData.append("phone", contactVal);
-      formData.append("inquiry", inquiryVal);
-      formData.append("file_name", fileNames || "첨부파일 없음");
-      formData.append("spec", specVal);
-
-      uploadedFilesList.forEach(file => {
-        formData.append("file", file);
-      });
-
-      try {
-        const response = await fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, {
-          method: "POST",
-          body: formData
-        });
-
-        try {
-          let orderDetailsText = inquiryVal || '별도 작성 내용 없음';
-          if (fileNames) orderDetailsText += `\n- 첨부파일: ${fileNames}`;
-          if (specVal) orderDetailsText += `\n- 규격/스펙: ${specVal}`;
-
-          await fetch('/api/send-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: orgVal,
-              email: isEmail ? contactVal : 'admin@ybprint.co.kr',
-              phone: isEmail ? '' : contactVal,
-              details: orderDetailsText
-            })
-          });
-        } catch (mailErr) {
-          console.error("이메일 발송 처리 알림:", mailErr);
-        }
-
-        if (response.ok) {
-          alert(isEmail 
-            ? "🎉 접수가 성공적으로 완료되었습니다!\n입력하신 이메일로 접수 확인 메일이 자동 발송되었습니다." 
-            : "🎉 AI 접수가 성공적으로 완료되었습니다!\n담당자가 확인 후 신속히 안내를 전달해 드립니다.");
-          orgInput.value = "";
-          phoneInput.value = "";
-          if (inquiryInput) inquiryInput.value = "";
-          hasUploadedFile = false;
-          uploadedFilesList = [];
-          lastScannedSpecSummary = "";
-          toggleDrawer(false);
-        } else {
-          alert("접수 중 서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
-        }
-      } catch (err) {
-        console.error("Submit inquiry error:", err);
-        alert("서버와 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.");
-      } finally {
-        btn.disabled = false;
-        btn.className = prevBtnClass;
-        btnText.innerHTML = prevBtnText;
-        validateForm();
       }
     }
 
@@ -1311,19 +785,8 @@
       const files = Array.from(e.target.files || []);
       if (files.length > 0) processFiles(files);
     }
-
-    function handleDragOver(e) {
-      e.preventDefault(); e.stopPropagation();
-      const dropzone = document.getElementById('file-dropzone');
-      if (dropzone) dropzone.className = "w-full bg-blue-50/90 border-2 border-blue-600 p-7 rounded-2xl text-center cursor-pointer transition-all scale-[1.02] shadow-lg ring-4 ring-blue-100";
-    }
-
-    function handleDragLeave(e) {
-      e.preventDefault(); e.stopPropagation();
-      const dropzone = document.getElementById('file-dropzone');
-      if (dropzone && !hasUploadedFile) dropzone.className = "w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all group";
-    }
-
+    function handleDragOver(e) { e.preventDefault(); e.stopPropagation(); }
+    function handleDragLeave(e) { e.preventDefault(); e.stopPropagation(); }
     function handleFileDrop(e) {
       e.preventDefault(); e.stopPropagation();
       const files = Array.from(e.dataTransfer ? e.dataTransfer.files : []);
@@ -1332,71 +795,34 @@
 
     function processFiles(files) {
       if (!files || files.length === 0) return;
-      const title = document.getElementById('drop-title');
-      const sub = document.getElementById('drop-sub');
-      const dropzone = document.getElementById('file-dropzone');
-      const iconContainer = document.getElementById('drop-icon-container');
-      const icon = document.getElementById('drop-icon');
-
       hasUploadedFile = true;
-
-      if (dropzone) dropzone.className = "w-full bg-emerald-50/80 border-2 border-emerald-500 p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs";
-      if (iconContainer) iconContainer.className = "w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-2.5 transition-colors";
-      if (icon) { icon.setAttribute("data-lucide", "check"); icon.className = "w-6 h-6 text-emerald-600"; }
-      lucide.createIcons();
-
-      if (title) {
-        if (files.length === 1) title.innerHTML = `<span class="text-slate-900 font-semibold">[${files[0].name}]</span> <span class="text-emerald-700 font-bold text-sm sm:text-base ml-1.5">✓ 첨부 완료</span>`;
-        else title.innerHTML = `<span class="text-slate-900 font-semibold">[${files[0].name}] 외 ${files.length - 1}개 파일</span> <span class="text-emerald-700 font-bold text-sm sm:text-base ml-1.5">✓ 첨부 완료</span>`;
-      }
-      if (sub) sub.innerText = "클릭하여 다른 파일로 재선택 가능합니다";
-
+      document.getElementById('drop-title').innerHTML = `<span class="text-slate-900 font-semibold">[${files[0].name}] 첨부 완료</span>`;
       validateForm();
       sendRealPdfToBackend(files);
     }
-
-    let isScanning = false;
 
     function setStepStatus(stepNum, status, labelText) {
       const box = document.getElementById(`ai-step-box-${stepNum}`);
       const icon = document.getElementById(`step-icon-${stepNum}`);
       const text = document.getElementById(`step-text-${stepNum}`);
-      if (!box || !icon || !text) return;
+      if (!box) return;
       if (status === 'active') {
-        box.className = "flex items-center gap-2 p-2.5 rounded-xl bg-blue-50 border border-blue-300 text-blue-800 font-bold step-active shadow-sm text-left";
+        box.className = "flex items-center gap-2 p-2.5 rounded-xl bg-blue-50 border border-blue-300 text-blue-800 font-bold text-left";
         icon.setAttribute("data-lucide", "loader-2"); icon.className = "w-4 h-4 text-blue-600 animate-spin shrink-0";
-        text.innerText = labelText || text.innerText;
       } else if (status === 'done') {
-        box.className = "flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold transition-all shadow-xs text-left";
+        box.className = "flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold text-left";
         icon.setAttribute("data-lucide", "check-circle-2"); icon.className = "w-4 h-4 text-emerald-600 shrink-0";
-        text.innerText = labelText || text.innerText;
-      } else {
-        box.className = "flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 font-semibold transition-all text-left";
-        icon.setAttribute("data-lucide", "circle-dashed"); icon.className = "w-4 h-4 text-slate-400 shrink-0";
       }
+      text.innerText = labelText;
       lucide.createIcons();
     }
 
-    function scrollToContactStep() {
-      const contactSection = document.getElementById('contact-step-section') || document.getElementById('client-org');
-      const orgInput = document.getElementById('client-org');
-      
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        setTimeout(() => {
-          if (orgInput) {
-            orgInput.classList.add('focus-pulse');
-            try { orgInput.focus({ preventScroll: true }); } catch(e) { orgInput.focus(); }
-            setTimeout(() => {
-              orgInput.classList.remove('focus-pulse');
-            }, 1500);
-          }
-        }, 500);
-      }
+    function formatExactMm(pt) {
+      const mm = pt * 25.4 / 72;
+      const match = mm.toString().match(/^-?\d+(?:\.\d{0,2})?/);
+      return match ? match[0] : mm.toString();
     }
 
-    // 🚀 [초고속 독립 바이너리 파서: 모든 하위 트리를 추적하여 실제 총 페이지 수와 규격 100% 정밀 실측]
     async function parseLocalDocument(file) {
       const fname = file.name.toLowerCase();
       const isPdf = fname.endsWith('.pdf');
@@ -1405,7 +831,6 @@
       const isDesign = fname.endsWith('.ai') || fname.endsWith('.psd');
       const isZip = fname.endsWith('.zip') || fname.endsWith('.rar');
 
-      // 1. PDF 원고: 최상위 루트 /Count 및 개별 /Page 토큰을 종합 실측
       if (isPdf) {
         try {
           const buffer = await file.arrayBuffer();
@@ -1413,25 +838,19 @@
           const decoder = new TextDecoder('latin1');
           const text = decoder.decode(bytes);
 
-          // 1-1. 전체 PDF 안의 모든 /Count 값을 수집하여 최상위 루트의 최대값 추출
           let maxCount = 0;
           const allCountMatches = [...text.matchAll(/\/Count\s+(\d+)/gi)];
           for (const m of allCountMatches) {
             const countVal = parseInt(m[1], 10);
-            if (countVal > maxCount) {
-              maxCount = countVal;
-            }
+            if (countVal > maxCount) maxCount = countVal;
           }
 
-          // 1-2. 개별 /Type /Page 토큰 개수 실측
           const pageTokenMatches = text.match(/\/Type\s*\/Page\b/g);
           const pageTokensCount = pageTokenMatches ? pageTokenMatches.length : 0;
-
-          // 둘 중 가장 신뢰도 높은 최대값을 실제 총 페이지 수로 판정
           const finalPageCount = Math.max(maxCount, pageTokensCount, 1);
 
-          // 1-3. MediaBox / CropBox 규격(포인트 pt) 실측
           let widthMm = 210, heightMm = 297;
+          let wDisplay = "210", hDisplay = "297";
           const mediaBoxMatch = text.match(/\/MediaBox\s*\[\s*([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s*\]/i) ||
                                 text.match(/\/CropBox\s*\[\s*([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s*\]/i);
 
@@ -1440,148 +859,112 @@
             const y1 = parseFloat(mediaBoxMatch[2]) || 0;
             const x2 = parseFloat(mediaBoxMatch[3]) || 0;
             const y2 = parseFloat(mediaBoxMatch[4]) || 0;
-            
             const ptW = Math.abs(x2 - x1);
             const ptH = Math.abs(y2 - y1);
-
-            // 포인트(pt)를 mm로 정밀 변환 (1 pt = 25.4 / 72 mm)
-            widthMm = Math.round((ptW * 25.4 / 72) * 10) / 10;
-            heightMm = Math.round((ptH * 25.4 / 72) * 10) / 10;
+            
+            widthMm = ptW * 25.4 / 72;
+            heightMm = ptH * 25.4 / 72;
+            wDisplay = formatExactMm(ptW);
+            hDisplay = formatExactMm(ptH);
           }
 
-          const isStandardA4Portrait  = Math.abs(widthMm - 210) <= 5 && Math.abs(heightMm - 297) <= 5;
-          const isStandardA4Landscape = Math.abs(widthMm - 297) <= 5 && Math.abs(heightMm - 210) <= 5;
-          const isStandardB5          = Math.abs(widthMm - 182) <= 5 && Math.abs(heightMm - 257) <= 5;
-          const isPptWide             = Math.abs(widthMm - 338.7) <= 6 && Math.abs(heightMm - 190.5) <= 6;
-          const isPptStandard         = Math.abs(widthMm - 254) <= 6 && Math.abs(heightMm - 190.5) <= 6;
+          const isA4P  = Math.abs(widthMm - 210) <= 5 && Math.abs(heightMm - 297) <= 5;
+          const isA4L  = Math.abs(widthMm - 297) <= 5 && Math.abs(heightMm - 210) <= 5;
+          const isB5   = Math.abs(widthMm - 182) <= 5 && Math.abs(heightMm - 257) <= 5;
+          const isPptW = Math.abs(widthMm - 338.7) <= 6 && Math.abs(heightMm - 190.5) <= 6;
 
-          let isStandard = isStandardA4Portrait || isStandardA4Landscape || isStandardB5;
           let specLabel = "";
-
-          if (isStandardA4Portrait) specLabel = "규격 (A4 세로형)";
-          else if (isStandardA4Landscape) specLabel = "규격 (A4 가로형)";
-          else if (isStandardB5) specLabel = "규격 (B5 4x6배판)";
-          else if (isPptWide) specLabel = "슬라이드 와이드 16:9 (338.7 × 190.5mm)";
-          else if (isPptStandard) specLabel = "슬라이드 일반 4:3 (254 × 190.5mm)";
-          else specLabel = `비규격 (${widthMm} × ${heightMm}mm)`;
+          if (isA4P) specLabel = "규격 (A4 세로형)";
+          else if (isA4L) specLabel = "규격 (A4 가로형)";
+          else if (isB5) specLabel = "규격 (B5 4x6배판)";
+          else if (isPptW) specLabel = "슬라이드 와이드 16:9";
+          else specLabel = `비규격`;
 
           return {
             filename: file.name,
             formatType: 'PDF',
-            pages: finalPageCount,
-            width: widthMm,
-            height: heightMm,
-            isStandard: isStandard,
-            specLabel: specLabel,
+            dimensionText: `${wDisplay} × ${hDisplay}mm (${specLabel})`,
+            pagesText: `${finalPageCount}p`,
             statusText: '정밀 규격 실측 완료',
-            remark: '인쇄용 PDF 원고의 실제 페이지 수와 재단 판형이 완벽하게 실측되었습니다.'
+            remark: '인쇄용 PDF 원고의 실제 페이지 수와 재단 판형이 완벽하게 실측되었습니다.',
+            pagesNum: finalPageCount
           };
         } catch (err) {
-          console.error("PDF 파서 에러:", err);
+          console.error(err);
         }
       }
 
-      // 2. 한글 원고 (HWP / HWPX)
       if (isHwp) {
         return {
           filename: file.name,
           formatType: 'HWP (한글)',
-          pages: '조판 검수 대기',
-          width: 210,
-          height: 297,
-          isStandard: true,
-          specLabel: '공공기관 HWP 표준 서식',
+          dimensionText: '공공기관 표준 조판 규격 (A4/B5 맞춤 검수 대기)',
+          pagesText: '조판 검수 대기',
           statusText: '한글 원고 접수 완료',
-          remark: '공공기관 한글 원고는 인쇄 전 전담 엔지니어가 조판 여백 및 폰트를 직접 정밀 확인합니다.'
+          remark: '공공기관 한글 원고는 인쇄 전 전담 엔지니어가 조판 여백 및 폰트를 직접 정밀 확인합니다.',
+          pagesNum: 0
         };
       }
 
-      // 3. Office 문서 (PPT / Word)
       if (isOffice) {
         return {
           filename: file.name,
           formatType: 'Office',
-          pages: '판형 검수 대기',
-          width: 210,
-          height: 297,
-          isStandard: true,
-          specLabel: '오피스 서식 원고',
+          dimensionText: '슬라이드 판형 (인쇄용 판형 최적화 대기)',
+          pagesText: '판형 검수 대기',
           statusText: '오피스 원고 접수 완료',
-          remark: '오피스 원고는 슬라이드/페이지 비율에 맞추어 인쇄 판형 가이드를 전담 배정합니다.'
+          remark: '오피스 원고는 슬라이드/페이지 비율에 맞추어 인쇄 판형 가이드를 전담 배정합니다.',
+          pagesNum: 0
         };
       }
 
-      // 4. 디자인 소스 (AI / PSD)
       if (isDesign) {
         return {
           filename: file.name,
           formatType: 'DESIGN',
-          pages: '아트보드 확인 대기',
-          width: 210,
-          height: 297,
-          isStandard: true,
-          specLabel: '고해상도 그래픽 소스',
+          dimensionText: '디자인 아트보드 실측 및 재단선(Bleed) 1:1 검수',
+          pagesText: '아트보드 확인 대기',
           statusText: '디자인 원본 접수 완료',
-          remark: '인쇄 전담 디자이너가 폰트 아웃라인(윤곽선) 및 해상도를 1:1 정밀 검수합니다.'
+          remark: '인쇄 전담 디자이너가 폰트 아웃라인(윤곽선) 및 해상도를 1:1 정밀 검수합니다.',
+          pagesNum: 0
         };
       }
 
-      // 5. 압축 패키지 (ZIP / RAR)
       if (isZip) {
         return {
           filename: file.name,
           formatType: 'ZIP',
-          pages: '일괄 확인 대기',
-          width: 210,
-          height: 297,
-          isStandard: true,
-          specLabel: '부속 원고 일괄 패키지',
+          dimensionText: '압축 해제 후 부속 원고별 개별 판형 검수',
+          pagesText: '일괄 확인 대기',
           statusText: '압축 패키지 접수 완료',
-          remark: '압축 해제 후 포함된 모든 부속 원고를 전담팀이 일괄 검수합니다.'
+          remark: '압축 해제 후 포함된 모든 부속 원고를 전담팀이 일괄 검수합니다.',
+          pagesNum: 0
         };
       }
 
-      // 6. 기타 일반 파일
       return {
         filename: file.name,
         formatType: 'ETC',
-        pages: '검수 대기',
-        width: 210,
-        height: 297,
-        isStandard: true,
-        specLabel: '일반 인쇄 원고',
+        dimensionText: '일반 인쇄 원고 규격',
+        pagesText: '검수 대기',
         statusText: '원고 접수 완료',
-        remark: '원고 접수 완료 후 담당자가 확인하여 연락드립니다.'
+        remark: '원고 접수 완료 후 담당자가 확인하여 연락드립니다.',
+        pagesNum: 0
       };
     }
 
     async function sendRealPdfToBackend(inputFiles) {
       let filesArr = Array.isArray(inputFiles) ? inputFiles : [inputFiles];
       uploadedFilesList = filesArr;
-      if (!filesArr || filesArr.length === 0) return;
+      if (filesArr.length === 0) return;
       let totalFileCount = filesArr.length;
 
-      const stepBoxesWrapper = document.getElementById('ai-step-boxes-wrapper');
-      if (stepBoxesWrapper) stepBoxesWrapper.classList.remove('hidden');
+      document.getElementById('ai-step-boxes-wrapper').classList.remove('hidden');
+      document.getElementById('ai-report-dual-container').classList.add('hidden');
 
-      isScanning = true;
-      wakeUpBackend();
-
-      const badge = document.getElementById('ai-percent-badge');
-      const statusText = document.getElementById('ai-status-text');
-      const subText = document.getElementById('ai-sub-text');
-      const progressFill = document.getElementById('ai-progress-fill');
-      const dualContainer = document.getElementById('ai-report-dual-container');
-
-      if (dualContainer) dualContainer.classList.add('hidden');
-      if (statusText) statusText.innerText = totalFileCount > 1 ? `총 ${totalFileCount}개 원고 분석 중...` : "원고 분석 중...";
-      if (subText) { subText.innerText = "원고 포맷을 판별하여 맞춤 인쇄 검수를 진행하고 있습니다"; subText.classList.remove('hidden'); }
-
-      setStepStatus(1, 'active', '01. 문서 크기/여백 측정');
-      setStepStatus(2, 'idle', '02. 이미지 선명도 검수');
+      setStepStatus(1, 'active', '01. 문서 포맷 및 치수 실측');
+      setStepStatus(2, 'idle', '02. 인쇄 최적화 규격 판별');
       setStepStatus(3, 'idle', '03. 맞춤 제작 가이드 생성');
-      if (badge) { badge.innerText = "35%"; badge.style.display = "block"; }
-      if (progressFill) progressFill.style.width = "35%";
 
       let scanResults = [];
       for (let i = 0; i < filesArr.length; i++) {
@@ -1589,37 +972,30 @@
         scanResults.push(parsed);
       }
 
-      await new Promise(r => setTimeout(r, 180));
-      setStepStatus(1, 'done', '01. 문서 크기/여백 측정 완료');
-      setStepStatus(2, 'active', '02. 이미지 선명도 검수');
-      if (badge) badge.innerText = "75%";
-      if (progressFill) progressFill.style.width = "75%";
-
       await new Promise(r => setTimeout(r, 200));
-      setStepStatus(2, 'done', '02. 이미지 선명도 검수 완료');
+      setStepStatus(1, 'done', '01. 문서 포맷 및 치수 실측 완료');
+      setStepStatus(2, 'active', '02. 인쇄 최적화 규격 판별');
+      
+      await new Promise(r => setTimeout(r, 200));
+      setStepStatus(2, 'done', '02. 인쇄 최적화 규격 판별 완료');
       setStepStatus(3, 'done', '03. 맞춤 제작 가이드 생성 완료');
-      if (badge) badge.innerText = "100%";
-      if (progressFill) progressFill.style.width = "100%";
 
       let summaryTitle = totalFileCount > 1 
-        ? `업로드하신 총 ${totalFileCount}개 원고의 검수가 완료되었습니다.`
-        : "업로드하신 원고 규격이 확인되었습니다.";
+        ? `총 ${totalFileCount}개 원고의 검수가 완료되었습니다.`
+        : "원고 규격 확인이 완료되었습니다.";
 
       let summaryBodyHtml = "";
 
       if (totalFileCount === 1) {
         let res = scanResults[0];
-        let pagesDisplay = typeof res.pages === 'number' ? `총 ${res.pages}p` : res.pages;
-        
-        lastScannedSpecSummary = `${res.width} × ${res.height}mm (${res.specLabel}) / ${pagesDisplay}`;
+        lastScannedSpecSummary = `${res.dimensionText} / ${res.pagesText}`;
 
         summaryBodyHtml = `
           <div class="space-y-0.5 text-[#666666] font-normal text-left leading-tight text-[13px]">
             <div><strong>원고 포맷</strong> : ${res.formatType}</div>
-            <div><strong>원고 규격</strong> : ${res.width} × ${res.height}mm (${res.specLabel})</div>
-            <div><strong>실제 페이지 수</strong> : ${pagesDisplay}</div>
-            <div><strong>안내 사항</strong> : ${res.remark}</div>
-            <div><strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자 확인 후 제작 일정 및 견적을 안내해 드립니다.</div>
+            <div><strong>원고 규격</strong> : ${res.dimensionText}</div>
+            <div><strong>페이지 수</strong> : ${res.pagesText}</div>
+            <div class="pt-1 text-[#444] mt-1"><strong>안내 사항</strong> : ${res.remark}</div>
           </div>
         `;
       } else {
@@ -1627,343 +1003,99 @@
         let hasCountablePages = true;
 
         let itemsHtml = scanResults.map((res, idx) => {
-          let pagesDisplay = typeof res.pages === 'number' ? `${res.pages}p` : res.pages;
-          if (typeof res.pages === 'number') {
-            totalPagesNum += res.pages;
-          } else {
-            hasCountablePages = false;
-          }
+          if (res.pagesNum > 0) totalPagesNum += res.pagesNum;
+          else hasCountablePages = false;
 
           return `
             <div class="pb-2.5 mb-2.5 border-b border-slate-200/90 last:border-0 last:mb-0 last:pb-0 text-left">
               <div class="font-bold text-slate-900 text-[13.5px] mb-1 flex items-center gap-1.5">
-                <span class="bg-blue-100 text-blue-800 text-[10px] font-mono px-1.5 py-0.5 rounded font-bold">원고 ${String(idx + 1).padStart(2, '0')}</span>
+                <span class="bg-blue-100 text-blue-800 text-[10px] font-mono px-1.5 py-0.5 rounded">원고 ${String(idx + 1).padStart(2, '0')}</span>
                 <span class="truncate">${res.filename}</span>
               </div>
-              <div class="space-y-0.5 text-[#666666] font-normal leading-tight text-[12.5px] pl-1">
-                <div>• <strong>규격</strong> : ${res.width} × ${res.height}mm (${res.specLabel})</div>
-                <div>• <strong>페이지 수</strong> : ${pagesDisplay}</div>
-                <div>• <strong>상태</strong> : ${res.statusText}</div>
+              <div class="space-y-0.5 text-[#666666] text-[12.5px] pl-1">
+                <div>• <strong>규격</strong> : ${res.dimensionText}</div>
+                <div>• <strong>페이지 수</strong> : ${res.pagesText}</div>
               </div>
             </div>
           `;
         }).join("");
 
-        lastScannedSpecSummary = hasCountablePages 
-          ? `총 ${totalFileCount}개 원고 (총 ${totalPagesNum}p)` 
-          : `총 ${totalFileCount}개 원고 접수`;
+        lastScannedSpecSummary = hasCountablePages ? `총 ${totalFileCount}개 원고 (총 ${totalPagesNum}p)` : `총 ${totalFileCount}개 원고 접수`;
 
-        summaryBodyHtml = `
-          <div class="space-y-3 text-left">
-            <div class="space-y-1">
-              ${itemsHtml}
-            </div>
-            <div class="pt-2 border-t border-slate-200 text-[#555555] font-normal leading-tight text-[12.5px]">
-              <strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자 확인 후 제작 일정 및 견적을 안내해 드립니다.
-            </div>
-          </div>
-        `;
+        summaryBodyHtml = `<div class="space-y-3 text-left"><div class="space-y-1">${itemsHtml}</div></div>`;
       }
 
-      const rptTitle = document.getElementById('rpt-summary-title');
-      const rptBody = document.getElementById('rpt-summary-body');
-      if (rptTitle) rptTitle.innerText = summaryTitle;
-      if (rptBody) rptBody.innerHTML = summaryBodyHtml;
-
-      let consoleLogsHeader = `====================================================================
-[YBPRINT AI SYSTEM - REAL-TIME DIAGNOSTIC LOG (TOTAL ${totalFileCount} FILES)]
-====================================================================
-`;
+      document.getElementById('rpt-summary-title').innerText = summaryTitle;
+      document.getElementById('rpt-summary-body').innerHTML = summaryBodyHtml;
 
       let consoleLogsBody = scanResults.map((res, idx) => {
-        let pagesDisplay = typeof res.pages === 'number' ? `TOTAL ${res.pages} PAGES (ACTUAL PARSED)` : `PENDING (${res.pages})`;
         return `--------------------------------------------------------------------
 [FILE ${idx + 1} / ${totalFileCount} : ${res.filename}]
   FORMAT TYPE    : ${res.formatType}
-  PAGE COUNT     : ${pagesDisplay}
-  METRIC SIZE    : ${res.width} mm x ${res.height} mm [${res.specLabel}]
+  PAGE COUNT     : ${res.pagesText}
+  METRIC SIZE    : ${res.dimensionText}
   ENGINE ACTION  : ${res.remark}`;
       }).join("\n\n");
 
-      let consoleLogsFooter = `
-====================================================================
-[3. SYSTEM ACTION GUIDE]
-  - ENGINEER REVIEW: PENDING (CUSTOMER CONTACT INFO REQUIRED)
-  - ESTIMATE STATUS: READY FOR 1:1 CUSTOMER ADVISORY
-====================================================================`;
+      document.getElementById('terminal-console-body').innerText = consoleLogsBody;
 
-      const termBody = document.getElementById('terminal-console-body');
-      if (termBody) termBody.innerText = consoleLogsHeader + consoleLogsBody + "\n" + consoleLogsFooter;
-
-      if (statusText) {
-        statusText.innerText = totalFileCount > 1 ? `${filesArr[0].name} 외 ${totalFileCount - 1}개 파일` : filesArr[0].name;
-      }
-      const sigEl = document.getElementById("ai-diagnostic-signal");
-      if (sigEl) sigEl.classList.remove("hidden");
-      if (subText) subText.classList.add("hidden");
-      if (badge) badge.style.display = "none";
-
-      if (stepBoxesWrapper) stepBoxesWrapper.classList.add('hidden');
-      if (dualContainer) dualContainer.classList.remove('hidden');
-
-      const inquiryInput = document.getElementById('text-inquiry');
-      if (inquiryInput) {
-        inquiryInput.placeholder = totalFileCount > 1 ? `청년인쇄사 AI가 첨부된 [총 ${totalFileCount}개 원고]의 분석을 마쳤습니다.\n자세한 제작사양과 완료요청일을 남겨주세요` : `청년인쇄사 AI가 첨부된 [${filesArr[0].name}] 원고의 분석을 마쳤습니다.\n자세한 제작사양과 완료요청일을 남겨주세요`;
-      }
-
-      validateForm();
-      setTimeout(() => { scrollToContactStep(); }, 600);
-
-      isScanning = false;
-    }
-
-    const canvas = document.getElementById('mysticJarvisCanvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      const size = 180; 
-      canvas.width = size * window.devicePixelRatio;
-      canvas.height = size * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-      const points = [];
-      const numPoints = 120;
-      const radius = 62; 
-      for (let i = 0; i < numPoints; i++) {
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos((Math.random() * 2) - 1);
-        points.push({ x: radius * Math.sin(phi) * Math.cos(theta), y: radius * Math.sin(phi) * Math.sin(theta), z: radius * Math.cos(phi) });
-      }
-      let rotationY = 0.003, rotationX = 0.002, targetRotationY = 0.003, targetRotationX = 0.002;
-
-      function renderMysticGlobe() {
-        ctx.clearRect(0, 0, size, size);
-        const cx = size / 2, cy = size / 2, fov = 130; 
-        if (isScanning) { targetRotationY = 0.022; targetRotationX = 0.012; } 
-        else { targetRotationY = 0.003; targetRotationX = 0.002; }
-        rotationY += (targetRotationY - rotationY) * 0.08; rotationX += (targetRotationX - rotationX) * 0.08;
-        const cosY = Math.cos(rotationY), sinY = Math.sin(rotationY), cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
-        const projected = points.map(p => {
-          let x1 = p.x * cosY - p.z * sinY, z1 = p.x * sinY + p.z * cosY;
-          let y2 = p.y * cosX - z1 * sinX, z2 = p.y * sinX + z1 * cosX;
-          p.x = x1; p.y = y2; p.z = z2;
-          const scale = fov / (fov + z2 + 40);
-          return { x: cx + x1 * scale, y: cy + y2 * scale, z: z2, scale: scale };
-        });
-        const coreGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, 38);
-        if (isScanning) {
-          coreGrad.addColorStop(0, 'rgba(59, 130, 246, 0.45)'); coreGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.25)'); coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        } else {
-          coreGrad.addColorStop(0, 'rgba(147, 197, 253, 0.28)'); coreGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.1)'); coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        }
-        ctx.beginPath(); ctx.arc(cx, cy, 38, 0, Math.PI * 2); ctx.fillStyle = coreGrad; ctx.fill();
-        ctx.lineWidth = isScanning ? 0.75 : 0.65;
-        for (let i = 0; i < projected.length; i++) {
-          for (let j = i + 1; j < projected.length; j++) {
-            const dx = projected[i].x - projected[j].x, dy = projected[i].y - projected[j].y, dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 40) {
-              const alphaBoost = isScanning ? 0.45 : 0.32, alpha = (1 - dist / 40) * (projected[i].scale * alphaBoost);
-              ctx.strokeStyle = isScanning ? `rgba(37, 99, 235, ${alpha * 1.25})` : `rgba(59, 130, 246, ${alpha})`;
-              ctx.beginPath(); ctx.moveTo(projected[i].x, projected[i].y); ctx.lineTo(projected[j].x, projected[j].y); ctx.stroke();
-            }
-          }
-        }
-        projected.forEach(p => {
-          if (p.z < 40) {
-            const dotAlpha = p.scale * (isScanning ? 0.65 : 0.42);
-            ctx.fillStyle = isScanning ? `rgba(37, 99, 235, ${dotAlpha})` : `rgba(59, 130, 246, ${dotAlpha})`;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.scale * (isScanning ? 1.4 : 1.2), 0, Math.PI * 2); ctx.fill();
-          }
-        });
-        requestAnimationFrame(renderMysticGlobe);
-      }
-      renderMysticGlobe();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const panel = document.getElementById('drawer-panel');
-      const tab = document.getElementById('drawer-index-tab');
-      
-      const phoneInput = document.getElementById('client-phone');
-      const orgInput = document.getElementById('client-org');
-      if (phoneInput) phoneInput.value = '';
-      if (orgInput) orgInput.value = '';
-      if (typeof validateForm === 'function') validateForm();
-
-      if (!panel || !tab) return;
-
-      let isDragging = false;
-      let startX = 0;
-      let draggedDistance = 0;
-      let isClickCandidate = true;
-
-      const getClientX = (e) => e.touches ? e.touches[0].clientX : e.clientX;
-
-      const onStart = (e) => {
-        if (!panel.classList.contains('is-closed')) return;
-        isDragging = true;
-        isClickCandidate = true;
-        startX = getClientX(e);
-        draggedDistance = 0;
-        
-        panel.style.transition = 'none';
-        panel.classList.remove('animate-drawer-wiggle');
-      };
-
-      const onMove = (e) => {
-        if (!isDragging) return;
-        const currentX = getClientX(e);
-        const deltaX = startX - currentX;
-
-        if (Math.abs(deltaX) > 5) {
-          isClickCandidate = false;
-        }
-
-        if (deltaX > 0) {
-          draggedDistance = Math.min(deltaX, panel.offsetWidth);
-          panel.style.transform = `translateX(calc(100% - ${draggedDistance}px))`;
-        }
-      };
-
-      const onEnd = () => {
-        if (!isDragging) return;
-        isDragging = false;
-        panel.style.transition = '';
-
-        if (isClickCandidate) {
-          toggleDrawer(true);
-        } else {
-          if (draggedDistance >= 90) {
-            toggleDrawer(true);
-          } else {
-            toggleDrawer(false);
-          }
-        }
-        draggedDistance = 0;
-      };
-
-      tab.addEventListener('mousedown', onStart);
-      window.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          e.preventDefault();
-          onMove(e);
-        }
-      });
-      window.addEventListener('mouseup', onEnd);
-
-      tab.addEventListener('touchstart', onStart, { passive: true });
-      window.addEventListener('touchmove', (e) => {
-        if (isDragging) {
-          onMove(e);
-        }
-      }, { passive: false });
-      window.addEventListener('touchend', onEnd);
+      document.getElementById("ai-diagnostic-signal").classList.remove("hidden");
+      document.getElementById('ai-step-boxes-wrapper').classList.add('hidden');
+      document.getElementById('ai-report-dual-container').classList.remove('hidden');
 
       setTimeout(() => {
-        if (panel.classList.contains('is-closed') && !isDragging) {
-          panel.classList.add('animate-drawer-wiggle');
-          setTimeout(() => panel.classList.remove('animate-drawer-wiggle'), 2000);
-        }
-      }, 2000);
+        document.getElementById('contact-step-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    }
 
-      setInterval(() => {
-        if (panel.classList.contains('is-closed') && !isDragging) {
-          panel.classList.add('animate-drawer-wiggle');
-          setTimeout(() => panel.classList.remove('animate-drawer-wiggle'), 2000);
-        }
-      }, 6000);
-    });
+    async function handleCtaClick() {
+      const orgInput = document.getElementById('client-org');
+      const phoneInput = document.getElementById('client-phone');
+      const inquiryInput = document.getElementById('text-inquiry');
+      const btn = document.getElementById('cta-button');
+      
+      const isEmail = /[a-zA-Z@]/.test(phoneInput.value.trim());
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>접수 처리 중...';
+      lucide.createIcons();
 
-    let secretTapCount = 0;
-    let secretTapTimer = null;
-    function triggerMobileAdminSecret() {
-      secretTapCount++;
-      if (secretTapTimer) clearTimeout(secretTapTimer);
-      if (secretTapCount >= 5) {
-        secretTapCount = 0;
-        toggleAdminModal(true);
-      } else {
-        secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1800);
+      const formData = new FormData();
+      formData.append("org", orgInput.value.trim());
+      formData.append("phone", phoneInput.value.trim());
+      formData.append("inquiry", inquiryInput ? inquiryInput.value.trim() : "");
+      formData.append("file_name", uploadedFilesList.map(f => f.name).join(", ") || "첨부파일 없음");
+      formData.append("spec", lastScannedSpecSummary || "직접 문의 접수");
+
+      uploadedFilesList.forEach(file => formData.append("file", file));
+
+      try {
+        const response = await fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, { method: "POST", body: formData });
+        
+        try {
+          await fetch('/api/send-order', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: orgInput.value.trim(),
+              email: isEmail ? phoneInput.value.trim() : 'admin@ybprint.co.kr',
+              phone: isEmail ? '' : phoneInput.value.trim(),
+              details: (inquiryInput.value || '') + `\n- 첨부파일: ${formData.get("file_name")}`
+            })
+          });
+        } catch (e) {}
+
+        if (response.ok) {
+          alert("🎉 접수가 성공적으로 완료되었습니다!");
+          toggleDrawer(false);
+        } else {
+          alert("서버 오류가 발생했습니다.");
+        }
+      } catch (err) {
+        alert("서버와 연결할 수 없습니다.");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '작성한 내용으로 견적 문의하기';
       }
     }
-
-    document.getElementById('footer-admin-trigger')?.addEventListener('click', function(e) {
-      e.preventDefault();
-      triggerMobileAdminSecret();
-    });
-    document.getElementById('copyright-admin-trigger')?.addEventListener('click', function(e) {
-      e.preventDefault();
-      triggerMobileAdminSecret();
-    });
-</script>
-
-<div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity p-4">
-  <div class="w-full max-w-sm rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-2xl text-neutral-100">
-    <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
-      <div class="flex items-center gap-2">
-        <span class="px-2 py-0.5 text-[11px] font-mono font-semibold bg-neutral-800 border border-neutral-700 text-neutral-300 rounded">ADMIN</span>
-        <h3 class="text-sm font-bold text-white tracking-tight">관리자 커맨드 모드</h3>
-      </div>
-      <button type="button" onclick="toggleAdminModal(false)" class="text-neutral-500 hover:text-neutral-300 text-xs">✕</button>
-    </div>
-
-    <div class="mt-4">
-      <label class="block text-xs font-medium text-neutral-400 mb-2">마스터 인증 비밀번호</label>
-      <input type="password" id="adminCommandInput" autocomplete="new-password" placeholder="••••" maxlength="20"
-        class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-center text-lg tracking-widest text-white font-mono focus:outline-none focus:border-neutral-400 transition" />
-    </div>
-
-    <div class="mt-5 flex gap-2">
-      <button type="button" onclick="toggleAdminModal(false)" class="flex-1 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition">닫기</button>
-      <button type="button" onclick="submitAdminAuth()" class="flex-1 py-2.5 bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-bold rounded-xl transition">진입하기</button>
-    </div>
-  </div>
-</div>
-
-<script>
-document.addEventListener('keydown', function(e) {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-    e.preventDefault();
-    toggleAdminModal(true);
-  }
-  if (e.key === 'Escape') {
-    toggleAdminModal(false);
-  }
-});
-
-function toggleAdminModal(show) {
-  const modal = document.getElementById('adminCommandModal');
-  const input = document.getElementById('adminCommandInput');
-  if (!modal) return;
-
-  if (show) {
-    modal.classList.remove('hidden');
-    input.value = '';
-    setTimeout(() => input.focus(), 50);
-  } else {
-    modal.classList.add('hidden');
-    input.value = '';
-  }
-}
-
-function submitAdminAuth() {
-  const input = document.getElementById('adminCommandInput');
-  const pw = input ? input.value : '';
-  
-  if (pw === '76057569') {
-    window.location.href = '/admin.html';
-  } else {
-    alert('인증 비밀번호가 일치하지 않습니다.');
-    if (input) {
-      input.value = '';
-      input.focus();
-    }
-  }
-}
-
-document.getElementById('adminCommandInput')?.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    submitAdminAuth();
-  }
-});
-</script>
+  </script>
 </body>
 </html>
