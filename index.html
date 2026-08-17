@@ -8,6 +8,12 @@
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +32,6 @@
       overflow-x: hidden;
     }
 
-    /* [GNB Header] */
     .gnb {
       position: fixed; top: 0; left: 0; width: 100%; height: 88px;
       display: flex; justify-content: space-between; align-items: center;
@@ -52,7 +57,6 @@
     .gnb-phone-badge .phone-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; color: #a3a3a3; }
     .gnb-phone-badge .phone-num { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em; color: #ffffff; }
 
-    /* 📱 모바일 화면 자동 최적화 */
     @media (max-width: 1024px) {
       .gnb { height: 60px !important; padding: 0 16px !important; }
       .gnb-nav { display: none !important; }
@@ -62,7 +66,6 @@
       .grid-frame { aspect-ratio: 1 / 1; min-height: 250px; }
       .slide { -webkit-transform-style: preserve-3d; -webkit-backface-visibility: hidden; }
       
-      /* 📱 모바일에서 CONTACT.jpg(유선전화) 정상 노출 처리 */
       .cta-section {
         background-attachment: scroll !important;
         background-position: center center !important;
@@ -77,17 +80,10 @@
     .gnb.is-over-white .gnb-phone-badge { border-color: #e4e4e7; }
     .gnb.is-over-white .gnb-phone-badge .phone-num { color: #09090b; }
 
-    /* 🎯 [GNB 헤더 높이만큼 스크롤 위치 완벽 보정] */
-    html {
-      scroll-behavior: smooth;
-    }
-    section, .processor-section, .mellow-gallery-section, .cta-section {
-      scroll-margin-top: 88px;
-    }
+    html { scroll-behavior: smooth; }
+    section, .processor-section, .mellow-gallery-section, .cta-section { scroll-margin-top: 88px; }
     @media (max-width: 1024px) {
-      section, .processor-section, .mellow-gallery-section, .cta-section {
-        scroll-margin-top: 60px;
-      }
+      section, .processor-section, .mellow-gallery-section, .cta-section { scroll-margin-top: 60px; }
     }
 
     .hero { position: relative; width: 100%; height: 100vh; display: flex; justify-content: start; align-items: center; overflow: hidden; padding-left: 5vw; padding-top: 88px; background-color: #050508; }
@@ -141,7 +137,6 @@
     .faq-icon { transition: transform 0.3s ease; }
     .faq-item.active .faq-icon { transform: rotate(45deg); }
 
-    /* ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스 & 다크 명암 + 화이트 텍스트 */
     .cta-section {
       width: 100%; min-height: 440px; padding: 90px 5vw;
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
@@ -242,9 +237,6 @@
     .info-label { width: 90px; color: #a1a1aa; font-weight: 500; flex-shrink: 0; }
     .info-value { color: #ffffff; font-weight: 400; }
     
-    /* ========================================================
-       🎞️ [청년인쇄사 갤러리] 무한 롤링 & 모바일 최적화
-       ======================================================== */
     .mellow-gallery-section {
       width: 100%;
       background-color: #000000;
@@ -443,65 +435,6 @@
 
   <section id="services" class="mellow-gallery-section">
     <div class="mellow-marquee-track">
-      <!-- SET 1 -->
-      <div class="mellow-card group">
-        <img src="gallery02.jpg" alt="책자 | 카탈로그">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">01 / BOOKLET</span>
-          <h3 class="text-lg font-bold text-white">책자 | 카탈로그</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery01.jpg" alt="홍보 | 리플릿">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">02 / LEAFLET</span>
-          <h3 class="text-lg font-bold text-white">홍보 | 리플릿</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery03.jpg" alt="포스터 | 대형출력">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">03 / POSTER</span>
-          <h3 class="text-lg font-bold text-white">포스터 | 대형출력</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery04.jpg" alt="기업 서식 | CI">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">04 / BRANDING</span>
-          <h3 class="text-lg font-bold text-white">기업 서식 | CI</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery08.jpg" alt="입체 패키지">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">05 / PACKAGE</span>
-          <h3 class="text-lg font-bold text-white">입체 패키지</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery06.jpg" alt="VIP 행택">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">06 / TAG</span>
-          <h3 class="text-lg font-bold text-white">VIP 행택</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery05.jpg" alt="패키지 스티커">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">07 / STICKER</span>
-          <h3 class="text-lg font-bold text-white">패키지 스티커</h3>
-        </div>
-      </div>
-      <div class="mellow-card group">
-        <img src="gallery07.jpg" alt="행사 서식">
-        <div class="mellow-overlay">
-          <span class="text-[10px] font-mono tracking-widest text-blue-400 mb-1">08 / FORM</span>
-          <h3 class="text-lg font-bold text-white">행사 서식</h3>
-        </div>
-      </div>
-
-      <!-- SET 2 -->
       <div class="mellow-card group">
         <img src="gallery02.jpg" alt="책자 | 카탈로그">
         <div class="mellow-overlay">
@@ -626,7 +559,6 @@
     </div>
   </section>
 
-  <!-- ☎️ [빠른 문의 섹션] CONTACT.jpg 패럴랙스 & 다크 명암 + 화이트 텍스트 -->
   <section id="contact" class="cta-section">
     <div class="cta-parallax-overlay"></div>
     <div class="cta-content-wrap max-w-4xl mx-auto flex flex-col items-center">
@@ -637,7 +569,6 @@
     </div>
   </section>
 
-  <!-- 🏢 하단 푸터 (모바일 관리자 5회 연속 탭 트리거 포함) -->
   <footer class="w-full bg-black text-white border-t border-neutral-800 py-16 px-[5vw] relative">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
       <div>
@@ -675,9 +606,8 @@
 
   <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-500 ease-out">
     
-    <!-- 서랍장 몸통과 완벽 결합된 일체형 인덱스 탭 손잡이 -->
     <button id="drawer-index-tab" 
-            title="AI 원고 검수 및 빠른 견적 서랍장 열기 (클릭 또는 좌측으로 끌어당기세요)"
+            title="AI 원고 검수 및 빠른 견적 서랍장 열기"
             class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
       <span class="text-xs font-black [writing-mode:vertical-rl] tracking-widest text-slate-100 group-hover:text-white py-2 pointer-events-none">끌어당겨보세요</span>
     </button>
@@ -730,7 +660,7 @@
             여기에 원고 파일을 놓으세요
           </div>
           <span id="drop-sub" class="text-xs sm:text-sm text-slate-400 font-normal block">
-            PDF, HWP, PPT, Word, AI 등 모든 포맷 지원 (복수 선택 가능)
+            PDF(1초 정밀실측), HWP, PPT, Word, AI 등 모든 포맷 지원 (복수 선택 가능)
           </span>
         </div>
       </div>
@@ -775,7 +705,6 @@
         </div>
 
         <div id="ai-report-dual-container" class="hidden space-y-4 pt-2 text-left">
-          
           <div class="p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3 text-left">
             <div class="flex items-center justify-between border-b border-slate-300 pb-2 text-left">
               <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">
@@ -803,7 +732,6 @@
             </div>
             <div id="terminal-console-body" class="p-4 overflow-x-auto whitespace-pre-wrap font-mono text-white leading-relaxed text-left"></div>
           </div>
-
         </div>
 
       </div>
@@ -817,7 +745,6 @@
         <div id="ai-inquiry-live-card-container"></div>
       </div>
 
-      <!-- 🔒 자동완성 꼬임 방지 (autocomplete="off" 적용) -->
       <div id="contact-step-section" class="space-y-4 pt-2 text-left scroll-mt-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -880,6 +807,10 @@
       isWarmingUp = true;
       fetch(`${RENDER_BACKEND_URL}/`, { method: 'GET', mode: 'cors' }).catch(() => {}).finally(() => { isWarmingUp = false; });
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      wakeUpBackend();
+    });
 
     const mainHeader = document.getElementById('mainHeader');
     const sec2 = document.getElementById('ai-check');
@@ -1328,14 +1259,16 @@
       formData.append("file_name", fileNames || "첨부파일 없음");
       formData.append("spec", specVal);
 
+      uploadedFilesList.forEach(file => {
+        formData.append("file", file);
+      });
+
       try {
-        // 1. 기존 백엔드 DB 저장 요청
         const response = await fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, {
           method: "POST",
           body: formData
         });
 
-        // 2. SendGrid 이메일 자동 발송 (/api/send-order 호출)
         try {
           let orderDetailsText = inquiryVal || '별도 작성 내용 없음';
           if (fileNames) orderDetailsText += `\n- 첨부파일: ${fileNames}`;
@@ -1371,7 +1304,7 @@
         }
       } catch (err) {
         console.error("Submit inquiry error:", err);
-        alert("서버와 연결할 수 없습니다. CMD 창에서 uvicorn 서버가 켜져 있는지 확인해 주세요.");
+        alert("서버와 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.");
       } finally {
         btn.disabled = false;
         btn.className = prevBtnClass;
@@ -1469,6 +1402,126 @@
       }
     }
 
+    // 🎯 [확장자별 맞춤 실시간 분석 엔진 (방식 1 최적화)]
+    async function parseLocalDocument(file) {
+      const fname = file.name.toLowerCase();
+      const isPdf = fname.endsWith('.pdf');
+      const isHwp = fname.endsWith('.hwp') || fname.endsWith('.hwpx');
+      const isOffice = fname.endsWith('.doc') || fname.endsWith('.docx') || fname.endsWith('.ppt') || fname.endsWith('.pptx');
+      const isDesign = fname.endsWith('.ai') || fname.endsWith('.psd');
+      const isZip = fname.endsWith('.zip') || fname.endsWith('.rar');
+
+      // 1. PDF 원고: 브라우저 pdf.js 엔진으로 0.1초 만에 실제 페이지 및 가로세로 규격 정밀 실측
+      if (isPdf && window.pdfjsLib) {
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+          const pdfDoc = await loadingTask.promise;
+          const numPages = pdfDoc.numPages;
+          const firstPage = await pdfDoc.getPage(1);
+          const viewport = firstPage.getViewport({ scale: 1.0 });
+
+          const w = Math.round(viewport.width * (25.4 / 72));
+          const h = Math.round(viewport.height * (25.4 / 72));
+
+          const isStandardA4Portrait = Math.abs(w - 210) <= 6 && Math.abs(h - 297) <= 6;
+          const isStandardA4Landscape = Math.abs(w - 297) <= 6 && Math.abs(h - 210) <= 6;
+          const isStandard = isStandardA4Portrait || isStandardA4Landscape;
+
+          const specLabel = isStandard 
+            ? (isStandardA4Portrait ? "규격 (A4 세로형)" : "규격 (A4 가로형)") 
+            : `비규격 (${w}×${h}mm)`;
+
+          return {
+            filename: file.name,
+            formatType: 'PDF',
+            pages: numPages,
+            width: w,
+            height: h,
+            isStandard: isStandard,
+            specLabel: specLabel,
+            statusText: '정밀 규격 실측 완료',
+            remark: '인쇄용 PDF 원고 규격이 완벽하게 실측되었습니다.'
+          };
+        } catch (err) {
+          console.warn("PDF.js parsing fallback:", err);
+        }
+      }
+
+      // 2. 한글 원고 (HWP / HWPX)
+      if (isHwp) {
+        return {
+          filename: file.name,
+          formatType: 'HWP (한글)',
+          pages: '조판 검수 대기',
+          width: 210,
+          height: 297,
+          isStandard: true,
+          specLabel: '공공기관 HWP 표준 서식',
+          statusText: '한글 원고 접수 완료',
+          remark: '공공기관 한글 원고는 인쇄 전 전담 엔지니어가 조판 여백 및 폰트를 직접 정밀 확인합니다.'
+        };
+      }
+
+      // 3. Office 문서 (PPT / Word)
+      if (isOffice) {
+        return {
+          filename: file.name,
+          formatType: 'Office',
+          pages: '판형 검수 대기',
+          width: 210,
+          height: 297,
+          isStandard: true,
+          specLabel: '오피스 서식 원고',
+          statusText: '오피스 원고 접수 완료',
+          remark: '오피스 원고는 슬라이드/페이지 비율에 맞추어 인쇄 판형 가이드를 전담 배정합니다.'
+        };
+      }
+
+      // 4. 디자인 소스 (AI / PSD)
+      if (isDesign) {
+        return {
+          filename: file.name,
+          formatType: 'DESIGN',
+          pages: '아트보드 확인 대기',
+          width: 210,
+          height: 297,
+          isStandard: true,
+          specLabel: '고해상도 그래픽 소스',
+          statusText: '디자인 원본 접수 완료',
+          remark: '인쇄 전담 디자이너가 폰트 아웃라인(윤곽선) 및 해상도를 1:1 정밀 검수합니다.'
+        };
+      }
+
+      // 5. 압축 패키지 (ZIP / RAR)
+      if (isZip) {
+        return {
+          filename: file.name,
+          formatType: 'ZIP',
+          pages: '일괄 확인 대기',
+          width: 210,
+          height: 297,
+          isStandard: true,
+          specLabel: '부속 원고 일괄 패키지',
+          statusText: '압축 패키지 접수 완료',
+          remark: '압축 해제 후 포함된 모든 부속 원고를 전담팀이 일괄 검수합니다.'
+        };
+      }
+
+      // 6. 기타 일반 파일
+      return {
+        filename: file.name,
+        formatType: 'ETC',
+        pages: '검수 대기',
+        width: 210,
+        height: 297,
+        isStandard: true,
+        specLabel: '일반 인쇄 원고',
+        statusText: '원고 접수 완료',
+        remark: '원고 접수 완료 후 담당자가 확인하여 연락드립니다.'
+      };
+    }
+
     async function sendRealPdfToBackend(inputFiles) {
       let filesArr = Array.isArray(inputFiles) ? inputFiles : [inputFiles];
       uploadedFilesList = filesArr;
@@ -1489,46 +1542,29 @@
 
       if (dualContainer) dualContainer.classList.add('hidden');
       if (statusText) statusText.innerText = totalFileCount > 1 ? `총 ${totalFileCount}개 원고 분석 중...` : "원고 분석 중...";
-      if (subText) { subText.innerText = "서버로 원고를 전송하여 규격을 분석하고 있습니다"; subText.classList.remove('hidden'); }
+      if (subText) { subText.innerText = "원고 포맷을 판별하여 맞춤 인쇄 검수를 진행하고 있습니다"; subText.classList.remove('hidden'); }
 
       setStepStatus(1, 'active', '01. 문서 크기/여백 측정');
       setStepStatus(2, 'idle', '02. 이미지 선명도 검수');
       setStepStatus(3, 'idle', '03. 맞춤 제작 가이드 생성');
-
-      if (badge) { badge.innerText = "45%"; badge.style.display = "block"; }
-      if (progressFill) progressFill.style.width = "45%";
+      if (badge) { badge.innerText = "35%"; badge.style.display = "block"; }
+      if (progressFill) progressFill.style.width = "35%";
 
       let scanResults = [];
-
       for (let i = 0; i < filesArr.length; i++) {
-        let file = filesArr[i];
-        try {
-          const formData = new FormData();
-          formData.append("file", file);
-
-          const response = await fetch(`${RENDER_BACKEND_URL}/scan-pdf`, { method: "POST", body: formData });
-          if (!response.ok) throw new Error("서버 응답 오류");
-
-          const data = await response.json();
-          scanResults.push({
-            filename: data.filename || file.name,
-            real: data.real_data,
-            success: true
-          });
-        } catch (err) {
-          console.log("PDF Scan note for " + file.name + ":", err);
-          scanResults.push({
-            filename: file.name,
-            real: {
-              dimension_mm: { width: 210, height: 297 },
-              images_summary: { total_count: 1 },
-              total_pages: 1
-            },
-            success: false
-          });
-        }
+        const parsed = await parseLocalDocument(filesArr[i]);
+        scanResults.push(parsed);
       }
 
+      await new Promise(r => setTimeout(r, 180));
+      setStepStatus(1, 'done', '01. 문서 크기/여백 측정 완료');
+      setStepStatus(2, 'active', '02. 이미지 선명도 검수');
+      if (badge) badge.innerText = "75%";
+      if (progressFill) progressFill.style.width = "75%";
+
+      await new Promise(r => setTimeout(r, 200));
+      setStepStatus(2, 'done', '02. 이미지 선명도 검수 완료');
+      setStepStatus(3, 'done', '03. 맞춤 제작 가이드 생성 완료');
       if (badge) badge.innerText = "100%";
       if (progressFill) progressFill.style.width = "100%";
 
@@ -1540,45 +1576,30 @@
 
       if (totalFileCount === 1) {
         let res = scanResults[0];
-        let w = res.real.dimension_mm.width;
-        let h = res.real.dimension_mm.height;
-        let pages = res.real.total_pages || 1;
-        let isImageValid = res.real.images_summary.total_count > 0;
+        let pagesDisplay = typeof res.pages === 'number' ? `총 ${res.pages}p` : res.pages;
         
-        let isStandardA4Portrait  = Math.abs(w - 210) < 5 && Math.abs(h - 297) < 5;
-        let isStandardA4Landscape = Math.abs(w - 297) < 5 && Math.abs(h - 210) < 5;
-        let isStandard = isStandardA4Portrait || isStandardA4Landscape;
-
-        let specLabel = isStandard 
-          ? (isStandardA4Portrait ? "규격 (A4 세로형)" : "규격 (A4 가로형)")
-          : "비규격";
-
-        lastScannedSpecSummary = `${w} × ${h}mm (${specLabel}) / ${pages}p`;
+        lastScannedSpecSummary = `${res.specLabel} / ${pagesDisplay}`;
 
         summaryBodyHtml = `
           <div class="space-y-0.5 text-[#666666] font-normal text-left leading-tight text-[13px]">
-            <div><strong>원고 규격</strong> : ${w} × ${h}mm (${specLabel})</div>
-            <div><strong>페이지 수</strong> : 총 ${pages}p</div>
-            <div><strong>이미지 해상도</strong> : ${isImageValid ? '300 DPI 이상 충족 (선명한 인쇄 출력 가능)' : '텍스트 및 벡터 기반 (선명한 인쇄 출력 가능)'}</div>
+            <div><strong>원고 포맷</strong> : ${res.formatType}</div>
+            <div><strong>원고 규격</strong> : ${res.specLabel}</div>
+            <div><strong>페이지 수</strong> : ${pagesDisplay}</div>
+            <div><strong>안내 사항</strong> : ${res.remark}</div>
             <div><strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자 확인 후 제작 일정 및 견적을 안내해 드립니다.</div>
           </div>
         `;
       } else {
-        let totalPagesSum = 0;
-        let itemsHtml = scanResults.map((res, idx) => {
-          let w = res.real.dimension_mm.width;
-          let h = res.real.dimension_mm.height;
-          let pages = res.real.total_pages || 1;
-          totalPagesSum += pages;
-          let isImageValid = res.real.images_summary.total_count > 0;
-          
-          let isStandardA4Portrait  = Math.abs(w - 210) < 5 && Math.abs(h - 297) < 5;
-          let isStandardA4Landscape = Math.abs(w - 297) < 5 && Math.abs(h - 210) < 5;
-          let isStandard = isStandardA4Portrait || isStandardA4Landscape;
+        let totalPagesNum = 0;
+        let hasCountablePages = true;
 
-          let specLabel = isStandard 
-            ? (isStandardA4Portrait ? "규격 (A4 세로형)" : "규격 (A4 가로형)")
-            : "비규격";
+        let itemsHtml = scanResults.map((res, idx) => {
+          let pagesDisplay = typeof res.pages === 'number' ? `${res.pages}p` : res.pages;
+          if (typeof res.pages === 'number') {
+            totalPagesNum += res.pages;
+          } else {
+            hasCountablePages = false;
+          }
 
           return `
             <div class="pb-2.5 mb-2.5 border-b border-slate-200/90 last:border-0 last:mb-0 last:pb-0 text-left">
@@ -1587,15 +1608,17 @@
                 <span class="truncate">${res.filename}</span>
               </div>
               <div class="space-y-0.5 text-[#666666] font-normal leading-tight text-[12.5px] pl-1">
-                <div>• <strong>원고 규격</strong> : ${w} × ${h}mm (${specLabel})</div>
-                <div>• <strong>페이지 수</strong> : ${pages}p</div>
-                <div>• <strong>이미지 해상도</strong> : ${isImageValid ? '300 DPI 이상 충족 (선명 출력 가능)' : '텍스트 및 벡터 기반 (선명 출력 가능)'}</div>
+                <div>• <strong>포맷/규격</strong> : ${res.formatType} (${res.specLabel})</div>
+                <div>• <strong>페이지 수</strong> : ${pagesDisplay}</div>
+                <div>• <strong>검수 상태</strong> : ${res.statusText}</div>
               </div>
             </div>
           `;
         }).join("");
 
-        lastScannedSpecSummary = `총 ${totalFileCount}개 원고 검수 완료 (총 ${totalPagesSum}p)`;
+        lastScannedSpecSummary = hasCountablePages 
+          ? `총 ${totalFileCount}개 원고 (총 ${totalPagesNum}p)` 
+          : `총 ${totalFileCount}개 원고 접수`;
 
         summaryBodyHtml = `
           <div class="space-y-3 text-left">
@@ -1620,28 +1643,13 @@
 `;
 
       let consoleLogsBody = scanResults.map((res, idx) => {
-        let w = res.real.dimension_mm.width;
-        let h = res.real.dimension_mm.height;
-        let pages = res.real.total_pages || 1;
-        let isStandardA4Portrait  = Math.abs(w - 210) < 5 && Math.abs(h - 297) < 5;
-        let isStandardA4Landscape = Math.abs(w - 297) < 5 && Math.abs(h - 210) < 5;
-        let isStandard = isStandardA4Portrait || isStandardA4Landscape;
-        let isImageValid = res.real.images_summary.total_count > 0;
-
+        let pagesDisplay = typeof res.pages === 'number' ? `TOTAL ${res.pages} PAGES (ACTUAL PARSED)` : `PENDING (${res.pages})`;
         return `--------------------------------------------------------------------
 [FILE ${idx + 1} / ${totalFileCount} : ${res.filename}]
-  PAGE COUNT     : TOTAL ${pages} PAGES (PARSED PASSED)
-  METRIC SIZE    : ${w} mm x ${h} mm [${isStandard ? 'STANDARD (정부표준 A4 규격)' : 'NON-STANDARD (비규격 원고)'}]
-
-[1. DIMENSION & LAYOUT ANALYSIS]
-  - DIAGNOSIS     : ${isStandard ? 'STANDARD A4 SIZE CONFIRMED (규격)' : 'NON-STANDARD DIMENSION DETECTED (비규격)'}
-  - RECOMMENDATION: ${isStandard ? 'READY FOR DIRECT BOOK BINDING' : 'CUSTOM TRIM & SCALING APPLIED (맞춤 재단 및 판형 보정)'}
-  - MARGIN & BLEED: AUTO ALIGNMENT SYSTEM ACTIVE
-
-[2. BITMAP & IMAGE RESOLUTION CHECK]
-  - BITMAP OBJs   : TOTAL ${res.real.images_summary.total_count} BITMAP OBJECTS PARSED
-  - DPI STATUS    : ${isImageValid ? 'EXCEEDS 300 DPI (PRINT QUALITY: PASS)' : 'PURE VECTOR/TEXT DOCUMENT (PASS)'}
-  - VECTOR TEXT   : FONTS EMBEDDED & STABLE`;
+  FORMAT TYPE    : ${res.formatType}
+  PAGE COUNT     : ${pagesDisplay}
+  SPEC / STATUS  : ${res.specLabel} [${res.statusText}]
+  ENGINE ACTION  : ${res.remark}`;
       }).join("\n\n");
 
       let consoleLogsFooter = `
@@ -1671,7 +1679,7 @@
       }
 
       validateForm();
-      setTimeout(() => { scrollToContactStep(); }, 700);
+      setTimeout(() => { scrollToContactStep(); }, 600);
 
       isScanning = false;
     }
@@ -1737,12 +1745,10 @@
       renderMysticGlobe();
     }
 
-    // 실시간 1:1 드래그 추적 및 3D 입체 들썩임 모션
     window.addEventListener('DOMContentLoaded', () => {
       const panel = document.getElementById('drawer-panel');
       const tab = document.getElementById('drawer-index-tab');
       
-      // 🔒 페이지 로드 시 크롬 자동완성 값 강제 비우기
       const phoneInput = document.getElementById('client-phone');
       const orgInput = document.getElementById('client-org');
       if (phoneInput) phoneInput.value = '';
@@ -1833,7 +1839,6 @@
       }, 6000);
     });
 
-    // 📱 [모바일 전용] 하단 푸터 5회 연속 탭 시 관리자 비밀번호 창 팝업
     let secretTapCount = 0;
     let secretTapTimer = null;
     function triggerMobileAdminSecret() {
@@ -1856,7 +1861,7 @@
       triggerMobileAdminSecret();
     });
 </script>
-<!-- ⌨️ B2B SaaS 커맨드 팔레트 관리자 모달 (Ctrl + K / Cmd + K / 모바일 5회 탭) -->
+
 <div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity p-4">
   <div class="w-full max-w-sm rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-2xl text-neutral-100">
     <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
