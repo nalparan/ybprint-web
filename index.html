@@ -453,6 +453,10 @@
           <div class="flex items-center"><span class="info-label font-urbanist">Address</span><span class="info-value">세종특별자치시 갈매로 364, 푸르지오시티 118호</span></div>
           <div class="flex items-center"><span class="info-label font-urbanist">Tel</span><span class="info-value font-urbanist">044.862.4803</span></div>
           <div class="flex items-center"><span class="info-label font-urbanist">E-mail</span><span class="info-value font-urbanist">admin@ybprint.co.kr</span></div>
+          <div class="flex items-center pt-2 text-neutral-400">
+            <span class="info-label font-urbanist">Copyright</span>
+            <span id="copyright-admin-trigger" class="font-urbanist text-neutral-300 cursor-pointer select-none">2026 청년인쇄사. All Rights Reserved.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -461,9 +465,14 @@
   <div id="drawer-backdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9990] hidden transition-opacity duration-300"></div>
 
   <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-500 ease-out">
-    <button id="drawer-index-tab" title="AI 원고 검수 및 빠른 견적 서랍장 열기" class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
+    
+    <button id="drawer-index-tab" 
+            onclick="toggleDrawer(true)"
+            title="AI 원고 검수 및 빠른 견적 서랍장 열기" 
+            class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
       <span class="text-xs font-black [writing-mode:vertical-rl] tracking-widest text-slate-100 group-hover:text-white py-2 pointer-events-none">끌어당겨보세요</span>
     </button>
+    
     <div class="px-8 py-5 flex justify-between items-center shrink-0 top-header-bg text-white z-20 shadow-md">
       <div class="flex items-center gap-3">
         <h2 class="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight text-left">작성 중인 원고를 첨부하거나 문의사항을 남겨주세요</h2>
@@ -487,6 +496,7 @@
             <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md text-[11px]">STEP 01</span>
             <label class="text-lg font-black text-title tracking-tight">원고 파일 첨부 <span class="text-muted font-normal text-base">(선택)</span></label>
           </div>
+          <span class="text-xs sm:text-sm text-slate-400 font-normal text-xs">※ 01 또는 02 중 하나만 작성하셔도 됩니다</span>
         </div>
         <div id="file-dropzone" onmouseenter="wakeUpBackend()" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" class="w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs hover:shadow-md group">
           <input type="file" id="file-input" class="hidden" accept=".hwp,.hwpx,.pdf,.doc,.docx,.ppt,.pptx,.ai,.psd,.zip,.rar" multiple onchange="handleFileSelect(event)" />
@@ -521,6 +531,7 @@
           <div class="p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3 text-left">
             <div class="flex items-center justify-between border-b border-slate-300 pb-2 text-left">
               <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">[청년인쇄사 AI 원고 확인 및 요약]</span>
+              <span class="text-xs font-mono text-slate-500">청년인쇄사 맞춤 제안</span>
             </div>
             <div class="report-summary-box text-slate-800 space-y-2.5 text-left">
               <p id="rpt-summary-title" class="font-bold text-lg text-slate-900 leading-snug text-left">[청년인쇄사 AI 원고 확인 완료]</p>
@@ -533,6 +544,7 @@
                 <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                 <span class="text-xs font-mono font-bold text-slate-400 ml-2">YBPRINT_AI_ENGINE_TERMINAL_v3.7</span>
               </div>
+              <span class="text-xs font-mono text-slate-300 font-semibold">[ REAL-TIME PARSING REPORT ]</span>
             </div>
             <div id="terminal-console-body" class="p-4 overflow-x-auto whitespace-pre-wrap font-mono text-white leading-relaxed text-left"></div>
           </div>
@@ -1096,6 +1108,213 @@
         btn.innerHTML = '작성한 내용으로 견적 문의하기';
       }
     }
+
+    // 🌐 자비스 3D 글로브 그래픽 캔버스
+    const canvas = document.getElementById('mysticJarvisCanvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = 180; 
+      canvas.width = size * window.devicePixelRatio;
+      canvas.height = size * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      const points = [];
+      const numPoints = 120;
+      const radius = 62; 
+      for (let i = 0; i < numPoints; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos((Math.random() * 2) - 1);
+        points.push({ x: radius * Math.sin(phi) * Math.cos(theta), y: radius * Math.sin(phi) * Math.sin(theta), z: radius * Math.cos(phi) });
+      }
+      let rotationY = 0.003, rotationX = 0.002;
+
+      function renderMysticGlobe() {
+        ctx.clearRect(0, 0, size, size);
+        const cx = size / 2, cy = size / 2, fov = 130; 
+        rotationY += 0.004; rotationX += 0.002;
+        const cosY = Math.cos(rotationY), sinY = Math.sin(rotationY), cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
+        const projected = points.map(p => {
+          let x1 = p.x * cosY - p.z * sinY, z1 = p.x * sinY + p.z * cosY;
+          let y2 = p.y * cosX - z1 * sinX, z2 = p.y * sinX + z1 * cosX;
+          p.x = x1; p.y = y2; p.z = z2;
+          const scale = fov / (fov + z2 + 40);
+          return { x: cx + x1 * scale, y: cy + y2 * scale, z: z2, scale: scale };
+        });
+        const coreGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, 38);
+        coreGrad.addColorStop(0, 'rgba(147, 197, 253, 0.28)');
+        coreGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.1)');
+        coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.beginPath(); ctx.arc(cx, cy, 38, 0, Math.PI * 2); ctx.fillStyle = coreGrad; ctx.fill();
+        ctx.lineWidth = 0.65;
+        for (let i = 0; i < projected.length; i++) {
+          for (let j = i + 1; j < projected.length; j++) {
+            const dx = projected[i].x - projected[j].x, dy = projected[i].y - projected[j].y, dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 40) {
+              const alpha = (1 - dist / 40) * (projected[i].scale * 0.32);
+              ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+              ctx.beginPath(); ctx.moveTo(projected[i].x, projected[i].y); ctx.lineTo(projected[j].x, projected[j].y); ctx.stroke();
+            }
+          }
+        }
+        projected.forEach(p => {
+          if (p.z < 40) {
+            ctx.fillStyle = `rgba(59, 130, 246, ${p.scale * 0.42})`;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.scale * 1.2, 0, Math.PI * 2); ctx.fill();
+          }
+        });
+        requestAnimationFrame(renderMysticGlobe);
+      }
+      renderMysticGlobe();
+    }
+
+    // 📱 [서랍장 드래그/슬라이드 이벤트 및 자동 흔들림 알림]
+    window.addEventListener('DOMContentLoaded', () => {
+      const panel = document.getElementById('drawer-panel');
+      const tab = document.getElementById('drawer-index-tab');
+      if (!panel || !tab) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let draggedDistance = 0;
+      let isClickCandidate = true;
+
+      const getClientX = (e) => e.touches ? e.touches[0].clientX : e.clientX;
+
+      const onStart = (e) => {
+        if (!panel.classList.contains('is-closed')) return;
+        isDragging = true;
+        isClickCandidate = true;
+        startX = getClientX(e);
+        draggedDistance = 0;
+        panel.style.transition = 'none';
+        panel.classList.remove('animate-drawer-wiggle');
+      };
+
+      const onMove = (e) => {
+        if (!isDragging) return;
+        const currentX = getClientX(e);
+        const deltaX = startX - currentX;
+        if (Math.abs(deltaX) > 5) isClickCandidate = false;
+        if (deltaX > 0) {
+          draggedDistance = Math.min(deltaX, panel.offsetWidth);
+          panel.style.transform = `translateX(calc(100% - ${draggedDistance}px))`;
+        }
+      };
+
+      const onEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        panel.style.transition = '';
+        if (isClickCandidate || draggedDistance >= 80) {
+          toggleDrawer(true);
+        } else {
+          toggleDrawer(false);
+        }
+        draggedDistance = 0;
+      };
+
+      tab.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', (e) => { if (isDragging) { e.preventDefault(); onMove(e); } });
+      window.addEventListener('mouseup', onEnd);
+
+      tab.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('touchmove', (e) => { if (isDragging) onMove(e); }, { passive: false });
+      window.addEventListener('touchend', onEnd);
+
+      setTimeout(() => {
+        if (panel.classList.contains('is-closed') && !isDragging) {
+          panel.classList.add('animate-drawer-wiggle');
+          setTimeout(() => panel.classList.remove('animate-drawer-wiggle'), 2000);
+        }
+      }, 2000);
+
+      setInterval(() => {
+        if (panel.classList.contains('is-closed') && !isDragging) {
+          panel.classList.add('animate-drawer-wiggle');
+          setTimeout(() => panel.classList.remove('animate-drawer-wiggle'), 2000);
+        }
+      }, 7000);
+    });
+
+    // 🔒 관리자 센터 비밀 진입 로직
+    let secretTapCount = 0;
+    let secretTapTimer = null;
+    function triggerMobileAdminSecret() {
+      secretTapCount++;
+      if (secretTapTimer) clearTimeout(secretTapTimer);
+      if (secretTapCount >= 5) {
+        secretTapCount = 0;
+        toggleAdminModal(true);
+      } else {
+        secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1800);
+      }
+    }
+
+    document.getElementById('footer-admin-trigger')?.addEventListener('click', function(e) {
+      e.preventDefault(); triggerMobileAdminSecret();
+    });
+    document.getElementById('copyright-admin-trigger')?.addEventListener('click', function(e) {
+      e.preventDefault(); triggerMobileAdminSecret();
+    });
+  </script>
+
+  <!-- 🔒 관리자 모달 -->
+  <div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-2xl text-neutral-100">
+      <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-[11px] font-mono font-semibold bg-neutral-800 border border-neutral-700 text-neutral-300 rounded">ADMIN</span>
+          <h3 class="text-sm font-bold text-white tracking-tight">관리자 커맨드 모드</h3>
+        </div>
+        <button type="button" onclick="toggleAdminModal(false)" class="text-neutral-500 hover:text-neutral-300 text-xs">✕</button>
+      </div>
+      <div class="mt-4">
+        <label class="block text-xs font-medium text-neutral-400 mb-2">마스터 인증 비밀번호</label>
+        <input type="password" id="adminCommandInput" autocomplete="new-password" placeholder="••••" maxlength="20"
+          class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-center text-lg tracking-widest text-white font-mono focus:outline-none focus:border-neutral-400 transition" />
+      </div>
+      <div class="mt-5 flex gap-2">
+        <button type="button" onclick="toggleAdminModal(false)" class="flex-1 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition">닫기</button>
+        <button type="button" onclick="submitAdminAuth()" class="flex-1 py-2.5 bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-bold rounded-xl transition">진입하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault(); toggleAdminModal(true);
+      }
+      if (e.key === 'Escape') toggleAdminModal(false);
+    });
+
+    function toggleAdminModal(show) {
+      const modal = document.getElementById('adminCommandModal');
+      const input = document.getElementById('adminCommandInput');
+      if (!modal) return;
+      if (show) {
+        modal.classList.remove('hidden');
+        input.value = '';
+        setTimeout(() => input.focus(), 50);
+      } else {
+        modal.classList.add('hidden');
+        input.value = '';
+      }
+    }
+
+    function submitAdminAuth() {
+      const input = document.getElementById('adminCommandInput');
+      const pw = input ? input.value : '';
+      if (pw === '76057569') {
+        window.location.href = '/admin.html';
+      } else {
+        alert('인증 비밀번호가 일치하지 않습니다.');
+        if (input) { input.value = ''; input.focus(); }
+      }
+    }
+
+    document.getElementById('adminCommandInput')?.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitAdminAuth();
+    });
   </script>
 </body>
 </html>
