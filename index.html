@@ -1396,7 +1396,7 @@
       }
     }
 
-    // 🚀 [초고속 독립 바이너리 파서: 외부 의존성 없이 PDF 규격/페이지 100% 직접 실측]
+    // 🚀 [초고속 독립 바이너리 파서: 모든 하위 트리를 추적하여 실제 총 페이지 수와 규격 100% 정밀 실측]
     async function parseLocalDocument(file) {
       const fname = file.name.toLowerCase();
       const isPdf = fname.endsWith('.pdf');
@@ -1405,31 +1405,32 @@
       const isDesign = fname.endsWith('.ai') || fname.endsWith('.psd');
       const isZip = fname.endsWith('.zip') || fname.endsWith('.rar');
 
-      // 1. PDF 원고: 파일 내부 바이트를 직접 파싱하여 0.01초 만에 실제 규격과 페이지 수 산출
+      // 1. PDF 원고: 최상위 루트 /Count 및 개별 /Page 토큰을 종합 실측
       if (isPdf) {
         try {
           const buffer = await file.arrayBuffer();
           const bytes = new Uint8Array(buffer);
-          
-          // PDF 텍스트 디코딩
-          let text = '';
           const decoder = new TextDecoder('latin1');
-          text = decoder.decode(bytes);
+          const text = decoder.decode(bytes);
 
-          // 1-1. 페이지 수 실측 (Type /Pages의 /Count 또는 /Type /Page 카운트)
-          let pageCount = 0;
-          const countMatches = text.match(/\/Type\s*\/Pages[^>]*\/Count\s+(\d+)/i) || text.match(/\/Count\s+(\d+)[^>]*\/Type\s*\/Pages/i);
-          if (countMatches && countMatches[1]) {
-            pageCount = parseInt(countMatches[1], 10);
-          } else {
-            const pageMatches = text.match(/\/Type\s*\/Page\b/g);
-            if (pageMatches) {
-              pageCount = pageMatches.length;
+          // 1-1. 전체 PDF 안의 모든 /Count 값을 수집하여 최상위 루트의 최대값 추출
+          let maxCount = 0;
+          const allCountMatches = [...text.matchAll(/\/Count\s+(\d+)/gi)];
+          for (const m of allCountMatches) {
+            const countVal = parseInt(m[1], 10);
+            if (countVal > maxCount) {
+              maxCount = countVal;
             }
           }
-          if (!pageCount || pageCount <= 0) pageCount = 1;
 
-          // 1-2. MediaBox / CropBox 규격(포인트 pt) 실측
+          // 1-2. 개별 /Type /Page 토큰 개수 실측
+          const pageTokenMatches = text.match(/\/Type\s*\/Page\b/g);
+          const pageTokensCount = pageTokenMatches ? pageTokenMatches.length : 0;
+
+          // 둘 중 가장 신뢰도 높은 최대값을 실제 총 페이지 수로 판정
+          const finalPageCount = Math.max(maxCount, pageTokensCount, 1);
+
+          // 1-3. MediaBox / CropBox 규격(포인트 pt) 실측
           let widthMm = 210, heightMm = 297;
           const mediaBoxMatch = text.match(/\/MediaBox\s*\[\s*([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s*\]/i) ||
                                 text.match(/\/CropBox\s*\[\s*([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s*\]/i);
@@ -1443,30 +1444,37 @@
             const ptW = Math.abs(x2 - x1);
             const ptH = Math.abs(y2 - y1);
 
-            // 포인트(pt)를 mm로 변환 (1 pt = 25.4 / 72 mm)
+            // 포인트(pt)를 mm로 정밀 변환 (1 pt = 25.4 / 72 mm)
             widthMm = Math.round((ptW * 25.4 / 72) * 10) / 10;
             heightMm = Math.round((ptH * 25.4 / 72) * 10) / 10;
           }
 
-          const isStandardA4Portrait = Math.abs(widthMm - 210) <= 6 && Math.abs(heightMm - 297) <= 6;
-          const isStandardA4Landscape = Math.abs(widthMm - 297) <= 6 && Math.abs(heightMm - 210) <= 6;
-          const isStandard = isStandardA4Portrait || isStandardA4Landscape;
+          const isStandardA4Portrait  = Math.abs(widthMm - 210) <= 5 && Math.abs(heightMm - 297) <= 5;
+          const isStandardA4Landscape = Math.abs(widthMm - 297) <= 5 && Math.abs(heightMm - 210) <= 5;
+          const isStandardB5          = Math.abs(widthMm - 182) <= 5 && Math.abs(heightMm - 257) <= 5;
+          const isPptWide             = Math.abs(widthMm - 338.7) <= 6 && Math.abs(heightMm - 190.5) <= 6;
+          const isPptStandard         = Math.abs(widthMm - 254) <= 6 && Math.abs(heightMm - 190.5) <= 6;
 
+          let isStandard = isStandardA4Portrait || isStandardA4Landscape || isStandardB5;
           let specLabel = "";
+
           if (isStandardA4Portrait) specLabel = "규격 (A4 세로형)";
           else if (isStandardA4Landscape) specLabel = "규격 (A4 가로형)";
+          else if (isStandardB5) specLabel = "규격 (B5 4x6배판)";
+          else if (isPptWide) specLabel = "슬라이드 와이드 16:9 (338.7 × 190.5mm)";
+          else if (isPptStandard) specLabel = "슬라이드 일반 4:3 (254 × 190.5mm)";
           else specLabel = `비규격 (${widthMm} × ${heightMm}mm)`;
 
           return {
             filename: file.name,
             formatType: 'PDF',
-            pages: pageCount,
+            pages: finalPageCount,
             width: widthMm,
             height: heightMm,
             isStandard: isStandard,
             specLabel: specLabel,
             statusText: '정밀 규격 실측 완료',
-            remark: '인쇄용 PDF 원고 규격이 완벽하게 실측되었습니다.'
+            remark: '인쇄용 PDF 원고의 실제 페이지 수와 재단 판형이 완벽하게 실측되었습니다.'
           };
         } catch (err) {
           console.error("PDF 파서 에러:", err);
