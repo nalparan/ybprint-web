@@ -890,7 +890,7 @@
     function updateHeaderOnScroll() {
       if (!mainHeader || !sec2 || !sec3 || !sec4 || !sec5) return;
       const hH = mainHeader.offsetHeight || 88;
-      const checkY = hH + 8; // 헤더 바로 하단 지점을 기준으로 현재 활성 섹션 정확 판정
+      const checkY = hH + 8;
       const s2R = sec2.getBoundingClientRect();
       const s3R = sec3.getBoundingClientRect();
       const s4R = sec4.getBoundingClientRect();
@@ -1314,23 +1314,51 @@
       btnText.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin inline-block mr-2"></i>접수 처리 중...';
       lucide.createIcons();
 
-      const formData = new FormData();
-      formData.append("org", orgInput.value.trim());
-      formData.append("phone", phoneInput.value.trim());
-      formData.append("inquiry", inquiryInput ? inquiryInput.value.trim() : "");
-      
+      const contactVal = phoneInput.value.trim();
+      const isEmail = /[a-zA-Z@]/.test(contactVal);
+      const orgVal = orgInput.value.trim();
+      const inquiryVal = inquiryInput ? inquiryInput.value.trim() : "";
       let fileNames = uploadedFilesList.map(f => f.name).join(", ");
+      const specVal = lastScannedSpecSummary || "직접 문의 접수";
+
+      const formData = new FormData();
+      formData.append("org", orgVal);
+      formData.append("phone", contactVal);
+      formData.append("inquiry", inquiryVal);
       formData.append("file_name", fileNames || "첨부파일 없음");
-      formData.append("spec", lastScannedSpecSummary || "직접 문의 접수");
+      formData.append("spec", specVal);
 
       try {
+        // 1. 기존 백엔드 DB 저장 요청
         const response = await fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, {
           method: "POST",
           body: formData
         });
 
+        // 2. SendGrid 이메일 자동 발송 (/api/send-order 호출)
+        try {
+          let orderDetailsText = inquiryVal || '별도 작성 내용 없음';
+          if (fileNames) orderDetailsText += `\n- 첨부파일: ${fileNames}`;
+          if (specVal) orderDetailsText += `\n- 규격/스펙: ${specVal}`;
+
+          await fetch('/api/send-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: orgVal,
+              email: isEmail ? contactVal : 'admin@ybprint.co.kr',
+              phone: isEmail ? '' : contactVal,
+              details: orderDetailsText
+            })
+          });
+        } catch (mailErr) {
+          console.error("이메일 발송 처리 알림:", mailErr);
+        }
+
         if (response.ok) {
-          alert("🎉 AI 접수가 성공적으로 완료되었습니다! 담당자가 확인 후 10분 내로 안내를 전달해 드립니다.");
+          alert(isEmail 
+            ? "🎉 접수가 성공적으로 완료되었습니다!\n입력하신 이메일로 접수 확인 메일이 자동 발송되었습니다." 
+            : "🎉 AI 접수가 성공적으로 완료되었습니다!\n담당자가 확인 후 신속히 안내를 전달해 드립니다.");
           orgInput.value = "";
           phoneInput.value = "";
           if (inquiryInput) inquiryInput.value = "";
@@ -1517,7 +1545,6 @@
         let pages = res.real.total_pages || 1;
         let isImageValid = res.real.images_summary.total_count > 0;
         
-        // 규격 판별: 정확히 210*297 (세로형) 또는 297*210 (가로형)만 규격, 그 외는 비규격
         let isStandardA4Portrait  = Math.abs(w - 210) < 5 && Math.abs(h - 297) < 5;
         let isStandardA4Landscape = Math.abs(w - 297) < 5 && Math.abs(h - 210) < 5;
         let isStandard = isStandardA4Portrait || isStandardA4Landscape;
