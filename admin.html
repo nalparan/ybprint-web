@@ -1197,18 +1197,32 @@
       };
 
       try {
-        await fetch(`${RENDER_BACKEND_URL}/send-quote`, {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초 제한
+
+        const res = await fetch(`${RENDER_BACKEND_URL}/send-quote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).catch(() => null);
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
 
-        alert(`🎉 [발송 완료]\n\n수신처: ${activeInquiry.org} (${activeInquiry.phone})\n총 견적금액: ${totalAmount}\n양식: ${template}\n\n고객에게 공식 견적서 및 결제 4대 서류 세트가 안전하게 발송되었습니다.`);
-        closeQuoteModal();
+        const result = await res.json();
+        
+        if (res.ok && result.status === 'success') {
+          alert(`🎉 [발송 완료]\n\n수신처: ${activeInquiry.org} (${result.target})\n총 견적금액: ${totalAmount}\n양식: ${template}\n\n고객에게 공식 견적서가 안전하게 발송되었습니다.`);
+          closeQuoteModal();
+        } else {
+          alert(`⚠️ [발송 확인 필요]\n\n결과: ${result.message || '메일 발송에 실패했습니다.'}\n\n메일플러그 환경변수(SENDER_PW) 또는 수신처 이메일을 확인해 주세요.`);
+        }
       } catch (err) {
         console.error("Quote send error:", err);
-        alert("발송 처리가 완료되었습니다.");
-        closeQuoteModal();
+        if (err.name === 'AbortError') {
+          alert("⚠️ [발송 시간 초과]\n\n메일 서버 응답이 지연되었습니다. Render 대시보드의 SENDER_PW 설정 및 메일플러그 설정을 확인해 주세요.");
+        } else {
+          alert("⚠️ [통신 오류]\n\n서버 통신 중 오류가 발생했습니다: " + err.message);
+        }
       } finally {
         btn.disabled = false;
         btn.innerHTML = originalHtml;
