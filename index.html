@@ -453,10 +453,6 @@
           <div class="flex items-center"><span class="info-label font-urbanist">Address</span><span class="info-value">세종특별자치시 갈매로 364, 푸르지오시티 118호</span></div>
           <div class="flex items-center"><span class="info-label font-urbanist">Tel</span><span class="info-value font-urbanist">044.862.4803</span></div>
           <div class="flex items-center"><span class="info-label font-urbanist">E-mail</span><span class="info-value font-urbanist">admin@ybprint.co.kr</span></div>
-          <div class="flex items-center pt-2 text-neutral-400">
-            <span class="info-label font-urbanist">Copyright</span>
-            <span id="copyright-admin-trigger" class="font-urbanist text-neutral-300 cursor-pointer select-none">2026 청년인쇄사. All Rights Reserved.</span>
-          </div>
         </div>
       </div>
     </div>
@@ -521,8 +517,8 @@
         <div class="space-y-3 pt-1 pl-1 text-left">
           <div class="w-full bg-slate-200 h-[2px] relative overflow-hidden"><div id="ai-progress-fill" class="bg-slate-900 h-full w-0 transition-all duration-500 ease-out"></div></div>
           <div id="ai-step-boxes-wrapper" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm font-semibold pt-1">
-            <div id="ai-step-box-1" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-1" class="w-4 h-4 shrink-0"></i><span id="step-text-1">01. 문서 크기/여백 측정</span></div>
-            <div id="ai-step-box-2" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-2" class="w-4 h-4 shrink-0"></i><span id="step-text-2">02. 이미지 선명도 검수</span></div>
+            <div id="ai-step-box-1" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-1" class="w-4 h-4 shrink-0"></i><span id="step-text-1">01. 문서 포맷 및 치수 실측</span></div>
+            <div id="ai-step-box-2" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-2" class="w-4 h-4 shrink-0"></i><span id="step-text-2">02. 인쇄 최적화 규격 판별</span></div>
             <div id="ai-step-box-3" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all"><i data-lucide="circle-dashed" id="step-icon-3" class="w-4 h-4 shrink-0"></i><span id="step-text-3">03. 맞춤 제작 가이드 생성</span></div>
           </div>
         </div>
@@ -541,7 +537,9 @@
           <div class="terminal-box rounded-2xl overflow-hidden text-left">
             <div class="terminal-header px-4 py-2.5 flex items-center justify-between text-slate-300">
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                 <span class="text-xs font-mono font-bold text-slate-400 ml-2">YBPRINT_AI_ENGINE_TERMINAL_v3.7</span>
               </div>
               <span class="text-xs font-mono text-slate-300 font-semibold">[ REAL-TIME PARSING REPORT ]</span>
@@ -639,6 +637,7 @@
     let hasUploadedFile = false;
     let uploadedFilesList = [];
     let lastScannedSpecSummary = "";
+    let isScanning = false;
 
     function toggleDrawer(open) {
       const backdrop = document.getElementById('drawer-backdrop');
@@ -971,8 +970,25 @@
       if (filesArr.length === 0) return;
       let totalFileCount = filesArr.length;
 
-      document.getElementById('ai-step-boxes-wrapper').classList.remove('hidden');
-      document.getElementById('ai-report-dual-container').classList.add('hidden');
+      isScanning = true;
+
+      const badge = document.getElementById('ai-percent-badge');
+      const statusText = document.getElementById('ai-status-text');
+      const subText = document.getElementById('ai-sub-text');
+      const progressFill = document.getElementById('ai-progress-fill');
+      const stepBoxesWrapper = document.getElementById('ai-step-boxes-wrapper');
+      const dualContainer = document.getElementById('ai-report-dual-container');
+      const diagSignal = document.getElementById("ai-diagnostic-signal");
+
+      if (dualContainer) dualContainer.classList.add('hidden');
+      if (stepBoxesWrapper) stepBoxesWrapper.classList.remove('hidden');
+      if (diagSignal) diagSignal.classList.add('hidden');
+
+      if (statusText) statusText.innerText = totalFileCount > 1 ? `총 ${totalFileCount}개 원고 분석 중...` : `${filesArr[0].name} 분석 중...`;
+      if (subText) { subText.innerText = "원고 포맷을 판별하여 맞춤 인쇄 검수를 진행하고 있습니다"; subText.classList.remove('hidden'); }
+
+      if (badge) { badge.innerText = "35%"; badge.style.display = "block"; }
+      if (progressFill) progressFill.style.width = "35%";
 
       setStepStatus(1, 'active', '01. 문서 포맷 및 치수 실측');
       setStepStatus(2, 'idle', '02. 인쇄 최적화 규격 판별');
@@ -987,10 +1003,14 @@
       await new Promise(r => setTimeout(r, 200));
       setStepStatus(1, 'done', '01. 문서 포맷 및 치수 실측 완료');
       setStepStatus(2, 'active', '02. 인쇄 최적화 규격 판별');
+      if (badge) badge.innerText = "75%";
+      if (progressFill) progressFill.style.width = "75%";
       
       await new Promise(r => setTimeout(r, 200));
       setStepStatus(2, 'done', '02. 인쇄 최적화 규격 판별 완료');
       setStepStatus(3, 'done', '03. 맞춤 제작 가이드 생성 완료');
+      if (badge) badge.innerText = "100%";
+      if (progressFill) progressFill.style.width = "100%";
 
       let summaryTitle = totalFileCount > 1 
         ? `총 ${totalFileCount}개 원고의 검수가 완료되었습니다.`
@@ -1051,9 +1071,25 @@
 
       document.getElementById('terminal-console-body').innerText = consoleLogsBody;
 
-      document.getElementById("ai-diagnostic-signal").classList.remove("hidden");
-      document.getElementById('ai-step-boxes-wrapper').classList.add('hidden');
-      document.getElementById('ai-report-dual-container').classList.remove('hidden');
+      // 분석 완료 UI 상태 적용
+      if (statusText) {
+        statusText.innerText = totalFileCount > 1 ? `${filesArr[0].name} 외 ${totalFileCount - 1}개 파일` : filesArr[0].name;
+      }
+      if (diagSignal) diagSignal.classList.remove("hidden");
+      if (subText) subText.classList.add("hidden");
+      if (badge) badge.style.display = "none";
+      if (stepBoxesWrapper) stepBoxesWrapper.classList.add('hidden');
+      if (dualContainer) dualContainer.classList.remove('hidden');
+
+      const inquiryInput = document.getElementById('text-inquiry');
+      if (inquiryInput) {
+        inquiryInput.placeholder = totalFileCount > 1 
+          ? `청년인쇄사 AI가 첨부된 [총 ${totalFileCount}개 원고]의 분석을 마쳤습니다.\n자세한 제작사양과 완료요청일을 남겨주세요` 
+          : `청년인쇄사 AI가 첨부된 [${filesArr[0].name}] 원고의 분석을 마쳤습니다.\n자세한 제작사양과 완료요청일을 남겨주세요`;
+      }
+
+      validateForm();
+      isScanning = false;
 
       setTimeout(() => {
         document.getElementById('contact-step-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1125,12 +1161,14 @@
         const phi = Math.acos((Math.random() * 2) - 1);
         points.push({ x: radius * Math.sin(phi) * Math.cos(theta), y: radius * Math.sin(phi) * Math.sin(theta), z: radius * Math.cos(phi) });
       }
-      let rotationY = 0.003, rotationX = 0.002;
+      let rotationY = 0.003, rotationX = 0.002, targetRotationY = 0.003, targetRotationX = 0.002;
 
       function renderMysticGlobe() {
         ctx.clearRect(0, 0, size, size);
         const cx = size / 2, cy = size / 2, fov = 130; 
-        rotationY += 0.004; rotationX += 0.002;
+        if (isScanning) { targetRotationY = 0.022; targetRotationX = 0.012; } 
+        else { targetRotationY = 0.003; targetRotationX = 0.002; }
+        rotationY += (targetRotationY - rotationY) * 0.08; rotationX += (targetRotationX - rotationX) * 0.08;
         const cosY = Math.cos(rotationY), sinY = Math.sin(rotationY), cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
         const projected = points.map(p => {
           let x1 = p.x * cosY - p.z * sinY, z1 = p.x * sinY + p.z * cosY;
@@ -1140,25 +1178,28 @@
           return { x: cx + x1 * scale, y: cy + y2 * scale, z: z2, scale: scale };
         });
         const coreGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, 38);
-        coreGrad.addColorStop(0, 'rgba(147, 197, 253, 0.28)');
-        coreGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.1)');
-        coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        if (isScanning) {
+          coreGrad.addColorStop(0, 'rgba(59, 130, 246, 0.45)'); coreGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.25)'); coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        } else {
+          coreGrad.addColorStop(0, 'rgba(147, 197, 253, 0.28)'); coreGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.1)'); coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        }
         ctx.beginPath(); ctx.arc(cx, cy, 38, 0, Math.PI * 2); ctx.fillStyle = coreGrad; ctx.fill();
-        ctx.lineWidth = 0.65;
+        ctx.lineWidth = isScanning ? 0.75 : 0.65;
         for (let i = 0; i < projected.length; i++) {
           for (let j = i + 1; j < projected.length; j++) {
             const dx = projected[i].x - projected[j].x, dy = projected[i].y - projected[j].y, dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 40) {
-              const alpha = (1 - dist / 40) * (projected[i].scale * 0.32);
-              ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+              const alphaBoost = isScanning ? 0.45 : 0.32, alpha = (1 - dist / 40) * (projected[i].scale * alphaBoost);
+              ctx.strokeStyle = isScanning ? `rgba(37, 99, 235, ${alpha * 1.25})` : `rgba(59, 130, 246, ${alpha})`;
               ctx.beginPath(); ctx.moveTo(projected[i].x, projected[i].y); ctx.lineTo(projected[j].x, projected[j].y); ctx.stroke();
             }
           }
         }
         projected.forEach(p => {
           if (p.z < 40) {
-            ctx.fillStyle = `rgba(59, 130, 246, ${p.scale * 0.42})`;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.scale * 1.2, 0, Math.PI * 2); ctx.fill();
+            const dotAlpha = p.scale * (isScanning ? 0.65 : 0.42);
+            ctx.fillStyle = isScanning ? `rgba(37, 99, 235, ${dotAlpha})` : `rgba(59, 130, 246, ${dotAlpha})`;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.scale * (isScanning ? 1.4 : 1.2), 0, Math.PI * 2); ctx.fill();
           }
         });
         requestAnimationFrame(renderMysticGlobe);
