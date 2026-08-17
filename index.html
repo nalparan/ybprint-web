@@ -220,7 +220,7 @@
 
     @keyframes diagnosticBlink {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.98); }
+      50% { transform: scale(0.98); opacity: 0.35; }
     }
     .badge-blink {
       animation: diagnosticBlink 1.5s infinite ease-in-out;
@@ -498,9 +498,19 @@
           </div>
           <span class="text-xs sm:text-sm text-slate-400 font-normal text-xs">※ 01 또는 02 중 하나만 작성하셔도 됩니다</span>
         </div>
-        <div id="file-dropzone" onmouseenter="wakeUpBackend()" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" class="w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs hover:shadow-md group">
+        
+        <!-- 🎯 드래그 앤 드롭 영역 시각 효과 복구 -->
+        <div id="file-dropzone" 
+             onmouseenter="wakeUpBackend()" 
+             onclick="document.getElementById('file-input').click()" 
+             ondragover="handleDragOver(event)" 
+             ondragleave="handleDragLeave(event)" 
+             ondrop="handleFileDrop(event)" 
+             class="w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs hover:shadow-md group">
           <input type="file" id="file-input" class="hidden" accept=".hwp,.hwpx,.pdf,.doc,.docx,.ppt,.pptx,.ai,.psd,.zip,.rar" multiple onchange="handleFileSelect(event)" />
-          <div id="drop-icon-container" class="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-2.5 transition-colors"><i data-lucide="upload-cloud" id="drop-icon" class="w-6 h-6 text-slate-500 group-hover:brand-key-text transition-colors"></i></div>
+          <div id="drop-icon-container" class="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-2.5 transition-colors">
+            <i data-lucide="upload-cloud" id="drop-icon" class="w-6 h-6 text-slate-500 group-hover:brand-key-text transition-colors"></i>
+          </div>
           <div id="drop-title" class="text-base sm:text-lg font-semibold text-slate-800 block mb-1">여기에 원고 파일을 놓으세요</div>
           <span id="drop-sub" class="text-xs sm:text-sm text-slate-400 font-normal block">PDF(1초 정밀실측), HWP, PPT, Word, AI 등 모든 포맷 지원</span>
         </div>
@@ -758,7 +768,6 @@
         </div>`;
     }
 
-    // 🌟 [실시간 입력 검증 및 상태 뱃지/에러문구 완전 복구]
     function validateForm(isBlur = false) {
       const orgInput = document.getElementById('client-org');
       const phoneInput = document.getElementById('client-phone');
@@ -779,7 +788,6 @@
       const phoneResult = checkPhoneOrEmailValid(phoneVal);
       const hasInquiryContent = inquiryVal.length >= 2 || hasUploadedFile;
 
-      // 1. 소속/이름 검증 상태 업데이트
       if (orgVal.trim() === '') {
         if (orgErrorMsg) orgErrorMsg.classList.add('hidden');
         orgInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
@@ -798,7 +806,6 @@
         if (orgStatusIcon) orgStatusIcon.innerHTML = '<span class="text-emerald-600 font-bold">✓ 올바름</span>';
       }
 
-      // 2. 연락처/이메일 검증 상태 업데이트
       if (phoneVal.trim() === '') {
         if (phoneErrorMsg) phoneErrorMsg.classList.add('hidden');
         phoneInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
@@ -822,7 +829,6 @@
         }
       }
 
-      // 3. CTA 버튼 상태 제어
       const btn = document.getElementById('cta-button');
       const btnText = document.getElementById('cta-btn-text');
       if (btn && btnText) {
@@ -853,18 +859,55 @@
       const files = Array.from(e.target.files || []);
       if (files.length > 0) processFiles(files);
     }
-    function handleDragOver(e) { e.preventDefault(); e.stopPropagation(); }
-    function handleDragLeave(e) { e.preventDefault(); e.stopPropagation(); }
+
+    // 🎯 [1. 드래그 오버 시 파란색 하이라이트 효과 복구]
+    function handleDragOver(e) { 
+      e.preventDefault(); 
+      e.stopPropagation(); 
+      const dropzone = document.getElementById('file-dropzone');
+      if (dropzone) {
+        dropzone.className = "w-full bg-blue-50/90 border-2 border-blue-600 p-7 rounded-2xl text-center cursor-pointer transition-all scale-[1.02] shadow-lg ring-4 ring-blue-100";
+      }
+    }
+
+    // 🎯 [드래그 벗어날 시 원래 스타일 복구]
+    function handleDragLeave(e) { 
+      e.preventDefault(); 
+      e.stopPropagation(); 
+      const dropzone = document.getElementById('file-dropzone');
+      if (dropzone && !hasUploadedFile) {
+        dropzone.className = "w-full bg-white border-2 border-dashed border-slate-300 hover:brand-key-border p-7 rounded-2xl text-center cursor-pointer transition-all group";
+      }
+    }
+
     function handleFileDrop(e) {
       e.preventDefault(); e.stopPropagation();
       const files = Array.from(e.dataTransfer ? e.dataTransfer.files : []);
       if (files.length > 0) processFiles(files);
     }
 
+    // 🎯 [첨부 완료 시 에메랄드 초록색 체크 상태 전환 복구]
     function processFiles(files) {
       if (!files || files.length === 0) return;
       hasUploadedFile = true;
-      document.getElementById('drop-title').innerHTML = `<span class="text-slate-900 font-semibold">[${files[0].name}] 첨부 완료</span>`;
+
+      const title = document.getElementById('drop-title');
+      const sub = document.getElementById('drop-sub');
+      const dropzone = document.getElementById('file-dropzone');
+      const iconContainer = document.getElementById('drop-icon-container');
+      const icon = document.getElementById('drop-icon');
+
+      if (dropzone) dropzone.className = "w-full bg-emerald-50/80 border-2 border-emerald-500 p-7 rounded-2xl text-center cursor-pointer transition-all shadow-xs";
+      if (iconContainer) iconContainer.className = "w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-2.5 transition-colors";
+      if (icon) { icon.setAttribute("data-lucide", "check"); icon.className = "w-6 h-6 text-emerald-600"; }
+      lucide.createIcons();
+
+      if (title) {
+        if (files.length === 1) title.innerHTML = `<span class="text-slate-900 font-semibold">[${files[0].name}]</span> <span class="text-emerald-700 font-bold text-sm sm:text-base ml-1.5">✓ 첨부 완료</span>`;
+        else title.innerHTML = `<span class="text-slate-900 font-semibold">[${files[0].name}] 외 ${files.length - 1}개 파일</span> <span class="text-emerald-700 font-bold text-sm sm:text-base ml-1.5">✓ 첨부 완료</span>`;
+      }
+      if (sub) sub.innerText = "클릭하여 다른 파일로 재선택 가능합니다";
+
       validateForm();
       sendRealPdfToBackend(files);
     }
@@ -883,6 +926,26 @@
       }
       text.innerText = labelText;
       lucide.createIcons();
+    }
+
+    // 🎯 [2. 분석 완료 후 연락처 섹션 자동 스크롤 & 펄스 포커스 복구]
+    function scrollToContactStep() {
+      const contactSection = document.getElementById('contact-step-section') || document.getElementById('client-org');
+      const orgInput = document.getElementById('client-org');
+      
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        setTimeout(() => {
+          if (orgInput) {
+            orgInput.classList.add('focus-pulse');
+            try { orgInput.focus({ preventScroll: true }); } catch(e) { orgInput.focus(); }
+            setTimeout(() => {
+              orgInput.classList.remove('focus-pulse');
+            }, 1500);
+          }
+        }, 500);
+      }
     }
 
     function formatExactMm(pt) {
@@ -1216,8 +1279,9 @@
       validateForm();
       isScanning = false;
 
+      // 🎯 분석 완료 후 연락처로 자동 이동 & 펄스 포커스 발동
       setTimeout(() => {
-        document.getElementById('contact-step-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        scrollToContactStep();
       }, 500);
     }
 
