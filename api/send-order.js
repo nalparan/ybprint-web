@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Only POST requests allowed' });
   }
@@ -14,22 +14,23 @@ export default async function handler(req, res) {
     }
   }
 
-  const name = body?.name || '고객';
-  const email = (body?.email || '').trim();
-  const phone = body?.phone || '';
-  const details = body?.details || '';
+  const name = body.name || '고객';
+  const email = (body.email || '').trim();
+  const phone = body.phone || '';
+  const details = body.details || '';
 
-  // 수신 대상: 고객 이메일이 있으면 거기로, 없으면 관리자 메일로
+  // 수신자 지정: 이메일이 입력되었으면 해당 이메일로, 전화번호만 있으면 관리자 메일로 발송
   const targetEmail = (email && email.includes('@')) ? email : 'admin@ybprint.co.kr';
 
-  // 발신자 계정 포맷 강제 보정
-  let smtpUser = (process.env.SMTP_USER || '').trim();
-  let smtpPass = (process.env.SMTP_PASS || '').trim();
-  const senderEmail = smtpUser.includes('@') ? smtpUser : `${smtpUser}@naver.com`;
+  const smtpUser = process.env.SMTP_USER || '';
+  const smtpPass = process.env.SMTP_PASS || '';
+
+  // 네이버 SMTP 발신자 주소 형식 보정
+  const senderAddress = smtpUser.includes('@') ? smtpUser : `${smtpUser}@naver.com`;
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.naver.com',
-    port: parseInt(process.env.SMTP_PORT || '465'),
+    port: 465,
     secure: true,
     auth: {
       user: smtpUser,
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
   });
 
   const mailOptions = {
-    from: `"청년인쇄사" <${senderEmail}>`,
+    from: `"청년인쇄사" <${senderAddress}>`,
     to: targetEmail,
     subject: `[청년인쇄사] ${name}님의 견적/문의 접수 안내`,
     html: `
@@ -60,7 +61,8 @@ export default async function handler(req, res) {
           </div>
         </div>
         <p style="font-size: 12px; color: #94a3b8; margin-top: 20px; line-height: 1.4;">
-          담당자가 내용을 꼼꼼히 확인 후 신속하게 연락드리겠습니다.
+          담당자가 내용을 꼼꼼히 확인 후 신속하게 연락드리겠습니다.<br>
+          추가 문의사항이 있으실 경우 본 메일로 회신해 주시면 안내를 도와드리겠습니다.
         </p>
       </div>
     `,
@@ -68,9 +70,9 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail(mailOptions);
-    return res.status(200).json({ success: true, message: '발송 성공' });
+    return res.status(200).json({ success: true });
   } catch (error) {
     console.error('Mail Send Error:', error);
     return res.status(500).json({ success: false, error: error.message });
   }
-}
+};
