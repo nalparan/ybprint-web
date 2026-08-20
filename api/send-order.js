@@ -15,13 +15,17 @@ export default async function handler(req, res) {
   }
 
   const name = body?.name || '고객';
-  const email = body?.email || '';
+  const email = (body?.email || '').trim();
   const phone = body?.phone || '';
   const details = body?.details || '';
 
-  // 고객이 이메일을 남기면 고객 메일로, 전화번호만 남기면 관리자 메일로 1곳만 단독 발송
+  // 수신 대상: 고객 이메일이 있으면 거기로, 없으면 관리자 메일로
   const targetEmail = (email && email.includes('@')) ? email : 'admin@ybprint.co.kr';
-  const smtpUser = process.env.SMTP_USER || '';
+
+  // 발신자 계정 포맷 강제 보정
+  let smtpUser = (process.env.SMTP_USER || '').trim();
+  let smtpPass = (process.env.SMTP_PASS || '').trim();
+  const senderEmail = smtpUser.includes('@') ? smtpUser : `${smtpUser}@naver.com`;
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.naver.com',
@@ -29,12 +33,12 @@ export default async function handler(req, res) {
     secure: true,
     auth: {
       user: smtpUser,
-      pass: process.env.SMTP_PASS,
+      pass: smtpPass,
     },
   });
 
   const mailOptions = {
-    from: `"청년인쇄사" <${smtpUser}>`,
+    from: `"청년인쇄사" <${senderEmail}>`,
     to: targetEmail,
     subject: `[청년인쇄사] ${name}님의 견적/문의 접수 안내`,
     html: `
@@ -56,8 +60,7 @@ export default async function handler(req, res) {
           </div>
         </div>
         <p style="font-size: 12px; color: #94a3b8; margin-top: 20px; line-height: 1.4;">
-          담당자가 내용을 꼼꼼히 확인 후 신속하게 연락드리겠습니다.<br>
-          추가 문의사항이 있으실 경우 본 메일로 회신해 주시면 안내를 도와드리겠습니다.
+          담당자가 내용을 꼼꼼히 확인 후 신속하게 연락드리겠습니다.
         </p>
       </div>
     `,
@@ -65,7 +68,7 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail(mailOptions);
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, message: '발송 성공' });
   } catch (error) {
     console.error('Mail Send Error:', error);
     return res.status(500).json({ success: false, error: error.message });
