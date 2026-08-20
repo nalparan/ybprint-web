@@ -1,8 +1,12 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
+  // 브라우저에서 주소로 직접 접속(GET)했을 때 정상 가동 여부 확인
   if (req.method !== 'POST') {
-    return res.status(200).json({ message: 'Send-order API is alive!' });
+    return res.status(200).json({ 
+      status: 'online', 
+      message: '청년인쇄사 메일 발송 서버가 정상 작동 중입니다.' 
+    });
   }
 
   try {
@@ -15,12 +19,10 @@ export default async function handler(req, res) {
 
     const rawUser = (process.env.SMTP_USER || '').trim();
     const smtpPass = (process.env.SMTP_PASS || '').trim();
-
-    // 네이버 SMTP 규격 자동 보정 (아이디와 이메일 주소 분리)
     const senderEmail = rawUser.includes('@') ? rawUser : `${rawUser}@naver.com`;
     const authId = rawUser.includes('@') ? rawUser.split('@')[0] : rawUser;
 
-    // 수신처 설정
+    // 수신 대상: 고객 이메일이 있으면 거기로, 없으면 관리자 메일로
     const targetEmail = (email && email.includes('@')) ? email.trim() : 'admin@ybprint.co.kr';
 
     const transporter = nodemailer.createTransport({
@@ -56,9 +58,10 @@ export default async function handler(req, res) {
     };
 
     await transporter.sendMail(mailOptions);
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, message: '발송 성공' });
+
   } catch (error) {
-    console.error('Mail Error:', error);
+    console.error('Mail Send Error:', error);
     return res.status(500).json({ success: false, error: error.message });
   }
-}
+};
