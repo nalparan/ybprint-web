@@ -1,70 +1,63 @@
+import nodemailer from 'nodemailer';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'POST 요청만 지원합니다.' });
+    return res.status(455).json({ message: 'Only POST requests are allowed' });
   }
 
-  try {
-    const { name, email, details, phone } = req.body;
+  const { name, email, phone, details } = req.body;
+  const adminEmail = 'admin@ybprint.co.kr';
 
-    if (!email || !name) {
-      return res.status(400).json({ error: '이름과 이메일은 필수입니다.' });
-    }
+  // 1. 발송 대상자 목록 설정 (고객 이메일이 있으면 고객 + 관리자 모두에게 발송)
+  let recipients = [adminEmail];
+  if (email && email.includes('@') && email !== adminEmail) {
+    recipients.push(email);
+  }
 
-    const emailHtml = `
-      <div style="font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px; color: #1f2937;">
-        <h2 style="color: #2563eb; margin-bottom: 16px; border-bottom: 2px solid #2563eb; padding-bottom: 8px;">청년인쇄사 접수 완료 안내</h2>
-        <p style="font-size: 16px; line-height: 1.6;">안녕하세요, <strong>${name}</strong>님!</p>
-        <p style="font-size: 15px; line-height: 1.6; color: #4b5563;">
-          청년인쇄사에 접수해 주셔서 진심으로 감사드립니다.<br>
-          고객님의 접수 내역이 시스템에 정상 등록되었습니다.
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.naver.com',
+    port: parseInt(process.env.SMTP_PORT || '465'),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: `"청년인쇄사 접수알림" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '), // 관리자와 고객 모두 수신
+    subject: `[청년인쇄사 견적접수] ${name}님의 새로운 문의/주문 내역입니다`,
+    html: `
+      <div style="font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+        <h2 style="color: #2563eb; margin-top: 0; padding-bottom: 12px; border-bottom: 2px solid #2563eb;">청년인쇄사 접수 안내</h2>
+        <p style="font-size: 15px; color: #334155; line-height: 1.6;">
+          안녕하세요! 청년인쇄사에 접수된 신규 견적 및 문의 내역입니다.
         </p>
-
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 20px 0;">
-          <h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 15px;">📋 접수 내역 상세</h4>
-          <p style="margin: 4px 0; font-size: 14px;"><strong>성함 / 상호:</strong> ${name}</p>
-          ${phone ? `<p style="margin: 4px 0; font-size: 14px;"><strong>연락처:</strong> ${phone}</p>` : ''}
-          <p style="margin: 4px 0; font-size: 14px;"><strong>요청 / 주문 내용:</strong></p>
-          <div style="margin-top: 6px; padding: 10px; background-color: #ffffff; border-radius: 4px; font-size: 14px; white-space: pre-wrap; line-height: 1.5;">${details || '접수 내용 없음'}</div>
+        
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin: 20px 0;">
+          <h3 style="font-size: 14px; color: #0f172a; margin-top: 0; margin-bottom: 12px;">📋 접수 내역 상세</h3>
+          <p style="margin: 6px 0; font-size: 14px; color: #475569;"><strong>성함 / 소속:</strong> ${name || '미입력'}</p>
+          <p style="margin: 6px 0; font-size: 14px; color: #475569;"><strong>연락처:</strong> ${phone || '미입력'}</p>
+          <p style="margin: 6px 0; font-size: 14px; color: #475569;"><strong>이메일:</strong> ${email || '미입력'}</p>
+          <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
+            <strong style="font-size: 14px; color: #0f172a;">요청 / 주문 내용:</strong>
+            <pre style="white-space: pre-wrap; font-family: inherit; font-size: 13px; color: #334155; background: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 6px;">${details || '내용 없음'}</pre>
+          </div>
         </div>
-
-        <p style="font-size: 14px; line-height: 1.6; color: #4b5563;">
-          담당자가 내용을 꼼꼼히 확인 후 신속하게 연락드리겠습니다.<br>
-          추가 문의사항이 있으실 경우 본 메일로 회신해 주시면 안내를 도와드리겠습니다.
-        </p>
-
-        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0 16px 0;">
-        <p style="font-size: 13px; color: #9ca3af; margin: 0;">
-          <strong>청년인쇄사</strong> | admin@ybprint.co.kr
+        
+        <p style="font-size: 12px; color: #94a3b8; margin-top: 20px; line-height: 1.4;">
+          * 본 메일은 청년인쇄사 온라인 시스템을 통해 접수 시 관리자 및 고객에게 자동 발송되는 안내 메일입니다.
         </p>
       </div>
-    `;
+    `,
+  };
 
-    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: email, name: name }] }],
-        from: {
-          email: process.env.SENDGRID_FROM_EMAIL || 'admin@ybprint.co.kr',
-          name: '청년인쇄사',
-        },
-        subject: `[청년인쇄사] ${name}님, 주문 접수가 완료되었습니다.`,
-        content: [{ type: 'text/html', value: emailHtml }],
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('SendGrid 오류:', errorText);
-      return res.status(response.status).json({ error: 'SendGrid 발송 실패' });
-    }
-
-    return res.status(200).json({ success: true, message: '발송 성공' });
-  } catch (err) {
-    console.error('서버 에러:', err);
-    return res.status(500).json({ error: '서버 내부 오류' });
+  try {
+    await transporter.sendMail(mailOptions);
+    return res.status(200).json({ success: true, message: '이메일이 성공적으로 발송되었습니다.' });
+  } catch (error) {
+    console.error('Mail Send Error:', error);
+    return res.status(500).json({ success: false, error: error.message });
   }
 }
