@@ -402,11 +402,11 @@
           <div class="flex justify-between items-center gap-6">
             <div class="flex items-center gap-6 text-left">
               <span class="text-sm font-mono text-blue-500 font-bold tracking-widest">01</span>
-              <h3 class="text-lg sm:text-xl font-bold text-neutral-100 group-hover:text-white leading-snug">국책연구원 및 관공서 보고서/책자, 당일 긴급 제작과 세종청사 직배송이 가능한가요?</h3>
+              <h3 class="text-lg sm:text-xl font-bold text-neutral-100 group-hover:text-white leading-snug">회의용 보고서나 세미나 책자, 당일 긴급 제작과 빠른 직배송이 가능한가요?</h3>
             </div>
             <span class="faq-icon text-2xl text-neutral-500 group-hover:text-white font-mono shrink-0">&plus;</span>
           </div>
-          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">오전 원고 확정 시 정부세종청사 및 국책연구원 단지 전역 당일 직배송이 가능합니다. 회의용 보고서, 세미나 책자, 급한 포스터 및 리플릿 등 현장 납기 일정에 맞춰 전담 배송팀이 직접 안전 전달해 드립니다.</div>
+          <div class="faq-answer mt-4 pl-12 text-sm sm:text-base text-neutral-400 leading-relaxed text-left">오전 원고 확정 시 당일 직배송 및 퀵 배송이 가능합니다. 회의용 보고서, 세미나 책자, 급한 포스터 및 리플릿 등 현장 납기 일정에 맞춰 전담 배송팀이 직접 안전하게 전달해 드립니다.</div>
         </div>
         <div class="faq-item border-b border-neutral-900 cursor-pointer py-8 group" onclick="toggleFaq(this)">
           <div class="flex justify-between items-center gap-6">
@@ -540,7 +540,7 @@
           <div class="p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3 text-left">
             <div class="flex items-center justify-between border-b border-slate-300 pb-2 text-left">
               <span class="text-xs font-mono font-bold text-slate-700 tracking-wider">[청년인쇄사 AI 원고 확인 및 요약]</span>
-              <span class="text-xs font-mono text-slate-500">청년인쇄사 맞춤 제안</span>
+              <span class="text-xs font-mono font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">청년인쇄사 맞춤 제안</span>
             </div>
             <div class="report-summary-box text-slate-800 space-y-2.5 text-left">
               <p id="rpt-summary-title" class="font-bold text-lg text-slate-900 leading-snug text-left">[청년인쇄사 AI 원고 확인 완료]</p>
@@ -567,7 +567,7 @@
           <span class="text-xs font-mono font-bold text-white tracking-wider bg-slate-900 px-2.5 py-0.5 rounded-md text-[11px]">STEP 02</span>
           <label class="text-lg font-black text-title tracking-tight">문의내용</label>
         </div>
-        <textarea id="text-inquiry" oninput="handleTextInput(this)" rows="3" placeholder="예) 국책연구원 회의용 보고서 무선제본 50부 당일 직배송 가능한가요?" class="w-full bg-white border border-slate-300 rounded-2xl p-4 text-base text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:border-blue-500 transition-all leading-relaxed shadow-xs text-left"></textarea>
+        <textarea id="text-inquiry" oninput="handleTextInput(this)" rows="3" placeholder="예) 회의용 보고서 스프링제본 50부 오늘까지 제작 가능한가요?" class="w-full bg-white border border-slate-300 rounded-2xl p-4 text-base text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:border-blue-500 transition-all leading-relaxed shadow-xs text-left"></textarea>
         <div id="ai-inquiry-live-card-container"></div>
       </div>
 
@@ -579,18 +579,18 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
           <div class="space-y-1.5 relative text-left">
             <label class="text-sm font-bold text-slate-700 flex justify-between items-center">
-              <span>소속 / 이름 <span class="text-red-500">*</span></span>
+              <span>회사명 / 이름 <span class="text-red-500">*</span></span>
               <span id="org-status-icon" class="text-xs font-bold text-slate-400"></span>
             </label>
-            <input type="text" id="client-org" name="inquiry_org_contact" autocomplete="off" oninput="validateForm()" onblur="validateForm(true)" placeholder="예: 기획홍보팀 홍길동" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs" />
-            <p id="org-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="org-error-text">소속 및 이름을 최소 2자 이상 입력해 주세요.</span></p>
+            <input type="text" id="client-org" name="inquiry_org_contact" autocomplete="off" oninput="validateForm()" onblur="validateForm(true)" placeholder="예: (주)청년기획 홍길동" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs" />
+            <p id="org-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="org-error-text">회사명 및 이름을 최소 2자 이상 입력해 주세요.</span></p>
           </div>
           <div class="space-y-1.5 relative text-left">
             <label class="text-sm font-bold text-slate-700 flex justify-between items-center">
-              <span>직통 연락처 또는 이메일 <span class="text-red-500">*</span></span>
+              <span>연락처 또는 이메일 <span class="text-red-500">*</span></span>
               <span id="phone-status-icon" class="text-xs font-bold text-slate-400"></span>
             </label>
-            <input type="text" id="client-phone" name="inquiry_phone_contact" autocomplete="off" oninput="handlePhoneOrEmailInput(this)" onblur="validateForm(true)" placeholder="예: 01012345678 또는 inquiry@domain.com" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs" />
+            <input type="text" id="client-phone" name="inquiry_phone_contact" autocomplete="off" oninput="handlePhoneOrEmailInput(this)" onblur="validateForm(true)" placeholder="예: 01012345678 또는 admin@ybprint.co.kr" class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-4 text-base font-medium text-title placeholder-[#9EA7B3] focus:outline-none focus:bg-white focus:brand-key-border transition-all shadow-xs" />
             <p id="phone-error-msg" class="text-xs font-semibold text-rose-500 flex items-center gap-1 hidden mt-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="phone-error-text">이메일 형식이 올바르지 않습니다.</span></p>
           </div>
         </div>
@@ -749,23 +749,66 @@
             }
           }, 300);
         }
-      }, 1200);
+      }, 700);
     }
 
     function parseInquiryTextAndRenderCard(text) {
       const cardContainer = document.getElementById('ai-inquiry-live-card-container');
+      if (!cardContainer) return;
+
+      // 제본방식 추출
+      let binding = '일반 제본';
+      if (text.includes('스프링') || text.includes('와이어') || text.includes('링')) binding = '스프링 제본';
+      else if (text.includes('무선') || text.includes('책자') || text.includes('보고서')) binding = '무선제본(PUR)';
+      else if (text.includes('중철') || text.includes('리플릿') || text.includes('소책자')) binding = '중철제본';
+      else if (text.includes('바인더')) binding = '바인더 제본';
+
+      // 요청수량 추출
+      let qty = '수량 확인중';
+      const qtyMatch = text.match(/(\d+)\s*(부|권|장|매|세트|set|EA)/i);
+      if (qtyMatch) {
+        qty = `${qtyMatch[1]}${qtyMatch[2]}`;
+      } else {
+        const numOnly = text.match(/(\d+)/);
+        if (numOnly) qty = `${numOnly[1]}부(추정)`;
+      }
+
+      // 희망일정 추출
+      let scheduleHtml = '<span class="text-emerald-600 font-bold">일정 조율</span>';
+      if (text.includes('오늘') || text.includes('당일') || text.includes('급') || text.includes('지금')) {
+        scheduleHtml = '<span class="text-rose-600 font-bold">당일 긴급 제작</span>';
+      } else if (text.includes('내일') || text.includes('익일')) {
+        scheduleHtml = '<span class="text-blue-600 font-bold">익일 출고 요청</span>';
+      }
+
       cardContainer.innerHTML = `
-        <div class="mt-3 p-5 rounded-2xl bg-slate-100 border border-slate-300 space-y-3">
+        <div class="mt-3 p-4 rounded-2xl bg-slate-100 border border-slate-300 space-y-2.5">
           <div class="flex items-center justify-between border-b border-slate-300 pb-2">
             <span class="text-xs font-mono font-bold text-slate-700">[청년인쇄사 AI 분석 요약]</span>
+            <span class="text-[11px] font-mono font-bold text-blue-600">실시간 분석</span>
           </div>
-          <div class="text-slate-800 space-y-2.5">
-            <p class="font-bold text-lg text-slate-900">문의 사항이 확인되었습니다.</p>
-            <div class="text-[#666666] text-[13px]">
-              <div><strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자가 즉시 확인 후 안내해 드립니다.</div>
+          <div class="text-slate-800 space-y-2">
+            <p class="font-bold text-sm sm:text-base text-slate-900">문의 사항이 분석되었습니다.</p>
+            <div class="grid grid-cols-3 gap-2 text-xs">
+              <div class="bg-white p-2 rounded-xl border border-slate-200">
+                <span class="text-slate-400 block text-[10px] mb-0.5">제본방식</span>
+                <strong class="text-slate-800">${binding}</strong>
+              </div>
+              <div class="bg-white p-2 rounded-xl border border-slate-200">
+                <span class="text-slate-400 block text-[10px] mb-0.5">요청수량</span>
+                <strong class="text-slate-800">${qty}</strong>
+              </div>
+              <div class="bg-white p-2 rounded-xl border border-slate-200">
+                <span class="text-slate-400 block text-[10px] mb-0.5">희망일정</span>
+                <strong>${scheduleHtml}</strong>
+              </div>
+            </div>
+            <div class="text-[#666666] text-[12px] pt-1">
+              <strong>다음 단계</strong> : 아래 연락처를 남겨주시면 담당자가 즉시 확인 후 안내해 드립니다.
             </div>
           </div>
         </div>`;
+      lucide.createIcons();
     }
 
     function validateForm(isBlur = false) {
@@ -789,7 +832,7 @@
       const isContactValid = isOrgValid && phoneResult.isValid;
       const hasInquiryText = inquiryVal.length >= 2;
 
-      // 1. 소속/이름 상태
+      // 1. 회사명/이름 상태
       if (orgVal.trim() === '') {
         if (orgErrorMsg) orgErrorMsg.classList.add('hidden');
         orgInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-1', 'ring-rose-500');
@@ -861,7 +904,7 @@
             if (!hasInquiryText && !orgVal && !phoneVal) {
               btnText.innerText = "수량/문의내용과 연락처를 입력해 주세요";
             } else if (!orgVal || !isOrgValid) {
-              btnText.innerText = "소속/이름을 정확히 입력해 주세요";
+              btnText.innerText = "회사명/이름을 정확히 입력해 주세요";
             } else if (!phoneVal || !phoneResult.isValid) {
               btnText.innerText = "올바른 연락처 형식을 입력해 주세요";
             } else {
@@ -869,11 +912,11 @@
             }
           } else if (hasInquiryText) {
             if (!orgVal || !isOrgValid) {
-              btnText.innerText = "소속/이름을 정확히 입력해 주세요";
+              btnText.innerText = "회사명/이름을 정확히 입력해 주세요";
             } else if (!phoneVal || !phoneResult.isValid) {
               btnText.innerText = "올바른 연락처 형식을 입력해 주세요";
             } else {
-              btnText.innerText = "소속 및 연락처를 입력해 주세요";
+              btnText.innerText = "회사명 및 연락처를 입력해 주세요";
             }
           } else {
             btnText.innerText = "원고 첨부 또는 문의내용을 입력해 주세요 ➔";
@@ -948,6 +991,9 @@
       } else if (status === 'done') {
         box.className = "flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold text-left";
         icon.setAttribute("data-lucide", "check-circle-2"); icon.className = "w-4 h-4 text-emerald-600 shrink-0";
+      } else {
+        box.className = "flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-400 transition-all";
+        icon.setAttribute("data-lucide", "circle-dashed"); icon.className = "w-4 h-4 text-slate-400 shrink-0";
       }
       text.innerText = labelText;
       lucide.createIcons();
@@ -1029,17 +1075,31 @@
           const isPptW = Math.abs(widthMm - 338.7) <= 6 && Math.abs(heightMm - 190.5) <= 6;
 
           let specLabel = "";
+          let recommendation = "";
+
           if (isA4P) specLabel = "규격 (A4 세로형)";
           else if (isA4L) specLabel = "규격 (A4 가로형)";
           else if (isB5) specLabel = "규격 (B5 4x6배판)";
           else if (isPptW) specLabel = "슬라이드 와이드 16:9";
           else specLabel = `비규격`;
 
+          // 지능형 맞춤 제작 사양 추천
+          if (isPptW || isA4L || (widthMm > heightMm)) {
+            recommendation = "가로형 와이어/트윈 스프링 제본 추천 (표지 250g 스노우+단면무광 / 본문 120g 모조 권장)";
+          } else if (finalPageCount >= 30) {
+            recommendation = "고강도 무선제본(PUR) 권장 (표지 250g 아트지+무광코팅 / 본문 100g 미색모조 추천)";
+          } else if (finalPageCount <= 24 && finalPageCount % 4 === 0) {
+            recommendation = "중철제본 최적화 규격 (표지·본문 150g 스노우 / 고해상도 디지털 인쇄 권장)";
+          } else {
+            recommendation = "스프링 또는 무선 제본 권장 (고속 디지털 속성 인쇄 최적화 규격)";
+          }
+
           return {
             filename: file.name,
             formatType: 'PDF',
             dimensionText: `${wDisplay} × ${hDisplay}mm (${specLabel})`,
             pagesText: `${finalPageCount}p`,
+            recommendation: recommendation,
             statusText: '정밀 규격 실측 완료',
             remark: '인쇄용 PDF 원고의 실제 페이지 수와 재단 판형이 완벽하게 실측되었습니다.',
             pagesNum: finalPageCount,
@@ -1054,10 +1114,11 @@
         return {
           filename: file.name,
           formatType: 'HWP (한글)',
-          dimensionText: '공공기관 표준 조판 규격 (A4/B5 맞춤 검수 대기)',
+          dimensionText: '표준 조판 규격 (A4/B5 맞춤 검수 대기)',
           pagesText: '조판 검수 대기',
+          recommendation: '공공/기업 표준 조판 최적화 (무선제본 또는 스프링 바인딩 권장)',
           statusText: '한글 원고 접수 완료',
-          remark: '공공기관 한글 원고는 인쇄 전 전담 엔지니어가 조판 여백 및 폰트를 직접 정밀 확인합니다.',
+          remark: '한글 원고는 인쇄 전 전담 엔지니어가 조판 여백 및 폰트를 직접 정밀 확인합니다.',
           pagesNum: 0
         };
       }
@@ -1068,6 +1129,7 @@
           formatType: 'Office',
           dimensionText: '슬라이드 판형 (인쇄용 판형 최적화 대기)',
           pagesText: '판형 검수 대기',
+          recommendation: '슬라이드 비율 가로 스프링 제본 또는 무선제본 추천',
           statusText: '오피스 원고 접수 완료',
           remark: '오피스 원고는 슬라이드/페이지 비율에 맞추어 인쇄 판형 가이드를 전담 배정합니다.',
           pagesNum: 0
@@ -1080,6 +1142,7 @@
           formatType: 'DESIGN',
           dimensionText: '디자인 아트보드 실측 및 재단선(Bleed) 1:1 검수',
           pagesText: '아트보드 확인 대기',
+          recommendation: '고해상도 CMYK 1:1 매칭 디지털/옵셋 인쇄 권장',
           statusText: '디자인 원본 접수 완료',
           remark: '인쇄 전담 디자이너가 폰트 아웃라인(윤곽선) 및 해상도를 1:1 정밀 검수합니다.',
           pagesNum: 0
@@ -1092,6 +1155,7 @@
           formatType: 'ZIP',
           dimensionText: '압축 해제 후 부속 원고별 개별 판형 검수',
           pagesText: '일괄 확인 대기',
+          recommendation: '부속 파일 일괄 검수 후 맞춤 제본 사양 일괄 안내',
           statusText: '압축 패키지 접수 완료',
           remark: '압축 해제 후 포함된 모든 부속 원고를 전담팀이 일괄 검수합니다.',
           pagesNum: 0
@@ -1103,6 +1167,7 @@
         formatType: 'ETC',
         dimensionText: '일반 인쇄 원고 규격',
         pagesText: '검수 대기',
+        recommendation: '담당자 1:1 상담 후 최적 사양 맞춤 제작',
         statusText: '원고 접수 완료',
         remark: '원고 접수 완료 후 담당자가 확인하여 연락드립니다.',
         pagesNum: 0
@@ -1132,9 +1197,9 @@
       if (statusText) statusText.innerText = totalFileCount > 1 ? `총 ${totalFileCount}개 원고 분석 중...` : `${filesArr[0].name} 분석 중...`;
       if (subText) { subText.innerText = "원고 포맷을 판별하여 맞춤 인쇄 검수를 진행하고 있습니다"; subText.classList.remove('hidden'); }
 
+      // [1단계 시작]
       if (badge) { badge.innerText = "35%"; badge.style.display = "block"; }
       if (progressFill) progressFill.style.width = "35%";
-
       setStepStatus(1, 'active', '01. 문서 포맷 및 치수 실측');
       setStepStatus(2, 'idle', '02. 인쇄 최적화 규격 판별');
       setStepStatus(3, 'idle', '03. 맞춤 제작 가이드 생성');
@@ -1145,17 +1210,30 @@
         scanResults.push(parsed);
       }
 
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, 450));
+
+      // [2단계 시작]
       setStepStatus(1, 'done', '01. 문서 포맷 및 치수 실측 완료');
       setStepStatus(2, 'active', '02. 인쇄 최적화 규격 판별');
-      if (badge) badge.innerText = "75%";
-      if (progressFill) progressFill.style.width = "75%";
+      if (badge) badge.innerText = "70%";
+      if (progressFill) progressFill.style.width = "70%";
       
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, 450));
+
+      // [3단계 시작]
       setStepStatus(2, 'done', '02. 인쇄 최적화 규격 판별 완료');
+      setStepStatus(3, 'active', '03. 맞춤 제작 가이드 생성');
+      if (badge) badge.innerText = "90%";
+      if (progressFill) progressFill.style.width = "90%";
+
+      await new Promise(r => setTimeout(r, 400));
+
+      // [검수 완료]
       setStepStatus(3, 'done', '03. 맞춤 제작 가이드 생성 완료');
       if (badge) badge.innerText = "100%";
       if (progressFill) progressFill.style.width = "100%";
+
+      await new Promise(r => setTimeout(r, 350));
 
       let summaryTitle = totalFileCount > 1 
         ? `총 ${totalFileCount}개 원고의 검수가 완료되었습니다.`
@@ -1168,11 +1246,14 @@
         lastScannedSpecSummary = `${res.dimensionText} / ${res.pagesText}`;
 
         summaryBodyHtml = `
-          <div class="space-y-0.5 text-[#666666] font-normal text-left leading-tight text-[13px]">
+          <div class="space-y-1.5 text-[#666666] font-normal text-left leading-tight text-[13px]">
             <div><strong>원고 포맷</strong> : ${res.formatType}</div>
             <div><strong>원고 규격</strong> : ${res.dimensionText}</div>
             <div><strong>페이지 수</strong> : ${res.pagesText}</div>
-            <div class="pt-1 text-[#444] mt-1"><strong>안내 사항</strong> : ${res.remark}</div>
+            <div class="pt-2 mt-1 border-t border-dashed border-slate-300 text-blue-900 font-medium">
+              <strong class="text-blue-700">💡 추천 사양</strong> : <span class="text-slate-800">${res.recommendation}</span>
+            </div>
+            <div class="pt-1 text-[#555]"><strong>안내 사항</strong> : ${res.remark}</div>
           </div>
         `;
       } else {
@@ -1192,13 +1273,13 @@
               <div class="space-y-0.5 text-[#666666] text-[12.5px] pl-1">
                 <div>• <strong>규격</strong> : ${res.dimensionText}</div>
                 <div>• <strong>페이지 수</strong> : ${res.pagesText}</div>
+                <div class="text-blue-900 font-medium pt-0.5">• <strong>추천</strong> : ${res.recommendation}</div>
               </div>
             </div>
           `;
         }).join("");
 
         lastScannedSpecSummary = hasCountablePages ? `총 ${totalFileCount}개 원고 (총 ${totalPagesNum}p)` : `총 ${totalFileCount}개 원고 접수`;
-
         summaryBodyHtml = `<div class="space-y-3 text-left"><div class="space-y-1">${itemsHtml}</div></div>`;
       }
 
@@ -1222,7 +1303,7 @@
           logText += `\n
 [1. DIMENSION & LAYOUT ANALYSIS]
   - DIAGNOSIS     : ${res.isStandard ? 'STANDARD A4/B5 SIZE CONFIRMED' : 'NON-STANDARD DIMENSION DETECTED'}
-  - RECOMMENDATION: ${res.isStandard ? 'READY FOR DIRECT BOOK BINDING' : 'CUSTOM TRIM & SCALING APPLIED'}
+  - RECOMMENDATION: ${res.recommendation}
   - MARGIN & BLEED: AUTO ALIGNMENT SYSTEM ACTIVE
 
 [2. BITMAP & IMAGE RESOLUTION CHECK]
@@ -1230,10 +1311,10 @@
   - VECTOR TEXT   : FONTS EMBEDDED & STABLE`;
         } else if (res.formatType === 'HWP (한글)') {
           logText += `\n
-[1. KOREAN GOV STANDARD (HWP/HWPX) ANALYSIS]
+[1. STANDARD HWP/HWPX ANALYSIS]
   - HEADER PARSING: HWP DOCUMENT STRUCTURE DETECTED
   - FONT CHECK    : BATANG/GULIM/HYFONTS EMBEDDING STATUS [PENDING]
-  - MARGIN ALIGN  : 15mm/20mm OFFICIAL DOC MARGIN CHECK QUEUED
+  - MARGIN ALIGN  : OFFICIAL DOC MARGIN CHECK QUEUED
 
 [2. PRE-PRESS PREPARATION]
   - CONVERSION    : HWP TO PDF/X-1A RENDER ENGINE ASSIGNED
