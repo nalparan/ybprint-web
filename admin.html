@@ -52,9 +52,8 @@
   <!-- 🌐 상단 네비게이션 바 -->
   <header class="bg-white/95 backdrop-blur-md border-b border-[#E5E8EB] px-4 sm:px-[5vw] py-3.5 sm:py-0 sm:h-20 flex items-center justify-between sticky top-0 z-40 shadow-xs">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-[#3182F6] to-[#60A5FA] flex items-center justify-center text-white font-black text-sm sm:text-base shadow-md shadow-blue-500/20 font-urbanist shrink-0">
-        YB
-      </div>
+      <!-- ① 좌측 상단 YB 로고 -> 파비콘 이미지로 교체 -->
+      <img src="/favicon.png" alt="청년인쇄사 로고" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl object-contain shadow-xs border border-[#E5E8EB] p-1 bg-white shrink-0">
       <div>
         <div class="flex items-center gap-2">
           <h1 class="font-extrabold text-base sm:text-xl text-[#191F28] tracking-tight">청년인쇄사</h1>
@@ -149,7 +148,7 @@
         </div>
       </div>
 
-      <!-- 📱 [모바일 전용 뷰: md 미만] 토스형 피드 카드 리스트 -->
+      <!-- 📱 [모바일 전용 뷰: md 미만] -->
       <div id="mobile-card-container" class="md:hidden divide-y divide-[#E5E8EB] p-3 space-y-3">
         <div class="py-12 text-center text-[#8B95A1] flex flex-col items-center justify-center gap-2">
           <i data-lucide="loader-2" class="w-6 h-6 text-[#3182F6] animate-spin"></i>
@@ -157,7 +156,7 @@
         </div>
       </div>
 
-      <!-- 💻 [PC/태블릿 전용 뷰: md 이상] 고정 테이블 뷰 -->
+      <!-- 💻 [PC/태블릿 전용 뷰: md 이상] -->
       <div class="hidden md:block overflow-x-auto w-full">
         <table class="w-full text-left border-collapse table-fixed min-w-[1100px]">
           <thead>
@@ -168,7 +167,7 @@
               <th class="py-4 px-4 w-44">연락처</th>
               <th class="py-4 px-5 w-[360px]">첨부 원고 / 규격</th>
               <th class="py-4 px-5 w-auto">문의 및 요청사항</th>
-              <th class="py-4 pl-3 pr-7 text-center w-52">관리</th>
+              <th class="py-4 pl-3 pr-7 text-center w-36">관리</th>
             </tr>
           </thead>
           <tbody id="inquiry-table-body" class="divide-y divide-[#E5E8EB] text-[#333D4B] text-[14px]">
@@ -245,7 +244,7 @@
           <span id="step-text-2" class="ml-2 font-bold text-[#8B95A1] text-sm hidden sm:inline">② 견적검증(엑셀 3종 원본뷰)</span>
           <div class="flex-1 h-px bg-[#E5E8EB] mx-3"></div>
         </div>
-        <div class="flex items-center">
+        <div class="flex-1 flex items-center">
           <div id="step-dot-3" class="w-7 h-7 rounded-full bg-[#F2F4F6] text-[#8B95A1] flex items-center justify-center font-bold text-xs">3</div>
           <span id="step-text-3" class="ml-2 font-bold text-[#8B95A1] text-sm hidden sm:inline">③ 고객 발송 & 다운로드</span>
         </div>
@@ -295,7 +294,7 @@
             </div>
           </div>
 
-          <!-- 항목별 상세내역 테이블 (비고란 포함) -->
+          <!-- 항목별 상세내역 테이블 -->
           <div class="bg-white p-4 sm:p-5 rounded-2xl border border-[#E5E8EB] shadow-2xs space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -357,25 +356,20 @@
             </div>
           </div>
 
-          <!-- 실제 엑셀 3종 원본 1:1 렌더링 페이퍼 박스 (PDF 변환 타깃) -->
           <div id="quote-printable-area" class="quote-paper p-6 sm:p-10 rounded-2xl border border-slate-300 max-w-3xl mx-auto text-slate-900 text-xs">
             
-            <!-- 문서 헤더 -->
             <div class="text-center mb-6">
               <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-slate-900 pb-2 inline-block px-10">견 &nbsp; 적 &nbsp; 서</h2>
             </div>
 
-            <!-- 발신/수신 2단 테이블 (엑셀 서식 동일) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <!-- 수신처 정보 -->
               <div class="space-y-1.5 border border-slate-400 p-3.5 rounded-lg bg-slate-50/40">
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">수 &nbsp; &nbsp; 신 :</span> <strong id="paper-receiver-org" class="text-sm font-black text-blue-900"></strong></div>
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">연 락 처 :</span> <span id="paper-receiver-phone" class="font-mono-code font-bold"></span></div>
-                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 17일</span></div>
+                <div class="flex items-center"><span class="w-16 font-bold text-slate-600">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 22일</span></div>
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">제 &nbsp; &nbsp; 목 :</span> <span id="paper-quote-title" class="font-bold">인쇄 및 제본 제작 건</span></div>
               </div>
 
-              <!-- 공급자(청년인쇄사) 고정 정보 (사업자등록증 일치) -->
               <div class="border border-slate-400 p-3.5 rounded-lg text-[11px] leading-relaxed relative bg-slate-50/40">
                 <div class="font-extrabold text-xs text-slate-900 mb-1 flex items-center justify-between">
                   <span>공 급 자 (청년인쇄사)</span>
@@ -388,7 +382,6 @@
               </div>
             </div>
 
-            <!-- 합계금액 바 (한글 금액 및 숫자 금액) -->
             <div class="bg-slate-900 text-white px-4 py-3 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 mb-6 font-bold">
               <div class="text-xs flex items-center gap-2">
                 <span>합계금액 :</span>
@@ -399,15 +392,10 @@
               </div>
             </div>
 
-            <!-- 견적 세부 내역 테이블 (엑셀 3종 원본 1:1 매핑) -->
             <div class="overflow-x-auto">
               <table class="excel-grid-table text-[11px] text-left">
-                <thead id="paper-table-thead" class="bg-slate-100 text-slate-800 text-center font-bold">
-                  <!-- 양식에 따라 동적 변경 -->
-                </thead>
-                <tbody id="paper-table-tbody" class="divide-y divide-slate-300 text-slate-800">
-                  <!-- 양식에 따라 동적 변경 -->
-                </tbody>
+                <thead id="paper-table-thead" class="bg-slate-100 text-slate-800 text-center font-bold"></thead>
+                <tbody id="paper-table-tbody" class="divide-y divide-slate-300 text-slate-800"></tbody>
                 <tfoot class="bg-slate-50 font-bold">
                   <tr>
                     <td colspan="4" class="text-center py-2 text-slate-700">공급가액 소계</td>
@@ -444,7 +432,6 @@
           </div>
 
           <div class="max-w-xl mx-auto space-y-4">
-            <!-- 발송 옵션 탭 라디오 버튼 -->
             <div class="grid grid-cols-2 gap-3">
               <label id="label-channel-auto" onclick="switchSendChannel('auto')" class="border-2 border-[#3182F6] bg-blue-50/50 p-3.5 rounded-2xl flex items-center gap-3 cursor-pointer transition-all">
                 <input type="radio" name="send_channel" id="radio-channel-auto" value="auto" checked class="text-[#3182F6]" />
@@ -463,7 +450,6 @@
               </label>
             </div>
 
-            <!-- 발송 메시지 미리보기 (스마트 발송 시 표출) -->
             <div id="smart-preview-card" class="bg-white border border-[#E5E8EB] rounded-2xl p-5 shadow-2xs space-y-2 text-left font-mono-code text-xs leading-relaxed text-[#333D4B]">
               <div class="text-[11px] font-bold text-[#8B95A1] font-sans pb-2 border-b border-[#E5E8EB]">발송 메일 내용 프리뷰</div>
               <p><strong>[청년인쇄사 견적 안내]</strong></p>
@@ -473,7 +459,6 @@
               <p class="pt-2 text-slate-500 font-sans text-[11px]">※ 공식 견적 내역과 필수 4대 증빙 서류 안내가 고객 이메일로 안전하게 전송됩니다.</p>
             </div>
 
-            <!-- PDF 전용 안내 (PDF 다운로드만 선택 시 표출) -->
             <div id="pdf-only-card" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left text-xs space-y-1.5 text-slate-700">
               <div class="font-bold text-sm text-slate-900 flex items-center gap-1.5 mb-1">
                 <i data-lucide="download" class="w-4 h-4 text-blue-600"></i>
@@ -498,13 +483,11 @@
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
         
-        <!-- 발송 버튼 (스마트 발송 모드) -->
         <button id="btn-submit-smart" onclick="submitQuoteSmartSend()" class="hidden px-6 py-2.5 bg-[#00B46B] hover:bg-[#009256] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="check-circle-2" class="w-4 h-4"></i>
           <span>고객에게 견적서 전송하기</span>
         </button>
 
-        <!-- 다운로드 버튼 (PDF 다운로드 모드) -->
         <button id="btn-submit-download" onclick="submitQuotePdfDownload()" class="hidden px-6 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="download" class="w-4 h-4"></i>
           <span>견적서 PDF 다운로드</span>
@@ -521,17 +504,17 @@
   <script>
     lucide.createIcons();
 
+    // 원래 정상 작동하던 백엔드 엔드포인트 유지
     const RENDER_BACKEND_URL = "https://ybprint-backend-1.onrender.com";
     let allInquiries = [];
 
-    // 청년인쇄사 기본 단가표 정의 (VAT 제외)
     const BASE_PRICES = {
-      print_bw: 50,      // 흑백출력 (page당)
-      print_color: 500,  // 칼라출력 (page당)
-      cover_print: 1700, // 표지출력 (부당)
-      cover_coat: 2200,  // 표지코팅 (부당)
-      bind_perfect: 3300,// 무선제본 (부당)
-      bind_wire: 3300    // 와이어제본 (부당)
+      print_bw: 50,
+      print_color: 500,
+      cover_print: 1700,
+      cover_coat: 2200,
+      bind_perfect: 3300,
+      bind_wire: 3300
     };
 
     let activeInquiry = null;
@@ -655,20 +638,18 @@
               <span class="text-xs font-mono-code text-[#8B95A1]">${timeRaw}</span>
             </div>
 
+            <!-- ② 연락처 아이콘 삭제 및 ③ 통화 버튼 삭제 적용 (모바일 뷰) -->
             <div class="flex items-center justify-between gap-2">
               <div>
                 <span class="text-[11px] font-bold text-[#8B95A1] block">소속 / 성함</span>
-                <span class="text-sm font-extrabold text-[#191F28]">${org}</span>
+                <span class="text-sm font-extrabold text-[#191F28] block">${org}</span>
+                <span class="text-xs font-mono-code font-bold text-[#1B64DA] block mt-0.5 select-all">${phone}</span>
               </div>
               <div class="flex items-center gap-1.5">
-                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}')" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#3182F6] active:bg-[#1B64DA] text-white rounded-xl text-xs font-bold shadow-md cursor-pointer">
-                  <i data-lucide="calculator" class="w-3 h-3"></i>
+                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}')" class="inline-flex items-center gap-1 px-3.5 py-2 bg-[#3182F6] active:bg-[#1B64DA] text-white rounded-xl text-xs font-bold shadow-md cursor-pointer">
+                  <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
                   <span>견적작성</span>
                 </button>
-                <a href="tel:${phone.replace(/[^0-9]/g, '')}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#E8F8F0] active:bg-[#D3F5E4] text-[#008A50] rounded-xl text-xs font-bold border border-[#B7F0D4]">
-                  <i data-lucide="phone-call" class="w-3 h-3 text-[#00B46B]"></i>
-                  <span>${phone}</span>
-                </a>
               </div>
             </div>
 
@@ -770,12 +751,12 @@
             <td class="py-5 pl-6 pr-3 font-mono-code font-bold text-[#8B95A1] text-center text-[13px]">${String(no).padStart(2, '0')}</td>
             <td class="py-5 px-4 whitespace-nowrap">${timeHtml}</td>
             <td class="py-5 px-5 font-bold text-[#191F28] text-[15px] truncate" title="${org}">${org}</td>
-            <td class="py-5 px-4 font-mono-code text-[#1B64DA] font-bold whitespace-nowrap text-[14px]">
-              <a href="tel:${phone.replace(/[^0-9]/g, '')}" class="hover:underline flex items-center gap-1.5">
-                <i data-lucide="phone" class="w-3.5 h-3.5 text-[#3182F6] shrink-0"></i>
-                <span>${phone}</span>
-              </a>
+            
+            <!-- ② 연락처 전화기 아이콘 완전 삭제 (텍스트만 깔끔하게 표시) -->
+            <td class="py-5 px-4 font-mono-code text-[#1B64DA] font-bold whitespace-nowrap text-[14px] select-all">
+              <span>${phone}</span>
             </td>
+            
             <td class="py-5 px-5">
               <div class="space-y-2 flex flex-col items-start max-w-[340px]">
                 ${fileChipsHtml}
@@ -791,15 +772,13 @@
                 </div>
               </div>
             </td>
+            
+            <!-- ③ 통화 배지 삭제 / 견적작성 단독 배치 -->
             <td class="py-5 pl-3 pr-7 text-center whitespace-nowrap">
-              <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}')" class="inline-flex items-center justify-center gap-1 px-3.5 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-[13px] font-extrabold shadow-md transition-all whitespace-nowrap cursor-pointer">
+              <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}')" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-[13px] font-extrabold shadow-md transition-all whitespace-nowrap cursor-pointer">
                 <i data-lucide="calculator" class="w-3.5 h-3.5 shrink-0"></i>
                 <span>견적작성</span>
               </button>
-              <a href="tel:${phone.replace(/[^0-9]/g, '')}" class="ml-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-[#E8F8F0] hover:bg-[#D3F5E4] text-[#008A50] hover:text-[#006C3E] rounded-xl text-[13px] font-extrabold border border-[#B7F0D4] transition-all whitespace-nowrap shadow-2xs">
-                <i data-lucide="phone-call" class="w-3.5 h-3.5 text-[#00B46B] shrink-0"></i>
-                <span>통화</span>
-              </a>
             </td>
           </tr>
         `;
@@ -1159,7 +1138,6 @@
       }
     }
 
-    // 🚀 SendGrid API 연동 발송 함수 (/api/send-estimate 호출)
     async function submitQuoteSmartSend() {
       const btn = document.getElementById('btn-submit-smart');
       const originalHtml = btn.innerHTML;
@@ -1237,7 +1215,6 @@
       }
     }
 
-    // 견적서 PDF 브라우저 즉시 다운로드 실행
     function submitQuotePdfDownload() {
       const btn = document.getElementById('btn-submit-download');
       const originalHtml = btn.innerHTML;
@@ -1270,9 +1247,6 @@
       });
     }
 
-    // ----------------------------------------------------------------
-    // 검색 필터 및 공통 
-    // ----------------------------------------------------------------
     function filterInquiries() {
       const q = document.getElementById('search-input').value.toLowerCase().trim();
       if (!q) {
