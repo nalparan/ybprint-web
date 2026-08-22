@@ -29,21 +29,21 @@
     ::-webkit-scrollbar-thumb { background: #D1D6DB; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #B0B8C1; }
 
-    /* 관공서 정산용 실제 엑셀 1:1 격자 서식 */
+    /* 관공서 정산용 실제 엑셀 1:1 출력 스타일 */
     .quote-paper {
       background: #FFFFFF;
       box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-      font-family: "Pretendard Variable", 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      font-family: 'Malgun Gothic', "Pretendard Variable", 'Noto Sans KR', sans-serif;
       color: #000000;
     }
-    .excel-grid-table {
+    .excel-table {
       border: 1.5px solid #000000 !important;
       border-collapse: collapse !important;
       width: 100%;
     }
-    .excel-grid-table th, .excel-grid-table td {
-      border: 1px solid #333333 !important;
-      padding: 5px 6px;
+    .excel-table th, .excel-table td {
+      border: 1px solid #444444 !important;
+      padding: 6px 8px;
     }
   </style>
 </head>
@@ -264,8 +264,8 @@
             <div class="flex-1">
               <label class="text-xs font-bold text-[#191F28] block mb-1">견적서 양식 선택 <span class="text-red-500">*</span></label>
               <select id="quote-template-select" onchange="onTemplateChange()" class="w-full bg-[#F9FAFB] border border-[#D1D6DB] rounded-xl px-3 py-2 text-sm font-bold text-[#191F28] focus:border-[#3182F6] focus:outline-none focus:bg-white transition-all">
-                <option value="디지털일반">📄 디지털일반 (글로벌리서치 표준형)</option>
                 <option value="디지탈상세">🏛️ 디지탈상세 (국가공무원인재개발원 전용 산출식)</option>
+                <option value="디지털일반">📄 디지털일반 (글로벌리서치 표준형)</option>
                 <option value="옵셋일반">🖨️ 옵셋일반 (비즈쿡 카탈로그 대량인쇄형)</option>
               </select>
             </div>
@@ -327,89 +327,18 @@
           </div>
         </div>
 
-        <!-- STEP 2: 견적 검증 (실물 3종 엑셀/PDF 원본 1:1 완벽 렌더링) -->
+        <!-- STEP 2: 견적 검증 (실제 3종 엑셀/PDF 원본 1:1 완벽 렌더링 컨테이너) -->
         <div id="quote-step-2-content" class="space-y-4 hidden">
           <div class="bg-[#E8F3FF] border border-[#BBDDFF] rounded-2xl p-4 flex gap-3 items-start text-left text-sm text-[#1B64DA] font-medium">
             <i data-lucide="shield-check" class="w-5 h-5 shrink-0 mt-0.5 text-[#3182F6]"></i>
             <div>
               <p class="font-bold text-[#191F28] mb-0.5">고객에게 전송될 실제 견적서 서식을 최종 검증해 주세요.</p>
-              <p class="text-xs text-[#4E5968]">선택하신 <strong id="preview-template-title" class="text-[#1B64DA] font-bold">디지털일반</strong> 원본 서식 그대로 데이터가 1:1 매핑되었습니다.</p>
+              <p class="text-xs text-[#4E5968]">선택하신 <strong id="preview-template-title" class="text-[#1B64DA] font-bold">디지탈상세</strong> 원본 서식 그대로 데이터가 1:1 매핑되었습니다.</p>
             </div>
           </div>
 
-          <!-- A4 관공서 실제 엑셀 출력 페이퍼 -->
+          <!-- A4 관공서 실제 엑셀 출력 페이퍼 (JS에서 동적 1:1 빌드) -->
           <div id="quote-printable-area" class="quote-paper p-6 sm:p-10 rounded-2xl border border-slate-300 max-w-3xl mx-auto text-slate-900 text-xs">
-            <div class="text-center mb-5">
-              <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
-            </div>
-            
-            <!-- 상단 발신/공급자 2단 결재 박스 (원본 엑셀 동일) -->
-            <div class="grid grid-cols-2 gap-3 mb-4">
-              <div class="border border-black p-3 leading-relaxed bg-slate-50/20 text-[11.5px]">
-                <div><strong>수 &nbsp; &nbsp; 신 :</strong> <span id="paper-receiver-org" class="font-black text-blue-950 text-sm"></span></div>
-                <div><strong>발 &nbsp; &nbsp; 신 :</strong> 청년인쇄사</div>
-                <div><strong>일 &nbsp; &nbsp; 자 :</strong> <span id="paper-quote-date" class="font-mono-code">2026년 08월 22일</span></div>
-                <div><strong>제 &nbsp; &nbsp; 목 :</strong> <span id="paper-quote-title" class="font-bold">출력 및 제본 견적의 件</span></div>
-              </div>
-              <div class="border border-black p-3 text-[11px] leading-relaxed relative bg-slate-50/20">
-                <div class="font-bold text-xs flex justify-between">
-                  <span>청 년 인 쇄 사</span>
-                  <span class="font-mono-code">119-22-03638</span>
-                </div>
-                <div><strong>대 &nbsp; &nbsp; 표 :</strong> 임형택</div>
-                <div><strong>소 재 지 :</strong> 세종특별자치시 갈매로 364, 118호 (푸르지오시티1차)</div>
-                <div><strong>직통전화 :</strong> 044-862-4803 &nbsp;|&nbsp; <strong>E-mail :</strong> admin@ybprint.co.kr</div>
-              </div>
-            </div>
-
-            <!-- 합계금액 엑셀 바[cite: 1, 2, 3] -->
-            <div class="border border-black bg-slate-100 px-4 py-2.5 flex justify-between items-center mb-4 text-[12px] font-bold">
-              <div>
-                <span>합계금액 :</span>
-                <span id="paper-hangul-total" class="font-black text-slate-950 ml-1 text-sm">일금 원 정</span>
-              </div>
-              <div class="font-mono-code text-sm font-black">
-                (₩ <span id="paper-number-total">0</span>)
-              </div>
-            </div>
-
-            <!-- [디지탈상세 전용] 품명/규격/수량/면수/사양 요약 테이블[cite: 1] -->
-            <div id="paper-injob-summary-box" class="mb-4 hidden">
-              <table class="excel-grid-table text-[11px] text-center">
-                <thead class="bg-slate-100 font-bold">
-                  <tr>
-                    <th class="py-1 px-2">품명</th>
-                    <th class="py-1 px-2 w-20">규격</th>
-                    <th class="py-1 px-2 w-16">수량</th>
-                    <th class="py-1 px-2 w-16">면수</th>
-                    <th class="py-1 px-3">사양</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td id="paper-summary-name" class="py-1.5 px-2 text-left font-bold">인재개발원 교육 교재 제작</td>
-                    <td class="py-1.5 px-2 font-mono-code">210*297</td>
-                    <td id="paper-summary-qty" class="py-1.5 px-2 font-mono-code font-bold">100부</td>
-                    <td id="paper-summary-pages" class="py-1.5 px-2 font-mono-code">26p</td>
-                    <td class="py-1.5 px-3 text-left font-medium">표지 칼라 / 본문 흑백 / 무선제본</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- 실물 엑셀 격자 본문 테이블[cite: 1, 2, 3] -->
-            <div class="overflow-x-auto">
-              <table class="excel-grid-table text-[11px] text-left">
-                <thead id="paper-table-thead" class="bg-slate-100 text-center font-bold"></thead>
-                <tbody id="paper-table-tbody" class="divide-y divide-slate-400"></tbody>
-                <tfoot id="paper-table-tfoot" class="bg-slate-50 font-bold"></tfoot>
-              </table>
-            </div>
-
-            <div class="mt-4 text-[10px] text-slate-600 space-y-0.5">
-              <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
-              <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
-            </div>
           </div>
         </div>
 
@@ -878,17 +807,8 @@
 
       const totalPageImpressions = detectedPageCount * currentBookCount;
 
-      if (template === '디지털일반') {
-        // 글로벌리서치 원본 서식 1:1[cite: 2]
-        addQuoteDataRow('기획', '-', '-', 0, 0, '');
-        addQuoteDataRow('디자인', '-', '-', 0, 0, '');
-        addQuoteDataRow('제작', '칼라출력', '표지 (315*468)', currentBookCount, BASE_PRICES.cover_print, '표지/단면/스노우250g');
-        addQuoteDataRow('제작', '흑백출력', '내지 (210*297)', totalPageImpressions, BASE_PRICES.print_bw, `${detectedPageCount}p x ${currentBookCount}부 / 모조80g`);
-        addQuoteDataRow('제작', '코팅', '표지 무광코팅', currentBookCount, BASE_PRICES.cover_coat, '표지/단면무광');
-        addQuoteDataRow('제작', '제본', '무선제본', currentBookCount, BASE_PRICES.bind_perfect, '무선 책제본');
-        addQuoteDataRow('기타', '배송', '세종 직배송', 1, 0, '당일 안전 직배송');
-      } else if (template === '디지탈상세') {
-        // 국가공무원인재개발원 원본 서식 1:1 (표지+코팅+제본 = 7,200원 완벽 일치)[cite: 1]
+      if (template === '디지탈상세') {
+        // 국가공무원인재개발원 원본 서식 1:1 (표지+코팅+제본 = 7,200원 일치)[cite: 1]
         const coverAndBindPerBook = BASE_PRICES.cover_print + BASE_PRICES.cover_coat + BASE_PRICES.bind_perfect; // 7,200원
         const totalAmount = (totalPageImpressions * BASE_PRICES.print_bw) + (currentBookCount * coverAndBindPerBook);
         
@@ -901,6 +821,15 @@
           '표지칼라/본문흑백/무선제본'
         );
         addQuoteDataRow('기타', '배송', '세종청사/공공기관 직배송', 1, 0, '당일 안전 직배송');
+      } else if (template === '디지털일반') {
+        // 글로벌리서치 원본 서식 1:1[cite: 2]
+        addQuoteDataRow('기획', '-', '-', 0, 0, '');
+        addQuoteDataRow('디자인', '-', '-', 0, 0, '');
+        addQuoteDataRow('제작', '칼라출력', '표지 (315*468)', currentBookCount, BASE_PRICES.cover_print, '표지/단면/스노우250g');
+        addQuoteDataRow('제작', '흑백출력', '내지 (210*297)', totalPageImpressions, BASE_PRICES.print_bw, `${detectedPageCount}p x ${currentBookCount}부 / 모조80g`);
+        addQuoteDataRow('제작', '코팅', '표지 무광코팅', currentBookCount, BASE_PRICES.cover_coat, '표지/단면무광');
+        addQuoteDataRow('제작', '제본', '무선제본', currentBookCount, BASE_PRICES.bind_perfect, '무선 책제본');
+        addQuoteDataRow('기타', '배송', '세종 직배송', 1, 0, '당일 안전 직배송');
       } else if (template === '옵셋일반') {
         // 비즈쿡 카탈로그 대량인쇄 원본 서식 1:1[cite: 3]
         addQuoteDataRow('기획', '-', '-', 0, 0, '');
@@ -972,17 +901,14 @@
       document.getElementById('quote-subtotal').innerText = subtotal.toLocaleString() + " 원";
       document.getElementById('quote-vat').innerText = vat.toLocaleString() + " 원";
       document.getElementById('quote-total').innerText = total.toLocaleString() + " 원";
-
-      document.getElementById('paper-number-total').innerText = total.toLocaleString();
-      document.getElementById('paper-hangul-total').innerText = "일금 " + numberToKorean(total) + " 정";
       document.getElementById('msg-target-total').innerText = total.toLocaleString();
     }
 
     function numberToKorean(number) {
       if (number === 0) return "영원";
-      const units = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
+      const units = ["", "만", "억", "조"];
       const smallUnits = ["", "십", "백", "천"];
-      const bigUnits = ["", "만", "억", "조"];
+      const digits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
       let result = "";
       let count = 0;
 
@@ -1077,22 +1003,12 @@
       lucide.createIcons();
     }
 
-    // 2단계 검증 뷰: 실물 3종 PDF 원본 1:1 격자 서식 동기화[cite: 1, 2, 3]
+    // [2단계 진입 시] 3종 실물 엑셀/PDF 서식 동적 완전 렌더링[cite: 1, 2, 3]
     function nextQuoteStep() {
       if (currentQuoteStep === 1) {
         const template = document.getElementById('quote-template-select').value;
         document.getElementById('preview-template-title').innerText = template;
-        document.getElementById('paper-receiver-org').innerText = activeInquiry.org;
         
-        const thead = document.getElementById('paper-table-thead');
-        const tbody = document.getElementById('paper-table-tbody');
-        const tfoot = document.getElementById('paper-table-tfoot');
-        const summaryBox = document.getElementById('paper-injob-summary-box');
-        
-        thead.innerHTML = '';
-        tbody.innerHTML = '';
-        tfoot.innerHTML = '';
-
         let subtotal = 0;
         const rowsData = [];
         document.querySelectorAll('.quote-calc-row').forEach(row => {
@@ -1111,135 +1027,297 @@
 
         const vat = Math.floor(subtotal * 0.1);
         const total = subtotal + vat;
+        const printArea = document.getElementById('quote-printable-area');
 
+        // -------------------------------------------------------------
+        // 1. [디지탈상세] 인재개발원 전용 실물 서식 1:1[cite: 1]
+        // -------------------------------------------------------------
         if (template === '디지탈상세') {
-          // 🏛️ 국가공무원인재개발원 실물 서식 1:1 (요약표 + 산출식 4열 구조)[cite: 1]
-          summaryBox.classList.remove('hidden');
-          document.getElementById('paper-summary-qty').innerText = `${currentBookCount}부`;
-          document.getElementById('paper-summary-pages').innerText = `${detectedPageCount}p`;
+          printArea.innerHTML = `
+            <div class="text-center mb-5">
+              <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mb-3 text-[11.5px] leading-relaxed">
+              <div class="border border-black p-3 bg-slate-50/20">
+                <div><strong>수 &nbsp; &nbsp; 신 :</strong> <span class="font-black text-blue-950 text-sm">${activeInquiry.org}</span></div>
+                <div><strong>발 &nbsp; &nbsp; 신 :</strong> 청년인쇄사</div>
+                <div><strong>일 &nbsp; &nbsp; 자 :</strong> 2026년 08월 22일</div>
+                <div><strong>제 &nbsp; &nbsp; 목 :</strong> 인쇄 및 제본 교재 제작 견적의 件</div>
+              </div>
+              <div class="border border-black p-3 text-[11px] relative bg-slate-50/20">
+                <div class="font-bold text-xs flex justify-between mb-1">
+                  <span>청 년 인 쇄 사</span>
+                  <span class="font-mono-code font-bold">119-22-03638</span>
+                </div>
+                <div><strong>대 &nbsp; &nbsp; 표 :</strong> 임형택</div>
+                <div><strong>소 재 지 :</strong> 세종특별자치시 갈매로 364, 118호 (푸르지오시티1차)</div>
+                <div><strong>직통전화 :</strong> 044-862-4803 &nbsp;|&nbsp; <strong>단위:</strong> won / V.A.T 포함</div>
+              </div>
+            </div>
 
-          thead.innerHTML = `
-            <tr class="bg-slate-100">
-              <th class="py-1.5 px-3 text-center font-bold w-40">항목</th>
-              <th class="py-1.5 px-3 text-center font-bold">산출내역</th>
-              <th class="py-1.5 px-3 w-28 text-right font-bold">금액</th>
-              <th class="py-1.5 px-3 w-36 text-center font-bold">비고</th>
-            </tr>
+            <!-- 합계금액 바 -->
+            <div class="border border-black bg-slate-100 px-4 py-2.5 flex justify-between items-center mb-3 text-[12px] font-bold">
+              <div>
+                <span>합계금액 :</span>
+                <span class="font-black text-slate-950 ml-1 text-sm">일금 ${numberToKorean(total)} 정</span>
+              </div>
+              <div class="font-mono-code text-sm font-black">
+                (₩ <span>${total.toLocaleString()}</span>)
+              </div>
+            </div>
+
+            <!-- [인재개발원 전용] 상단 품명/규격/수량/면수/사양 요약 테이블[cite: 1] -->
+            <div class="mb-3">
+              <table class="excel-table text-[11px] text-center">
+                <thead class="bg-slate-100 font-bold">
+                  <tr>
+                    <th class="py-1 px-2">품명</th>
+                    <th class="py-1 px-2 w-20">규격</th>
+                    <th class="py-1 px-2 w-16">수량</th>
+                    <th class="py-1 px-2 w-16">면수</th>
+                    <th class="py-1 px-3">사양</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="py-1.5 px-2 text-left font-bold">교육 교재 제작</td>
+                    <td class="py-1.5 px-2 font-mono-code">210*297</td>
+                    <td class="py-1.5 px-2 font-mono-code font-bold">${currentBookCount}부</td>
+                    <td class="py-1.5 px-2 font-mono-code">${detectedPageCount}p</td>
+                    <td class="py-1.5 px-3 text-left font-medium">표지 칼라 / 본문 흑백 / 무선제본</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- [인재개발원 전용] 공식 산출식 4열 테이블[cite: 1] -->
+            <div class="overflow-x-auto">
+              <table class="excel-table text-[11px] text-left">
+                <thead class="bg-slate-100 text-center font-bold">
+                  <tr>
+                    <th class="py-1.5 px-3 text-center w-40">항목</th>
+                    <th class="py-1.5 px-3 text-center">산출내역</th>
+                    <th class="py-1.5 px-3 w-28 text-right">금액</th>
+                    <th class="py-1.5 px-3 w-36 text-center">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsData.map(r => `
+                    <tr>
+                      <td class="py-2 px-3 text-center font-bold">${r.type || r.name}</td>
+                      <td class="py-2 px-3 font-medium font-mono-code">${r.desc}</td>
+                      <td class="py-2 px-3 text-right font-mono-code font-bold">${r.amtStr}</td>
+                      <td class="py-2 px-3 text-center text-slate-600">${r.remark}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+                <tfoot class="bg-slate-50 font-bold">
+                  <tr>
+                    <td colspan="2" class="text-center py-1.5">소계</td>
+                    <td class="text-right py-1.5 px-3 font-mono-code">${subtotal.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="text-center py-1.5">절사</td>
+                    <td class="text-right py-1.5 px-3 font-mono-code">0</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                  <tr class="bg-slate-100">
+                    <td colspan="2" class="text-center py-2 font-black text-xs">합계금액 (VAT 포함)</td>
+                    <td class="text-right py-2 px-3 font-mono-code font-black text-blue-900 text-sm">${total.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <div class="mt-4 text-[10px] text-slate-600 space-y-0.5">
+              <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
+              <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
+            </div>
           `;
+        } 
+        // -------------------------------------------------------------
+        // 2. [옵셋일반] 비즈쿡 카탈로그 대량인쇄 서식 1:1[cite: 3]
+        // -------------------------------------------------------------
+        else if (template === '옵셋일반') {
+          printArea.innerHTML = `
+            <div class="text-center mb-5">
+              <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mb-3 text-[11.5px] leading-relaxed">
+              <div class="border border-black p-3 bg-slate-50/20">
+                <div><strong>수 &nbsp; &nbsp; 신 :</strong> <span class="font-black text-blue-950 text-sm">${activeInquiry.org}</span></div>
+                <div><strong>발 &nbsp; &nbsp; 신 :</strong> 청년인쇄사</div>
+                <div><strong>일 &nbsp; &nbsp; 자 :</strong> 2026년 08월 22일</div>
+                <div><strong>제 &nbsp; &nbsp; 목 :</strong> 카탈로그 인쇄 견적의 件</div>
+              </div>
+              <div class="border border-black p-3 text-[11px] relative bg-slate-50/20">
+                <div class="font-bold text-xs flex justify-between mb-1">
+                  <span>청 년 인 쇄 사</span>
+                  <span class="font-mono-code font-bold">119-22-03638</span>
+                </div>
+                <div><strong>대 &nbsp; &nbsp; 표 :</strong> 임형택</div>
+                <div><strong>소 재 지 :</strong> 세종특별자치시 갈매로 364, 118호 (푸르지오시티1차)</div>
+                <div><strong>직통전화 :</strong> 044-862-4803 &nbsp;|&nbsp; <strong>E-mail :</strong> admin@ybprint.co.kr</div>
+              </div>
+            </div>
 
-          tbody.innerHTML = rowsData.map(r => `
-            <tr>
-              <td class="py-2 px-3 text-center font-bold">${r.type || r.name}</td>
-              <td class="py-2 px-3 font-medium font-mono-code">${r.desc}</td>
-              <td class="py-2 px-3 text-right font-mono-code font-bold">${r.amtStr}</td>
-              <td class="py-2 px-3 text-center text-slate-600">${r.remark}</td>
-            </tr>
-          `).join('');
+            <!-- 합계금액 바 -->
+            <div class="border border-black bg-slate-100 px-4 py-2.5 flex justify-between items-center mb-3 text-[12px] font-bold">
+              <div>
+                <span>합계금액 :</span>
+                <span class="font-black text-slate-950 ml-1 text-sm">일금 ${numberToKorean(total)} 정</span>
+              </div>
+              <div class="font-mono-code text-sm font-black">
+                (₩ <span>${total.toLocaleString()}</span>)
+              </div>
+            </div>
 
-          tfoot.innerHTML = `
-            <tr>
-              <td colspan="2" class="text-center py-1.5 font-bold">소계</td>
-              <td class="text-right py-1.5 px-3 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-            <tr>
-              <td colspan="2" class="text-center py-1.5 font-bold">절사</td>
-              <td class="text-right py-1.5 px-3 font-mono-code font-bold">0</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-            <tr class="bg-slate-100">
-              <td colspan="2" class="text-center py-2 font-black text-xs">합계금액 (VAT 포함)</td>
-              <td class="text-right py-2 px-3 font-mono-code font-black text-blue-900 text-sm">${total.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
+            <!-- [옵셋 전용] 7열 분리 테이블[cite: 3] -->
+            <div class="overflow-x-auto">
+              <table class="excel-table text-[11px] text-left">
+                <thead class="bg-slate-100 text-center font-bold">
+                  <tr>
+                    <th class="py-1 px-2 w-14">항목</th>
+                    <th class="py-1 px-2 w-16">내역</th>
+                    <th class="py-1 px-3">규격</th>
+                    <th class="py-1 px-2 w-14">수량</th>
+                    <th class="py-1 px-2 w-20 text-right">단가</th>
+                    <th class="py-1 px-2 w-24 text-right">공급가액</th>
+                    <th class="py-1 px-3 w-32 text-center">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsData.map(r => `
+                    <tr>
+                      <td class="py-1 px-2 text-center font-bold">${r.type}</td>
+                      <td class="py-1 px-2 text-center font-semibold">${r.name}</td>
+                      <td class="py-1 px-3 font-medium">${r.desc}</td>
+                      <td class="py-1 px-2 text-center font-mono-code">${r.qty}</td>
+                      <td class="py-1 px-2 text-right font-mono-code">${r.price}</td>
+                      <td class="py-1 px-2 text-right font-mono-code font-bold">${r.amtStr}</td>
+                      <td class="py-1 px-3 text-center text-slate-600">${r.remark}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+                <tfoot class="bg-slate-50 font-bold">
+                  <tr>
+                    <td colspan="5" class="text-center py-1.5">소계</td>
+                    <td class="text-right py-1.5 px-2 font-mono-code">${subtotal.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="text-center py-1.5">합계금액 (VAT 제외)</td>
+                    <td class="text-right py-1.5 px-2 font-mono-code">${subtotal.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                  <tr class="bg-slate-100">
+                    <td colspan="5" class="text-center py-2 font-black text-xs">합계금액 (VAT 포함)</td>
+                    <td class="text-right py-2 px-2 font-mono-code font-black text-blue-900 text-sm">${total.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div class="mt-4 text-[10px] text-slate-600 space-y-0.5">
+              <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
+              <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
+            </div>
           `;
-        } else if (template === '옵셋일반') {
-          // 🖨️ 비즈쿡 카탈로그 실물 서식 1:1[cite: 3]
-          summaryBox.classList.add('hidden');
-          thead.innerHTML = `
-            <tr class="bg-slate-100">
-              <th class="py-1 px-2 w-14 text-center font-bold">항목</th>
-              <th class="py-1 px-2 w-16 text-center font-bold">내역</th>
-              <th class="py-1 px-3 text-center font-bold">규격</th>
-              <th class="py-1 px-2 w-14 text-center font-bold">수량</th>
-              <th class="py-1 px-2 w-20 text-right font-bold">단가</th>
-              <th class="py-1 px-2 w-24 text-right font-bold">공급가액</th>
-              <th class="py-1 px-3 w-32 text-center font-bold">비고</th>
-            </tr>
-          `;
+        }
+        // -------------------------------------------------------------
+        // 3. [디지털일반] 글로벌리서치 표준 서식 1:1[cite: 2]
+        // -------------------------------------------------------------
+        else {
+          printArea.innerHTML = `
+            <div class="text-center mb-5">
+              <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mb-3 text-[11.5px] leading-relaxed">
+              <div class="border border-black p-3 bg-slate-50/20">
+                <div><strong>수 &nbsp; &nbsp; 신 :</strong> <span class="font-black text-blue-950 text-sm">${activeInquiry.org}</span></div>
+                <div><strong>발 &nbsp; &nbsp; 신 :</strong> 청년인쇄사</div>
+                <div><strong>일 &nbsp; &nbsp; 자 :</strong> 2026년 08월 22일</div>
+                <div><strong>제 &nbsp; &nbsp; 목 :</strong> 출력 및 제본 견적의 件</div>
+              </div>
+              <div class="border border-black p-3 text-[11px] relative bg-slate-50/20">
+                <div class="font-bold text-xs flex justify-between mb-1">
+                  <span>청 년 인 쇄 사</span>
+                  <span class="font-mono-code font-bold">119-22-03638</span>
+                </div>
+                <div><strong>대 &nbsp; &nbsp; 표 :</strong> 임형택</div>
+                <div><strong>소 재 지 :</strong> 세종특별자치시 갈매로 364, 118호 (푸르지오시티1차)</div>
+                <div><strong>직통전화 :</strong> 044-862-4803 &nbsp;|&nbsp; <strong>E-mail :</strong> admin@ybprint.co.kr</div>
+              </div>
+            </div>
 
-          tbody.innerHTML = rowsData.map(r => `
-            <tr>
-              <td class="py-1 px-2 text-center font-bold">${r.type}</td>
-              <td class="py-1 px-2 text-center font-semibold">${r.name}</td>
-              <td class="py-1 px-3 font-medium">${r.desc}</td>
-              <td class="py-1 px-2 text-center font-mono-code">${r.qty}</td>
-              <td class="py-1 px-2 text-right font-mono-code">${r.price}</td>
-              <td class="py-1 px-2 text-right font-mono-code font-bold">${r.amtStr}</td>
-              <td class="py-1 px-3 text-center text-slate-600">${r.remark}</td>
-            </tr>
-          `).join('');
+            <!-- 합계금액 바 -->
+            <div class="border border-black bg-slate-100 px-4 py-2.5 flex justify-between items-center mb-3 text-[12px] font-bold">
+              <div>
+                <span>합계금액 :</span>
+                <span class="font-black text-slate-950 ml-1 text-sm">일금 ${numberToKorean(total)} 정</span>
+              </div>
+              <div class="font-mono-code text-sm font-black">
+                (₩ <span>${total.toLocaleString()}</span>)
+              </div>
+            </div>
 
-          tfoot.innerHTML = `
-            <tr>
-              <td colspan="5" class="text-center py-1.5 font-bold">소계</td>
-              <td class="text-right py-1.5 px-2 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-            <tr>
-              <td colspan="5" class="text-center py-1.5 font-bold">합계금액 (VAT 제외)</td>
-              <td class="text-right py-1.5 px-2 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-            <tr class="bg-slate-100">
-              <td colspan="5" class="text-center py-2 font-black text-xs">합계금액 (VAT 포함)</td>
-              <td class="text-right py-2 px-2 font-mono-code font-black text-blue-900 text-sm">${total.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-          `;
-        } else {
-          // 📄 글로벌리서치 실물 서식 1:1[cite: 2]
-          summaryBox.classList.add('hidden');
-          thead.innerHTML = `
-            <tr class="bg-slate-100">
-              <th class="py-1 px-2 w-14 text-center font-bold">항목</th>
-              <th class="py-1 px-2 w-16 text-center font-bold">내역</th>
-              <th class="py-1 px-3 text-center font-bold">규격</th>
-              <th class="py-1 px-2 w-14 text-center font-bold">수량</th>
-              <th class="py-1 px-2 w-20 text-right font-bold">단가</th>
-              <th class="py-1 px-2 w-24 text-right font-bold">공급가액</th>
-              <th class="py-1 px-3 w-32 text-center font-bold">비고</th>
-            </tr>
-          `;
+            <!-- [글로벌리서치 전용] 7열 테이블[cite: 2] -->
+            <div class="overflow-x-auto">
+              <table class="excel-table text-[11px] text-left">
+                <thead class="bg-slate-100 text-center font-bold">
+                  <tr>
+                    <th class="py-1 px-2 w-14">항목</th>
+                    <th class="py-1 px-2 w-16">내역</th>
+                    <th class="py-1 px-3">규격</th>
+                    <th class="py-1 px-2 w-14">수량</th>
+                    <th class="py-1 px-2 w-20 text-right">단가</th>
+                    <th class="py-1 px-2 w-24 text-right">공급가액</th>
+                    <th class="py-1 px-3 w-32 text-center">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsData.map(r => `
+                    <tr>
+                      <td class="py-1 px-2 text-center font-bold">${r.type}</td>
+                      <td class="py-1 px-2 text-center font-semibold">${r.name}</td>
+                      <td class="py-1 px-3 font-medium">${r.desc}</td>
+                      <td class="py-1 px-2 text-center font-mono-code">${r.qty}</td>
+                      <td class="py-1 px-2 text-right font-mono-code">${r.price}</td>
+                      <td class="py-1 px-2 text-right font-mono-code font-bold">${r.amtStr}</td>
+                      <td class="py-1 px-3 text-center text-slate-600">${r.remark}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+                <tfoot class="bg-slate-50 font-bold">
+                  <tr>
+                    <td colspan="5" class="text-center py-1.5">소계</td>
+                    <td class="text-right py-1.5 px-2 font-mono-code">${subtotal.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="text-center py-1.5">합계금액 (VAT 제외)</td>
+                    <td class="text-right py-1.5 px-2 font-mono-code">${subtotal.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                  <tr class="bg-slate-100">
+                    <td colspan="5" class="text-center py-2 font-black text-xs">합계금액 (VAT 포함)</td>
+                    <td class="text-right py-2 px-2 font-mono-code font-black text-blue-900 text-sm">${total.toLocaleString()}</td>
+                    <td class="text-center text-slate-400">-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
 
-          tbody.innerHTML = rowsData.map(r => `
-            <tr>
-              <td class="py-1 px-2 text-center font-bold">${r.type}</td>
-              <td class="py-1 px-2 text-center font-semibold">${r.name}</td>
-              <td class="py-1 px-3 font-medium">${r.desc}</td>
-              <td class="py-1 px-2 text-center font-mono-code">${r.qty}</td>
-              <td class="py-1 px-2 text-right font-mono-code">${r.price}</td>
-              <td class="py-1 px-2 text-right font-mono-code font-bold">${r.amtStr}</td>
-              <td class="py-1 px-3 text-center text-slate-600">${r.remark}</td>
-            </tr>
-          `).join('');
-
-          tfoot.innerHTML = `
-            <tr>
-              <td colspan="5" class="text-center py-1.5 font-bold">소계</td>
-              <td class="text-right py-1.5 px-2 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-            <tr>
-              <td colspan="5" class="text-center py-1.5 font-bold">합계금액 (VAT 제외)</td>
-              <td class="text-right py-1.5 px-2 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
-            <tr class="bg-slate-100">
-              <td colspan="5" class="text-center py-2 font-black text-xs">합계금액 (VAT 포함)</td>
-              <td class="text-right py-2 px-2 font-mono-code font-black text-blue-900 text-sm">${total.toLocaleString()}</td>
-              <td class="text-center text-slate-400">-</td>
-            </tr>
+            <div class="mt-4 text-[10px] text-slate-600 space-y-0.5">
+              <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
+              <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
+            </div>
           `;
         }
       }
