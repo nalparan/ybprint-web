@@ -221,7 +221,7 @@
         <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-full hover:bg-[#F2F4F6] text-[#8B95A1] hover:text-[#191F28] flex items-center justify-center transition-colors">✕</button>
       </div>
 
-      <!-- 상단 단계 네비게이션 탭 (클릭 시 해당 단계로 즉시 전환) -->
+      <!-- 상단 단계 네비게이션 탭 (클릭 시 해당 단계로 즉시 이동) -->
       <div class="flex items-center px-6 py-3.5 bg-[#F9FAFB] border-b border-[#E5E8EB] shrink-0 select-none">
         <div onclick="goToStep(1)" class="flex-1 flex items-center cursor-pointer group py-1">
           <div id="step-dot-1" class="w-7 h-7 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-xs shadow-md transition-all">1</div>
@@ -328,7 +328,7 @@
           </div>
         </div>
 
-        <!-- STEP 2: 견적 검증 (실물 3종 원본 서식 1:1 동적 렌더링) -->
+        <!-- STEP 2: 견적 검증 (실제 3종 엑셀/PDF 원본 1:1 완벽 렌더링 컨테이너) -->
         <div id="quote-step-2-content" class="space-y-4 hidden">
           <div class="bg-[#E8F3FF] border border-[#BBDDFF] rounded-2xl p-4 flex gap-3 items-start text-left text-sm text-[#1B64DA] font-medium">
             <i data-lucide="shield-check" class="w-5 h-5 shrink-0 mt-0.5 text-[#3182F6]"></i>
@@ -800,7 +800,7 @@
       onTemplateChange();
     }
 
-    // 엑셀 3종 원본 서식 1:1 매핑 빌더 (단가 기준 통일)
+    // 엑셀 3종 원본 서식 1:1 매핑 빌더[cite: 1, 2, 3]
     function onTemplateChange() {
       const template = document.getElementById('quote-template-select').value;
       const tbody = document.getElementById('quote-items-tbody');
@@ -809,7 +809,7 @@
       const totalPageImpressions = detectedPageCount * currentBookCount;
 
       if (template === '디지탈상세') {
-        // 국가공무원인재개발원 원본 서식 1:1 (표지+코팅+제본 = 7,200원 일치)[cite: 1]
+        // 국가공무원인재개발원 원본 서식 1:1
         const coverAndBindPerBook = BASE_PRICES.cover_print + BASE_PRICES.cover_coat + BASE_PRICES.bind_perfect; // 7,200원
         const totalAmount = (totalPageImpressions * BASE_PRICES.print_bw) + (currentBookCount * coverAndBindPerBook);
         
@@ -899,16 +899,19 @@
       const vat = Math.floor(subtotal * 0.1);
       const total = subtotal + vat;
 
-      document.getElementById('quote-subtotal').innerText = subtotal.toLocaleString() + " 원";
-      document.getElementById('quote-vat').innerText = vat.toLocaleString() + " 원";
-      document.getElementById('quote-total').innerText = total.toLocaleString() + " 원";
-      
-      const msgTotal = document.getElementById('msg-target-total');
-      if (msgTotal) msgTotal.innerText = total.toLocaleString();
+      const subtotalEl = document.getElementById('quote-subtotal');
+      const vatEl = document.getElementById('quote-vat');
+      const totalEl = document.getElementById('quote-total');
+      const msgTotalEl = document.getElementById('msg-target-total');
+
+      if (subtotalEl) subtotalEl.innerText = subtotal.toLocaleString() + " 원";
+      if (vatEl) vatEl.innerText = vat.toLocaleString() + " 원";
+      if (totalEl) totalEl.innerText = total.toLocaleString() + " 원";
+      if (msgTotalEl) msgTotalEl.innerText = total.toLocaleString();
     }
 
     function numberToKorean(number) {
-      if (number === 0) return "영원";
+      if (!number || number === 0) return "영원";
       const units = ["", "만", "억", "조"];
       const smallUnits = ["", "십", "백", "천"];
       const digits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
@@ -920,10 +923,14 @@
         let str = "";
         for (let i = 0; i < 4; i++) {
           let digit = mod % 10;
-          if (digit > 0) { str = digits[digit] + smallUnits[i] + str; }
+          if (digit > 0) {
+            str = digits[digit] + smallUnits[i] + str;
+          }
           mod = Math.floor(mod / 10);
         }
-        if (str !== "") { result = str + units[count] + " " + result; }
+        if (str !== "") {
+          result = str + units[count] + " " + result;
+        }
         count++;
         number = Math.floor(number / 10000);
       }
@@ -962,10 +969,11 @@
       }
     }
 
-    // 2단계 실물 서식 1:1 완벽 렌더링 함수[cite: 1, 2, 3]
+    // [2단계 진입 시] 3종 실물 엑셀/PDF 서식 동적 완전 렌더링[cite: 1, 2, 3]
     function renderStep2Preview() {
       const template = document.getElementById('quote-template-select').value;
-      document.getElementById('preview-template-title').innerText = template;
+      const titleEl = document.getElementById('preview-template-title');
+      if (titleEl) titleEl.innerText = template;
       
       let subtotal = 0;
       const rowsData = [];
@@ -975,7 +983,7 @@
         const desc = row.querySelector('.row-desc').value;
         const qty = row.querySelector('.row-qty').value;
         const price = parseFloat(row.querySelector('.row-price').value || 0).toLocaleString();
-        const amtStr = row.querySelector('.row-amt').value;
+        const amtStr = row.querySelector('.row-amt').value || "0";
         const amt = parseInt(amtStr.replace(/,/g, ''), 10) || 0;
         const remark = row.querySelector('.row-remark').value || "";
         
@@ -987,6 +995,8 @@
       const total = subtotal + vat;
       const printArea = document.getElementById('quote-printable-area');
       const orgName = activeInquiry.org || "영신여고";
+
+      if (!printArea) return;
 
       if (template === '디지탈상세') {
         // 국가공무원인재개발원 원본 서식 1:1[cite: 1]
@@ -1185,7 +1195,6 @@
       if (msgTemplate) msgTemplate.innerText = template;
     }
 
-    // 단계별 UI 갱신 함수
     function updateQuoteStepUI() {
       document.getElementById('quote-step-1-content').classList.toggle('hidden', currentQuoteStep !== 1);
       document.getElementById('quote-step-2-content').classList.toggle('hidden', currentQuoteStep !== 2);
@@ -1199,20 +1208,22 @@
 
       if (currentQuoteStep === 3) {
         if (selectedChannel === 'auto') {
-          btnSmart.classList.remove('hidden');
-          btnDownload.classList.add('hidden');
+          if (btnSmart) btnSmart.classList.remove('hidden');
+          if (btnDownload) btnDownload.classList.add('hidden');
         } else {
-          btnSmart.classList.add('hidden');
-          btnDownload.classList.remove('hidden');
+          if (btnSmart) btnSmart.classList.add('hidden');
+          if (btnDownload) btnDownload.classList.remove('hidden');
         }
       } else {
-        btnSmart.classList.add('hidden');
-        btnDownload.classList.add('hidden');
+        if (btnSmart) btnSmart.classList.add('hidden');
+        if (btnDownload) btnDownload.classList.add('hidden');
       }
 
       for (let i = 1; i <= 3; i++) {
         const dot = document.getElementById(`step-dot-${i}`);
         const text = document.getElementById(`step-text-${i}`);
+        if (!dot || !text) continue;
+
         if (i === currentQuoteStep) {
           dot.className = "w-7 h-7 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-xs shadow-md";
           text.className = "ml-2 font-extrabold text-[#191F28] text-sm hidden sm:inline";
@@ -1230,7 +1241,6 @@
       lucide.createIcons();
     }
 
-    // 단계 직접 점프 이동 함수 (상단 탭 클릭 시)
     function goToStep(targetStep) {
       if (targetStep === 2 || targetStep === 3) {
         renderStep2Preview();
@@ -1258,9 +1268,11 @@
 
     async function submitQuoteSmartSend() {
       const btn = document.getElementById('btn-submit-smart');
-      const originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>고객 발송 중...</span>`;
+      const originalHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>고객 발송 중...</span>`;
+      }
       lucide.createIcons();
 
       const template = document.getElementById('quote-template-select').value;
@@ -1324,16 +1336,20 @@
         console.error("Quote send error:", err);
         alert("⚠️ [통신 오류]\n\n견적서 메일 발송 중 오류가 발생했습니다: " + err.message);
       } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
       }
     }
 
     function submitQuotePdfDownload() {
       const btn = document.getElementById('btn-submit-download');
-      const originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>PDF 생성 및 저장 중...</span>`;
+      const originalHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>PDF 생성 및 저장 중...</span>`;
+      }
       lucide.createIcons();
 
       const element = document.getElementById('quote-printable-area');
@@ -1355,14 +1371,18 @@
           localStorage.setItem('yb_completed_items', JSON.stringify(completedItems));
           filterInquiries();
         }
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
         closeQuoteModal();
       }).catch(err => {
         console.error("PDF download error:", err);
         window.print();
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
       });
     }
 
