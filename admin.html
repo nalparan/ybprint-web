@@ -426,6 +426,7 @@
 
     const RENDER_BACKEND_URL = "https://ybprint-backend-1.onrender.com";
     let allInquiries = [];
+    let displayedInquiries = [];
     
     let deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items') || '[]');
     let completedItems = JSON.parse(localStorage.getItem('yb_completed_items') || '[]');
@@ -437,7 +438,7 @@
       bind_perfect: 3300
     };
 
-    let activeInquiry = { org: "영신여고", phone: "serviceonm@naver.com", inquiry: "", spec: "", fileName: "" };
+    let activeInquiry = { org: "영신여고", phone: "serviceonm@naver.com", inquiry: "", spec: "", fileName: "", timeKey: "" };
     let currentQuoteStep = 1;
     let detectedPageCount = 26;
     let currentBookCount = 100;
@@ -458,7 +459,8 @@
           return !deletedItems.includes(key);
         });
 
-        renderAllViews(allInquiries);
+        displayedInquiries = [...allInquiries].reverse();
+        renderAllViews(displayedInquiries);
         updateStats(allInquiries);
         const serverStatus = document.getElementById('server-status-label');
         if (serverStatus) serverStatus.innerText = "Render Live";
@@ -533,9 +535,8 @@
       }
 
       if (totalBadge) totalBadge.innerText = `${list.length}건`;
-      const reversed = [...list].reverse();
 
-      container.innerHTML = reversed.map((item, idx) => {
+      container.innerHTML = list.map((item, idx) => {
         const no = list.length - idx;
         const timeRaw = item.timestamp || item.created_at || item.time || "-";
         const org = item.org || item.name || "미입력";
@@ -566,12 +567,6 @@
           fileChipsHtml = `<div class="text-xs text-[#8B95A1] flex items-center gap-1"><i data-lucide="file-minus" class="w-3.5 h-3.5"></i><span>첨부파일 없음</span></div>`;
         }
 
-        const safeOrg = encodeURIComponent(org);
-        const safePhone = encodeURIComponent(phone);
-        const safeSpec = encodeURIComponent(spec);
-        const safeInquiry = encodeURIComponent(inquiry);
-        const safeFileName = encodeURIComponent(rawFile);
-
         return `
           <div class="bg-[#F9FAFB] border border-[#E5E8EB] rounded-2xl p-4 space-y-3 text-left transition-all ${opacityClass}">
             <div class="flex items-center justify-between border-b border-[#E5E8EB] pb-2.5">
@@ -587,7 +582,7 @@
               </div>
               
               <div class="flex flex-col items-end gap-1.5 min-w-[100px]">
-                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}', '${timeRaw}')" class="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-[#3182F6] active:bg-[#1B64DA] text-white rounded-xl text-[12px] font-bold shadow-md cursor-pointer">
+                <button onclick="openQuoteModalByIndex(${idx})" class="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-[#3182F6] active:bg-[#1B64DA] text-white rounded-xl text-[12px] font-bold shadow-md cursor-pointer">
                   <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
                   <span>견적작성</span>
                 </button>
@@ -608,7 +603,7 @@
               ${spec && spec !== '-' ? `<div class="text-[11px] text-[#6B7684] bg-white p-2 rounded-lg border border-[#E5E8EB] mt-1">${spec}</div>` : ''}
             </div>
 
-            <div onclick="openDetailModal('${safeOrg}', '${safePhone}', '${safeSpec}', '${safeInquiry}')" class="bg-white p-3 rounded-xl border border-[#E5E8EB] active:bg-slate-50 transition-all cursor-pointer">
+            <div onclick="openDetailModalByIndex(${idx})" class="bg-white p-3 rounded-xl border border-[#E5E8EB] active:bg-slate-50 transition-all cursor-pointer">
               <div class="flex items-center justify-between mb-1">
                 <span class="text-[11px] font-bold text-[#8B95A1]">문의 및 요청사항</span>
                 <span class="text-[10px] font-bold text-[#3182F6] flex items-center gap-0.5">상세보기 <i data-lucide="chevron-right" class="w-3 h-3"></i></span>
@@ -643,9 +638,7 @@
         return;
       }
 
-      const reversed = [...list].reverse();
-
-      tbody.innerHTML = reversed.map((item, idx) => {
+      tbody.innerHTML = list.map((item, idx) => {
         const no = list.length - idx;
         const timeRaw = item.timestamp || item.created_at || item.time || "-";
         const org = item.org || item.name || "-";
@@ -690,12 +683,6 @@
           fileChipsHtml = `<div class="inline-flex items-center gap-1.5 text-[#8B95A1] text-[13px]"><i data-lucide="file-minus" class="w-4 h-4 shrink-0"></i><span>첨부파일 없음</span></div>`;
         }
 
-        const safeOrg = encodeURIComponent(org);
-        const safePhone = encodeURIComponent(phone);
-        const safeSpec = encodeURIComponent(spec);
-        const safeInquiry = encodeURIComponent(inquiry);
-        const safeFileName = encodeURIComponent(rawFile);
-
         return `
           <tr class="table-row-hover transition-colors align-middle ${opacityClass}">
             <td class="py-5 pl-6 pr-3 font-mono-code font-bold text-[#8B95A1] text-center text-[13px]">${String(no).padStart(2, '0')}</td>
@@ -713,7 +700,7 @@
               </div>
             </td>
             <td class="py-5 px-5 text-[#333D4B]">
-              <div onclick="openDetailModal('${safeOrg}', '${safePhone}', '${safeSpec}', '${safeInquiry}')" class="bg-[#F9FAFB] hover:bg-white p-3 rounded-2xl border border-[#E5E8EB] hover:border-[#3182F6] hover:shadow-xs transition-all cursor-pointer group" title="클릭 시 전체 내용 보기">
+              <div onclick="openDetailModalByIndex(${idx})" class="bg-[#F9FAFB] hover:bg-white p-3 rounded-2xl border border-[#E5E8EB] hover:border-[#3182F6] hover:shadow-xs transition-all cursor-pointer group" title="클릭 시 전체 내용 보기">
                 <p class="line-clamp-2 leading-relaxed text-[13.5px] text-[#333D4B] group-hover:text-[#191F28] font-medium">${inquiry}</p>
                 <div class="mt-1 flex items-center gap-1 text-[11px] text-[#3182F6] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                   <i data-lucide="maximize-2" class="w-3 h-3"></i>
@@ -724,7 +711,7 @@
             
             <td class="py-5 pl-3 pr-7 text-center whitespace-nowrap">
               <div class="flex flex-col gap-1.5 items-center w-full max-w-[110px] mx-auto">
-                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}', '${timeRaw}')" class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-[12.5px] font-extrabold shadow-md transition-all cursor-pointer">
+                <button onclick="openQuoteModalByIndex(${idx})" class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-[12.5px] font-extrabold shadow-md transition-all cursor-pointer">
                   <i data-lucide="calculator" class="w-3.5 h-3.5 shrink-0"></i>
                   <span>견적작성</span>
                 </button>
@@ -745,10 +732,14 @@
       lucide.createIcons();
     }
 
-    function openDetailModal(org, phone, spec, inquiry) {
-      document.getElementById('modal-org-phone').innerText = `${decodeURIComponent(org)} (${decodeURIComponent(phone)})`;
-      document.getElementById('modal-spec').innerText = decodeURIComponent(spec);
-      document.getElementById('modal-inquiry').innerText = decodeURIComponent(inquiry);
+    function openDetailModalByIndex(idx) {
+      const item = displayedInquiries[idx];
+      if (!item) return;
+      const org = item.org || item.name || "-";
+      const phone = item.phone || "-";
+      document.getElementById('modal-org-phone').innerText = `${org} (${phone})`;
+      document.getElementById('modal-spec').innerText = item.spec || "-";
+      document.getElementById('modal-inquiry').innerText = item.inquiry || "(작성 내용 없음)";
       document.getElementById('detail-modal').classList.remove('hidden');
     }
 
@@ -756,14 +747,16 @@
       document.getElementById('detail-modal').classList.add('hidden');
     }
 
-    function openQuoteModal(org, phone, inquiry, spec, fileName, timeKey) {
+    // 인덱스 기반 안전 모달 열기 (특수문자/줄바꿈 에러 100% 방지)
+    function openQuoteModalByIndex(idx) {
+      const item = displayedInquiries[idx] || {};
       activeInquiry = {
-        org: decodeURIComponent(org) || "영신여고",
-        phone: decodeURIComponent(phone) || "serviceonm@naver.com",
-        inquiry: decodeURIComponent(inquiry) || "",
-        spec: decodeURIComponent(spec) || "",
-        fileName: decodeURIComponent(fileName) || "",
-        timeKey: timeKey
+        org: item.org || item.name || "영신여고",
+        phone: item.phone || "serviceonm@naver.com",
+        inquiry: item.inquiry || "",
+        spec: item.spec || "",
+        fileName: item.file_name || item.filename || "",
+        timeKey: item.timestamp || item.created_at || item.time || ""
       };
 
       document.getElementById('quote-modal-org').innerText = activeInquiry.org;
@@ -813,7 +806,7 @@
       const totalPageImpressions = detectedPageCount * currentBookCount;
 
       if (template === '디지탈상세') {
-        const coverAndBindPerBook = BASE_PRICES.cover_print + BASE_PRICES.cover_coat + BASE_PRICES.bind_perfect;
+        const coverAndBindPerBook = BASE_PRICES.cover_print + BASE_PRICES.cover_coat + BASE_PRICES.bind_perfect; // 7,200원
         const totalAmount = (totalPageImpressions * BASE_PRICES.print_bw) + (currentBookCount * coverAndBindPerBook);
         
         addQuoteDataRow(
@@ -885,7 +878,7 @@
         let price = parseFloat(row.querySelector('.row-price').value) || 0;
         
         if (template === '옵셋일반' && name === '일반관리비') {
-          price = Math.round(paperTotalExcludingMaterial * 0.12);
+          price = Math.round(paperTotalExcludingMaterial * 0.12); // 12% 산출[cite: 3]
           row.querySelector('.row-price').value = price;
         }
 
@@ -1002,7 +995,7 @@
         if (!printArea) return;
 
         if (template === '디지탈상세') {
-          // 국가공무원인재개발원 원본 서식 1:1
+          // 국가공무원인재개발원 원본 서식 1:1[cite: 1]
           printArea.innerHTML = `
             <div class="text-center mb-5">
               <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
@@ -1105,6 +1098,7 @@
             </div>
           `;
         } else {
+          // 글로벌리서치 / 옵셋일반 7열 원본 서식 1:1[cite: 2, 3]
           printArea.innerHTML = `
             <div class="text-center mb-5">
               <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
@@ -1398,14 +1392,16 @@
     function filterInquiries() {
       const q = document.getElementById('search-input').value.toLowerCase().trim();
       if (!q) {
-        renderAllViews(allInquiries);
+        displayedInquiries = [...allInquiries].reverse();
+        renderAllViews(displayedInquiries);
         return;
       }
       const filtered = allInquiries.filter(item => {
         const str = `${item.org || ''} ${item.phone || ''} ${item.file_name || ''} ${item.inquiry || ''} ${item.spec || ''}`.toLowerCase();
         return str.includes(q);
       });
-      renderAllViews(filtered);
+      displayedInquiries = [...filtered].reverse();
+      renderAllViews(displayedInquiries);
     }
 
     function updateStats(list) {
