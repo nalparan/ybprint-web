@@ -1251,7 +1251,7 @@
             <div><strong>원고 규격</strong> : ${res.dimensionText}</div>
             <div><strong>페이지 수</strong> : ${res.pagesText}</div>
             <div class="pt-2 mt-1 border-t border-dashed border-slate-300 text-blue-900 font-medium">
-              <strong class="text-blue-700">💡 추천 사양</strong> : <span class="text-slate-800">${res.recommendation}</span>
+              <strong class="text-blue-700">추천 사양</strong> : <span class="text-slate-800">${res.recommendation}</span>
             </div>
             <div class="pt-1 text-[#555]"><strong>안내 사항</strong> : ${res.remark}</div>
           </div>
@@ -1423,7 +1423,7 @@
         } catch (e) {}
 
         if (response.ok) {
-          alert("🎉 접수가 성공적으로 완료되었습니다!");
+          alert("접수가 정상적으로 완료되었습니다.");
           toggleDrawer(false);
         } else {
           alert("접수 중 서버 지연이 발생했습니다. 다시 한번 버튼을 눌러주세요.");
@@ -1587,7 +1587,7 @@
     });
   </script>
 
-  <!-- 🔒 관리자 모달 -->
+  <!-- 관리자 모달 -->
   <div id="adminCommandModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity p-4">
     <div class="w-full max-w-sm rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-2xl text-neutral-100">
       <div class="flex items-center justify-between pb-3 border-b border-neutral-800">
