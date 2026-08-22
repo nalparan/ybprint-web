@@ -29,7 +29,6 @@
     ::-webkit-scrollbar-thumb { background: #D1D6DB; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #B0B8C1; }
 
-    /* 엑셀 서식 1:1 완벽 재현 스타일 */
     .quote-paper {
       background: #FFFFFF;
       box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
@@ -49,10 +48,8 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
 
-  <!-- 🌐 상단 네비게이션 바 -->
   <header class="bg-white/95 backdrop-blur-md border-b border-[#E5E8EB] px-4 sm:px-[5vw] py-3.5 sm:py-0 sm:h-20 flex items-center justify-between sticky top-0 z-40 shadow-xs">
     <div class="flex items-center gap-3">
-      <!-- ① 좌측 상단 YB 로고 -> 파비콘 이미지로 교체 -->
       <img src="/favicon.png" alt="청년인쇄사 로고" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl object-contain shadow-xs border border-[#E5E8EB] p-1 bg-white shrink-0">
       <div>
         <div class="flex items-center gap-2">
@@ -63,7 +60,6 @@
       </div>
     </div>
 
-    <!-- 액션 버튼 영역 -->
     <div class="flex items-center gap-2 sm:gap-3 shrink-0">
       <div class="hidden lg:flex items-center gap-2 bg-[#F2F4F6] border border-[#E5E8EB] px-3.5 py-1.5 rounded-xl">
         <span class="w-2.5 h-2.5 rounded-full bg-[#00B46B] live-indicator shadow-[0_0_8px_#00B46B]"></span>
@@ -82,12 +78,9 @@
     </div>
   </header>
 
-  <!-- 📊 메인 대시보드 컨테이너 -->
   <main class="flex-1 w-full px-4 sm:px-[5vw] py-5 sm:py-8 space-y-5 sm:space-y-7">
     
-    <!-- 📈 상단 지표 카드 -->
     <div class="grid grid-cols-3 gap-2.5 sm:gap-5">
-      <!-- 01. 오늘 접수 -->
       <div class="bg-white border border-[#E5E8EB] rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-xs">
         <div class="flex items-center justify-between text-[#8B95A1] mb-1.5 sm:mb-3">
           <span class="text-[11px] sm:text-[13px] font-bold tracking-tight">오늘 접수</span>
@@ -101,7 +94,6 @@
         </div>
       </div>
 
-      <!-- 02. 원고 첨부 -->
       <div class="bg-white border border-[#E5E8EB] rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-xs">
         <div class="flex items-center justify-between text-[#8B95A1] mb-1.5 sm:mb-3">
           <span class="text-[11px] sm:text-[13px] font-bold tracking-tight">원고 첨부</span>
@@ -115,7 +107,6 @@
         </div>
       </div>
 
-      <!-- 03. 클라우드 서버 -->
       <div class="bg-white border border-[#E5E8EB] rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-xs">
         <div class="flex items-center justify-between text-[#8B95A1] mb-1.5 sm:mb-3">
           <span class="text-[11px] sm:text-[13px] font-bold tracking-tight">서버 상태</span>
@@ -130,10 +121,7 @@
       </div>
     </div>
 
-    <!-- 📋 접수 내역 메인 카드 -->
     <div class="bg-white border border-[#E5E8EB] rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs w-full">
-      
-      <!-- 상단 툴바 & 검색 -->
       <div class="p-4 sm:p-7 border-b border-[#E5E8EB] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
         <div class="flex items-center justify-between">
           <h2 class="text-base sm:text-xl font-extrabold text-[#191F28] flex items-center gap-2.5">
@@ -141,14 +129,12 @@
             <span class="text-xs font-mono-code font-bold bg-[#E8F3FF] text-[#1B64DA] px-2.5 py-0.5 rounded-full border border-[#BBDDFF]" id="total-badge">0건</span>
           </h2>
         </div>
-
         <div class="relative w-full sm:w-80">
           <i data-lucide="search" class="w-4 h-4 text-[#8B95A1] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
           <input type="text" id="search-input" oninput="filterInquiries()" placeholder="소속, 연락처, 원고명 검색..." class="w-full bg-[#F2F4F6] border border-[#E5E8EB] rounded-xl sm:rounded-2xl pl-9 pr-4 py-2 text-xs sm:text-sm text-[#191F28] placeholder-[#8B95A1] focus:outline-none focus:bg-white focus:border-[#3182F6] transition-all font-medium" />
         </div>
       </div>
 
-      <!-- 📱 [모바일 전용 뷰: md 미만] -->
       <div id="mobile-card-container" class="md:hidden divide-y divide-[#E5E8EB] p-3 space-y-3">
         <div class="py-12 text-center text-[#8B95A1] flex flex-col items-center justify-center gap-2">
           <i data-lucide="loader-2" class="w-6 h-6 text-[#3182F6] animate-spin"></i>
@@ -156,7 +142,6 @@
         </div>
       </div>
 
-      <!-- 💻 [PC/태블릿 전용 뷰: md 이상] -->
       <div class="hidden md:block overflow-x-auto w-full">
         <table class="w-full text-left border-collapse table-fixed min-w-[1100px]">
           <thead>
@@ -167,7 +152,7 @@
               <th class="py-4 px-4 w-44">연락처</th>
               <th class="py-4 px-5 w-[360px]">첨부 원고 / 규격</th>
               <th class="py-4 px-5 w-auto">문의 및 요청사항</th>
-              <th class="py-4 pl-3 pr-7 text-center w-36">관리</th>
+              <th class="py-4 pl-3 pr-7 text-center w-[140px]">관리</th>
             </tr>
           </thead>
           <tbody id="inquiry-table-body" class="divide-y divide-[#E5E8EB] text-[#333D4B] text-[14px]">
@@ -186,7 +171,7 @@
     </div>
   </main>
 
-  <!-- 🔍 상세 모달 (원문 전체 보기) -->
+  <!-- 상세 모달 -->
   <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white border border-[#E5E8EB] w-full max-w-lg rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4 sm:space-y-5">
       <div class="flex items-center justify-between border-b border-[#E5E8EB] pb-3 sm:pb-4">
@@ -216,11 +201,10 @@
     </div>
   </div>
 
-  <!-- 🧮 견적서 자동 작성 / 검증(엑셀 3종 원본 1:1) / 발송 모달 -->
+  <!-- 견적 발송 모달 -->
   <div id="quote-modal" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-2 sm:p-6">
     <div class="bg-white border border-[#E5E8EB] w-full max-w-5xl rounded-3xl flex flex-col shadow-2xl h-[94vh] sm:h-[90vh] overflow-hidden">
       
-      <!-- 헤더 -->
       <div class="p-4 sm:p-6 border-b border-[#E5E8EB] flex items-center justify-between bg-white shrink-0">
         <div>
           <h3 class="font-extrabold text-base sm:text-xl text-[#191F28] flex items-center gap-2">
@@ -232,7 +216,6 @@
         <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-full hover:bg-[#F2F4F6] text-[#8B95A1] hover:text-[#191F28] flex items-center justify-center transition-colors">✕</button>
       </div>
 
-      <!-- 진행률 표시기 (Stepper) -->
       <div class="flex items-center px-6 py-3.5 bg-[#F9FAFB] border-b border-[#E5E8EB] shrink-0">
         <div class="flex-1 flex items-center">
           <div id="step-dot-1" class="w-7 h-7 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-xs">1</div>
@@ -250,13 +233,9 @@
         </div>
       </div>
 
-      <!-- 바디 영역 -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#F8FAFC] relative">
         
-        <!-- STEP 1: 자동견적작성 (대시보드 입력 화면) -->
         <div id="quote-step-1-content" class="space-y-5 block">
-          
-          <!-- 상단 메타 정보 카드 -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-4 rounded-2xl border border-[#E5E8EB] shadow-2xs">
             <div>
               <span class="text-[11px] font-bold text-[#8B95A1] block mb-1">수신 고객 / 기관</span>
@@ -275,7 +254,6 @@
             </div>
           </div>
 
-          <!-- 양식 선택 & 제작 부수 설정 -->
           <div class="bg-white p-4 rounded-2xl border border-[#E5E8EB] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 shadow-2xs">
             <div class="flex-1">
               <label class="text-xs font-bold text-[#191F28] block mb-1">견적서 양식 선택 <span class="text-red-500">*</span></label>
@@ -294,7 +272,6 @@
             </div>
           </div>
 
-          <!-- 항목별 상세내역 테이블 -->
           <div class="bg-white p-4 sm:p-5 rounded-2xl border border-[#E5E8EB] shadow-2xs space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -322,13 +299,10 @@
                     <th class="py-2.5 px-3 w-10 text-center">삭제</th>
                   </tr>
                 </thead>
-                <tbody id="quote-items-tbody" class="divide-y divide-[#E5E8EB] text-sm">
-                  <!-- JS 동적 생성 -->
-                </tbody>
+                <tbody id="quote-items-tbody" class="divide-y divide-[#E5E8EB] text-sm"></tbody>
               </table>
             </div>
             
-            <!-- 실시간 금액 집계 박스 -->
             <div class="bg-[#F9FAFB] border border-[#E5E8EB] rounded-xl p-4 flex flex-col gap-1.5 text-right">
               <div class="flex justify-end items-center gap-4 text-xs font-medium text-[#4E5968]">
                 <span>공급가액 합계:</span>
@@ -346,7 +320,6 @@
           </div>
         </div>
 
-        <!-- STEP 2: 검증 (실제 엑셀 견적서 3종 원본 1:1 서식 뷰) -->
         <div id="quote-step-2-content" class="space-y-4 hidden">
           <div class="bg-[#E8F3FF] border border-[#BBDDFF] rounded-2xl p-4 flex gap-3 items-start text-left text-sm text-[#1B64DA] font-medium">
             <i data-lucide="shield-check" class="w-5 h-5 shrink-0 mt-0.5 text-[#3182F6]"></i>
@@ -357,11 +330,9 @@
           </div>
 
           <div id="quote-printable-area" class="quote-paper p-6 sm:p-10 rounded-2xl border border-slate-300 max-w-3xl mx-auto text-slate-900 text-xs">
-            
             <div class="text-center mb-6">
               <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-slate-900 pb-2 inline-block px-10">견 &nbsp; 적 &nbsp; 서</h2>
             </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div class="space-y-1.5 border border-slate-400 p-3.5 rounded-lg bg-slate-50/40">
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">수 &nbsp; &nbsp; 신 :</span> <strong id="paper-receiver-org" class="text-sm font-black text-blue-900"></strong></div>
@@ -369,7 +340,6 @@
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">견적일자 :</span> <span id="paper-quote-date" class="font-mono-code">2026년 08월 22일</span></div>
                 <div class="flex items-center"><span class="w-16 font-bold text-slate-600">제 &nbsp; &nbsp; 목 :</span> <span id="paper-quote-title" class="font-bold">인쇄 및 제본 제작 건</span></div>
               </div>
-
               <div class="border border-slate-400 p-3.5 rounded-lg text-[11px] leading-relaxed relative bg-slate-50/40">
                 <div class="font-extrabold text-xs text-slate-900 mb-1 flex items-center justify-between">
                   <span>공 급 자 (청년인쇄사)</span>
@@ -381,7 +351,6 @@
                 <div><strong>직통전화 :</strong> 044-862-4803 &nbsp; | &nbsp; <strong>E-mail :</strong> admin@ybprint.co.kr</div>
               </div>
             </div>
-
             <div class="bg-slate-900 text-white px-4 py-3 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 mb-6 font-bold">
               <div class="text-xs flex items-center gap-2">
                 <span>합계금액 :</span>
@@ -391,7 +360,6 @@
                 (<span id="paper-number-total" class="text-lg font-black text-white">0</span> 원 / VAT 포함)
               </div>
             </div>
-
             <div class="overflow-x-auto">
               <table class="excel-grid-table text-[11px] text-left">
                 <thead id="paper-table-thead" class="bg-slate-100 text-slate-800 text-center font-bold"></thead>
@@ -412,16 +380,13 @@
                 </tfoot>
               </table>
             </div>
-
             <div class="mt-5 text-[10px] text-slate-500 space-y-0.5">
               <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
               <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
             </div>
-
           </div>
         </div>
 
-        <!-- STEP 3: 최종 발송 화면 & PDF 다운로드 옵션 -->
         <div id="quote-step-3-content" class="space-y-5 hidden">
           <div class="text-center py-3">
             <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2 text-emerald-600">
@@ -469,10 +434,8 @@
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- 푸터 액션 바 -->
       <div class="p-4 sm:p-5 border-t border-[#E5E8EB] bg-white shrink-0 flex justify-between items-center gap-3">
         <button id="btn-prev-step" onclick="prevQuoteStep()" class="hidden px-5 py-2.5 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#4E5968] rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
           이전 단계
@@ -504,9 +467,12 @@
   <script>
     lucide.createIcons();
 
-    // 원래 정상 작동하던 백엔드 엔드포인트 유지
     const RENDER_BACKEND_URL = "https://ybprint-backend-1.onrender.com";
     let allInquiries = [];
+    
+    // 로컬 스토리지 데이터 (삭제 및 완료 상태 보존)
+    let deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items') || '[]');
+    let completedItems = JSON.parse(localStorage.getItem('yb_completed_items') || '[]');
 
     const BASE_PRICES = {
       print_bw: 50,
@@ -532,23 +498,21 @@
           method: 'GET',
           mode: 'cors'
         });
-
-        if (!response.ok) {
-          throw new Error("HTTP error " + response.status);
-        }
-
+        if (!response.ok) throw new Error("HTTP error " + response.status);
         const data = await response.json();
-        allInquiries = Array.isArray(data) ? data : (data.inquiries || []);
+        const rawList = Array.isArray(data) ? data : (data.inquiries || []);
+        
+        // 영구 삭제된 항목 필터링
+        allInquiries = rawList.filter(item => {
+          const key = item.timestamp || item.created_at || item.time || "-";
+          return !deletedItems.includes(key);
+        });
+
         renderAllViews(allInquiries);
         updateStats(allInquiries);
-
-        const statusLabel = document.getElementById('server-status-label');
-        if (statusLabel) statusLabel.innerText = "Render Live";
+        document.getElementById('server-status-label').innerText = "Render Live";
       } catch (err) {
-        console.error("Failed to fetch inquiries:", err);
-        const statusLabel = document.getElementById('server-status-label');
-        if (statusLabel) statusLabel.innerText = "Connecting...";
-        
+        document.getElementById('server-status-label').innerText = "Connecting...";
         if (allInquiries.length === 0) {
           const emptyHtml = `
             <div class="py-12 text-center text-[#6B7684] flex flex-col items-center justify-center gap-2">
@@ -562,10 +526,45 @@
           lucide.createIcons();
         }
       } finally {
-        if (refreshIcon) {
-          setTimeout(() => refreshIcon.classList.remove('animate-spin'), 600);
-        }
+        if (refreshIcon) setTimeout(() => refreshIcon.classList.remove('animate-spin'), 600);
       }
+    }
+
+    // 상태 변경 함수 (접수대기 ↔ 처리완료)
+    function toggleStatus(key) {
+      if(completedItems.includes(key)) {
+        completedItems = completedItems.filter(k => k !== key);
+      } else {
+        completedItems.push(key);
+      }
+      localStorage.setItem('yb_completed_items', JSON.stringify(completedItems));
+      filterInquiries();
+    }
+
+    // 영구 삭제 함수
+    function deleteInquiry(key) {
+      if(!confirm('이 접수 내역을 목록에서 영구적으로 삭제하시겠습니까?')) return;
+      
+      if (!deletedItems.includes(key)) {
+        deletedItems.push(key);
+        localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems));
+      }
+      
+      allInquiries = allInquiries.filter(item => {
+        const itemKey = item.timestamp || item.created_at || item.time || "-";
+        return itemKey !== key;
+      });
+      
+      filterInquiries();
+      updateStats(allInquiries);
+      
+      try {
+        fetch(`${RENDER_BACKEND_URL}/delete-inquiry`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key })
+        });
+      } catch(e) {}
     }
 
     function renderAllViews(list) {
@@ -593,7 +592,6 @@
       }
 
       if (totalBadge) totalBadge.innerText = `${list.length}건`;
-
       const reversed = [...list].reverse();
 
       container.innerHTML = reversed.map((item, idx) => {
@@ -605,6 +603,8 @@
         const spec = item.spec || "-";
         const inquiry = item.inquiry || "(작성 내용 없음)";
         const hasFile = rawFile && rawFile !== "첨부파일 없음";
+        const isCompleted = completedItems.includes(timeRaw);
+        const opacityClass = isCompleted ? "opacity-70 bg-slate-50/50" : "";
 
         let fileChipsHtml = '';
         if (hasFile) {
@@ -632,32 +632,39 @@
         const safeFileName = encodeURIComponent(rawFile);
 
         return `
-          <div class="bg-[#F9FAFB] border border-[#E5E8EB] rounded-2xl p-4 space-y-3 text-left">
+          <div class="bg-[#F9FAFB] border border-[#E5E8EB] rounded-2xl p-4 space-y-3 text-left transition-all ${opacityClass}">
             <div class="flex items-center justify-between border-b border-[#E5E8EB] pb-2.5">
               <span class="text-xs font-mono-code font-bold text-[#1B64DA] bg-blue-100/60 px-2 py-0.5 rounded-md">NO.${String(no).padStart(2, '0')}</span>
               <span class="text-xs font-mono-code text-[#8B95A1]">${timeRaw}</span>
             </div>
 
-            <!-- ② 연락처 아이콘 삭제 및 ③ 통화 버튼 삭제 적용 (모바일 뷰) -->
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-start justify-between gap-2">
               <div>
                 <span class="text-[11px] font-bold text-[#8B95A1] block">소속 / 성함</span>
                 <span class="text-sm font-extrabold text-[#191F28] block">${org}</span>
                 <span class="text-xs font-mono-code font-bold text-[#1B64DA] block mt-0.5 select-all">${phone}</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}')" class="inline-flex items-center gap-1 px-3.5 py-2 bg-[#3182F6] active:bg-[#1B64DA] text-white rounded-xl text-xs font-bold shadow-md cursor-pointer">
+              
+              <!-- 진행 상태 / 삭제 / 견적 버튼 그룹 -->
+              <div class="flex flex-col items-end gap-1.5 min-w-[100px]">
+                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}', '${timeRaw}')" class="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-[#3182F6] active:bg-[#1B64DA] text-white rounded-xl text-[12px] font-bold shadow-md cursor-pointer">
                   <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
                   <span>견적작성</span>
                 </button>
+                <div class="flex items-center gap-1 w-full">
+                  <button onclick="toggleStatus('${timeRaw}')" class="flex-1 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isCompleted ? 'bg-[#E8F8F0] text-[#008A50] border-[#B7F0D4]' : 'bg-[#F2F4F6] text-[#4E5968] border-[#E5E8EB]'}">
+                    ${isCompleted ? '처리완료' : '접수대기'}
+                  </button>
+                  <button onclick="deleteInquiry('${timeRaw}')" class="px-2 py-1.5 bg-[#FFF0F2] active:bg-[#FFE5E8] text-[#F04452] border border-[#FFD6DB] rounded-lg transition-all">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
               </div>
             </div>
 
             <div class="space-y-1.5">
               <span class="text-[11px] font-bold text-[#8B95A1] block">첨부 원고</span>
-              <div class="space-y-1">
-                ${fileChipsHtml}
-              </div>
+              <div class="space-y-1">${fileChipsHtml}</div>
               ${spec && spec !== '-' ? `<div class="text-[11px] text-[#6B7684] bg-white p-2 rounded-lg border border-[#E5E8EB] mt-1">${spec}</div>` : ''}
             </div>
 
@@ -707,6 +714,9 @@
         const spec = item.spec || "-";
         const inquiry = item.inquiry || "(작성 내용 없음)";
         const hasFile = rawFile && rawFile !== "첨부파일 없음";
+        
+        const isCompleted = completedItems.includes(timeRaw);
+        const opacityClass = isCompleted ? "opacity-60 bg-slate-50/50" : "";
 
         let timeHtml = '-';
         if (timeRaw && timeRaw !== '-') {
@@ -747,12 +757,11 @@
         const safeFileName = encodeURIComponent(rawFile);
 
         return `
-          <tr class="table-row-hover transition-colors align-middle">
+          <tr class="table-row-hover transition-colors align-middle ${opacityClass}">
             <td class="py-5 pl-6 pr-3 font-mono-code font-bold text-[#8B95A1] text-center text-[13px]">${String(no).padStart(2, '0')}</td>
             <td class="py-5 px-4 whitespace-nowrap">${timeHtml}</td>
             <td class="py-5 px-5 font-bold text-[#191F28] text-[15px] truncate" title="${org}">${org}</td>
             
-            <!-- ② 연락처 전화기 아이콘 완전 삭제 (텍스트만 깔끔하게 표시) -->
             <td class="py-5 px-4 font-mono-code text-[#1B64DA] font-bold whitespace-nowrap text-[14px] select-all">
               <span>${phone}</span>
             </td>
@@ -773,12 +782,22 @@
               </div>
             </td>
             
-            <!-- ③ 통화 배지 삭제 / 견적작성 단독 배치 -->
+            <!-- 관리 칼럼: 견적, 진행상태 배지, 영구삭제 배지 추가 -->
             <td class="py-5 pl-3 pr-7 text-center whitespace-nowrap">
-              <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}')" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-[13px] font-extrabold shadow-md transition-all whitespace-nowrap cursor-pointer">
-                <i data-lucide="calculator" class="w-3.5 h-3.5 shrink-0"></i>
-                <span>견적작성</span>
-              </button>
+              <div class="flex flex-col gap-1.5 items-center w-full max-w-[110px] mx-auto">
+                <button onclick="openQuoteModal('${safeOrg}', '${safePhone}', '${safeInquiry}', '${safeSpec}', '${safeFileName}', '${timeRaw}')" class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-[12.5px] font-extrabold shadow-md transition-all cursor-pointer">
+                  <i data-lucide="calculator" class="w-3.5 h-3.5 shrink-0"></i>
+                  <span>견적작성</span>
+                </button>
+                <div class="flex items-center gap-1 w-full">
+                  <button onclick="toggleStatus('${timeRaw}')" class="flex-1 py-1.5 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${isCompleted ? 'bg-[#E8F8F0] text-[#008A50] border-[#B7F0D4] hover:bg-[#D3F5E4]' : 'bg-[#F2F4F6] text-[#4E5968] border-[#E5E8EB] hover:bg-[#E5E8EB]'}" title="진행 상태 변경">
+                    ${isCompleted ? '처리완료' : '접수대기'}
+                  </button>
+                  <button onclick="deleteInquiry('${timeRaw}')" class="px-2 py-1.5 bg-[#FFF0F2] hover:bg-[#FFE5E8] text-[#F04452] border border-[#FFD6DB] rounded-lg transition-all cursor-pointer" title="내역 영구 삭제">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5 shrink-0"></i>
+                  </button>
+                </div>
+              </div>
             </td>
           </tr>
         `;
@@ -798,16 +817,14 @@
       document.getElementById('detail-modal').classList.add('hidden');
     }
 
-    // ----------------------------------------------------------------
-    // 🧮 견적 발송 모달 자동화 및 엑셀 3종 원본 1:1 서식 엔진
-    // ----------------------------------------------------------------
-    function openQuoteModal(org, phone, inquiry, spec, fileName) {
+    function openQuoteModal(org, phone, inquiry, spec, fileName, timeKey) {
       activeInquiry = {
         org: decodeURIComponent(org) || "미입력 고객",
         phone: decodeURIComponent(phone) || "연락처 없음",
         inquiry: decodeURIComponent(inquiry) || "",
         spec: decodeURIComponent(spec) || "",
-        fileName: decodeURIComponent(fileName) || ""
+        fileName: decodeURIComponent(fileName) || "",
+        timeKey: timeKey
       };
 
       document.getElementById('quote-modal-org').innerText = activeInquiry.org;
@@ -880,7 +897,6 @@
         addQuoteDataRow('기타', '표지 코팅 가공', currentBookCount, BASE_PRICES.cover_coat, '단면 무광코팅');
         addQuoteDataRow('기타', '무선제본 가공', currentBookCount, BASE_PRICES.bind_perfect, '옵셋 무선제본');
       }
-
       calculateQuoteTotals();
     }
 
@@ -889,29 +905,13 @@
       const tr = document.createElement('tr');
       tr.className = "quote-calc-row hover:bg-slate-50 transition-colors";
       tr.innerHTML = `
-        <td class="py-2 px-2">
-          <input type="text" value="${type}" class="row-type w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:border-[#3182F6] focus:outline-none">
-        </td>
-        <td class="py-2 px-2">
-          <input type="text" value="${desc}" class="row-desc w-full bg-white border border-[#D1D6DB] rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:border-[#3182F6] focus:outline-none">
-        </td>
-        <td class="py-2 px-2">
-          <input type="number" min="0" step="any" value="${qty}" oninput="calculateQuoteTotals()" class="row-qty w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-center focus:border-[#3182F6] focus:outline-none">
-        </td>
-        <td class="py-2 px-2">
-          <input type="number" min="0" value="${price}" oninput="calculateQuoteTotals()" class="row-price w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-right focus:border-[#3182F6] focus:outline-none">
-        </td>
-        <td class="py-2 px-2">
-          <input type="text" readonly value="0" class="row-amt w-full bg-[#F2F4F6] border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-extrabold text-right text-[#191F28] cursor-not-allowed">
-        </td>
-        <td class="py-2 px-2">
-          <input type="text" value="${remark}" placeholder="비고 입력" class="row-remark w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs text-slate-600 focus:border-[#3182F6] focus:outline-none">
-        </td>
-        <td class="py-2 px-2 text-center">
-          <button type="button" onclick="this.closest('tr').remove(); calculateQuoteTotals();" class="text-[#8B95A1] hover:text-[#F04452] transition-colors cursor-pointer">
-            <i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i>
-          </button>
-        </td>
+        <td class="py-2 px-2"><input type="text" value="${type}" class="row-type w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="text" value="${desc}" class="row-desc w-full bg-white border border-[#D1D6DB] rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="number" min="0" step="any" value="${qty}" oninput="calculateQuoteTotals()" class="row-qty w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-center focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="number" min="0" value="${price}" oninput="calculateQuoteTotals()" class="row-price w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-right focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="text" readonly value="0" class="row-amt w-full bg-[#F2F4F6] border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-extrabold text-right text-[#191F28] cursor-not-allowed"></td>
+        <td class="py-2 px-2"><input type="text" value="${remark}" placeholder="비고 입력" class="row-remark w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs text-slate-600 focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2 text-center"><button type="button" onclick="this.closest('tr').remove(); calculateQuoteTotals();" class="text-[#8B95A1] hover:text-[#F04452] transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td>
       `;
       tbody.appendChild(tr);
       lucide.createIcons();
@@ -944,7 +944,6 @@
       document.getElementById('paper-foot-total').innerText = total.toLocaleString();
       document.getElementById('paper-number-total').innerText = total.toLocaleString();
       document.getElementById('paper-hangul-total').innerText = "일금 " + numberToKorean(total) + " 정";
-
       document.getElementById('msg-target-total').innerText = total.toLocaleString();
     }
 
@@ -961,14 +960,10 @@
         let str = "";
         for (let i = 0; i < 4; i++) {
           let digit = mod % 10;
-          if (digit > 0) {
-            str = units[digit] + smallUnits[i] + str;
-          }
+          if (digit > 0) { str = units[digit] + smallUnits[i] + str; }
           mod = Math.floor(mod / 10);
         }
-        if (str !== "") {
-          result = str + bigUnits[count] + " " + result;
-        }
+        if (str !== "") { result = str + bigUnits[count] + " " + result; }
         count++;
         number = Math.floor(number / 10000);
       }
@@ -1064,38 +1059,9 @@
         tbody.innerHTML = '';
 
         if (template === '디지탈상세') {
-          thead.innerHTML = `
-            <tr>
-              <th class="py-2 px-2 w-28 text-center">항목</th>
-              <th class="py-2 px-3 text-center">산출내역</th>
-              <th class="py-2 px-2 w-16 text-center">수량</th>
-              <th class="py-2 px-2 w-24 text-right">단가</th>
-              <th class="py-2 px-2 w-28 text-right">금액(원)</th>
-              <th class="py-2 px-3 w-36 text-center">비고</th>
-            </tr>
-          `;
-        } else if (template === '옵셋일반') {
-          thead.innerHTML = `
-            <tr>
-              <th class="py-2 px-2 w-20 text-center">항목</th>
-              <th class="py-2 px-3 text-center">내역 및 규격</th>
-              <th class="py-2 px-2 w-16 text-center">수량</th>
-              <th class="py-2 px-2 w-24 text-right">단가</th>
-              <th class="py-2 px-2 w-28 text-right">공급가액(원)</th>
-              <th class="py-2 px-3 w-36 text-center">비고</th>
-            </tr>
-          `;
+          thead.innerHTML = `<tr><th class="py-2 px-2 w-28 text-center">항목</th><th class="py-2 px-3 text-center">산출내역</th><th class="py-2 px-2 w-16 text-center">수량</th><th class="py-2 px-2 w-24 text-right">단가</th><th class="py-2 px-2 w-28 text-right">금액(원)</th><th class="py-2 px-3 w-36 text-center">비고</th></tr>`;
         } else {
-          thead.innerHTML = `
-            <tr>
-              <th class="py-2 px-2 w-20 text-center">항목</th>
-              <th class="py-2 px-3 text-center">내역 및 규격</th>
-              <th class="py-2 px-2 w-16 text-center">수량</th>
-              <th class="py-2 px-2 w-24 text-right">단가</th>
-              <th class="py-2 px-2 w-28 text-right">공급가액(원)</th>
-              <th class="py-2 px-3 w-36 text-center">비고</th>
-            </tr>
-          `;
+          thead.innerHTML = `<tr><th class="py-2 px-2 w-20 text-center">항목</th><th class="py-2 px-3 text-center">내역 및 규격</th><th class="py-2 px-2 w-16 text-center">수량</th><th class="py-2 px-2 w-24 text-right">단가</th><th class="py-2 px-2 w-28 text-right">공급가액(원)</th><th class="py-2 px-3 w-36 text-center">비고</th></tr>`;
         }
 
         document.querySelectorAll('.quote-calc-row').forEach(row => {
@@ -1106,16 +1072,7 @@
           const amt = row.querySelector('.row-amt').value;
           const remark = row.querySelector('.row-remark').value || "-";
 
-          tbody.innerHTML += `
-            <tr>
-              <td class="text-center font-bold text-slate-800">${type}</td>
-              <td class="font-medium">${desc}</td>
-              <td class="text-center font-mono-code">${qty}</td>
-              <td class="text-right font-mono-code">${price}</td>
-              <td class="text-right font-mono-code font-bold">${amt}</td>
-              <td class="text-center text-slate-600">${remark}</td>
-            </tr>
-          `;
+          tbody.innerHTML += `<tr><td class="text-center font-bold text-slate-800">${type}</td><td class="font-medium">${desc}</td><td class="text-center font-mono-code">${qty}</td><td class="text-right font-mono-code">${price}</td><td class="text-right font-mono-code font-bold">${amt}</td><td class="text-center text-slate-600">${remark}</td></tr>`;
         });
       }
 
@@ -1158,30 +1115,21 @@
           <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 16px;">[청년인쇄사] 견적서 안내</h2>
           <p style="font-size: 16px; line-height: 1.6;">안녕하세요, <strong>${activeInquiry.org}</strong> 고객님!</p>
           <p style="font-size: 15px; line-height: 1.6; color: #4b5563;">
-            청년인쇄사에 문의해주셔서 진심으로 감사드립니다.<br>
-            요청하신 견적서를 안내해 드립니다.
+            청년인쇄사에 문의해주셔서 진심으로 감사드립니다.<br>요청하신 견적서를 안내해 드립니다.
           </p>
-
           <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 20px 0;">
             <p style="margin: 4px 0; font-size: 14px;"><strong>■ 수신처 :</strong> ${activeInquiry.org}</p>
             <p style="margin: 4px 0; font-size: 14px;"><strong>■ 견적서 양식 :</strong> ${template}</p>
             <p style="margin: 4px 0; font-size: 16px; color: #2563eb;"><strong>■ 총 견적금액 : ${totalAmount}</strong> (VAT 포함)</p>
           </div>
-
-          <div style="margin: 20px 0; padding: 16px; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
-            ${quoteHtml}
-          </div>
-
+          <div style="margin: 20px 0; padding: 16px; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">${quoteHtml}</div>
           <div style="background-color: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 13px; color: #475569; line-height: 1.5;">
             <p style="margin: 0 0 4px 0;"><strong>※ 공공기관 결제 및 정산 안내</strong></p>
             <p style="margin: 0;">• 세종청사 및 국책연구원 행정 규격에 맞추어 법인카드 결제 및 세금계산서 후불 정산이 가능합니다.</p>
             <p style="margin: 0;">• 필수 4대 서류(사업자등록증, 통장사본 등)가 기본 동봉됩니다.</p>
           </div>
-
           <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0 16px 0;">
-          <p style="font-size: 13px; color: #9ca3af; margin: 0;">
-            <strong>청년인쇄사</strong> | 문의전화: 044-862-4803 | admin@ybprint.co.kr
-          </p>
+          <p style="font-size: 13px; color: #9ca3af; margin: 0;"><strong>청년인쇄사</strong> | 문의전화: 044-862-4803 | admin@ybprint.co.kr</p>
         </div>
       `;
 
@@ -1202,6 +1150,14 @@
 
         if (res.ok && result.success) {
           alert(`🎉 [발송 성공]\n\n수신처: ${activeInquiry.org} (${recipientEmail})\n총 견적금액: ${totalAmount}\n\n고객에게 공식 견적서 메일이 안전하게 전송되었습니다.`);
+          
+          // 발송 성공 시 자동으로 처리완료 상태로 변경
+          if (activeInquiry.timeKey && !completedItems.includes(activeInquiry.timeKey)) {
+            completedItems.push(activeInquiry.timeKey);
+            localStorage.setItem('yb_completed_items', JSON.stringify(completedItems));
+            filterInquiries();
+          }
+          
           closeQuoteModal();
         } else {
           alert(`⚠️ [발송 실패]\n\n${result.error || '이메일 발송에 실패했습니다.'}\nSendGrid 환경변수 설정을 확인해 주세요.`);
@@ -1236,6 +1192,14 @@
 
       html2pdf().set(opt).from(element).save().then(() => {
         alert(`💾 [다운로드 완료]\n\n'${fileName}' 파일이 성공적으로 저장되었습니다.`);
+        
+        // 다운로드 완료 시 자동으로 처리완료 상태로 변경
+        if (activeInquiry.timeKey && !completedItems.includes(activeInquiry.timeKey)) {
+          completedItems.push(activeInquiry.timeKey);
+          localStorage.setItem('yb_completed_items', JSON.stringify(completedItems));
+          filterInquiries();
+        }
+        
         btn.disabled = false;
         btn.innerHTML = originalHtml;
         closeQuoteModal();
@@ -1266,7 +1230,6 @@
       if (!list) return;
 
       if (todayCountEl) todayCountEl.innerText = list.length;
-      
       const fileInquiries = list.filter(item => item.file_name && item.file_name !== "첨부파일 없음");
       if (fileCountEl) fileCountEl.innerText = fileInquiries.length;
     }
