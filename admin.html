@@ -29,7 +29,7 @@
     ::-webkit-scrollbar-thumb { background: #D1D6DB; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #B0B8C1; }
 
-    /* 관공서 정산용 실제 엑셀 1:1 격자 스타일 */
+    /* 관공서 정산용 실제 엑셀 1:1 격자 서식 */
     .quote-paper {
       background: #FFFFFF;
       box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
@@ -327,7 +327,7 @@
           </div>
         </div>
 
-        <!-- STEP 2: 견적 검증 (실물 3종 PDF 원본 1:1 완벽 렌더링) -->
+        <!-- STEP 2: 견적 검증 (실물 3종 엑셀/PDF 원본 1:1 완벽 렌더링) -->
         <div id="quote-step-2-content" class="space-y-4 hidden">
           <div class="bg-[#E8F3FF] border border-[#BBDDFF] rounded-2xl p-4 flex gap-3 items-start text-left text-sm text-[#1B64DA] font-medium">
             <i data-lucide="shield-check" class="w-5 h-5 shrink-0 mt-0.5 text-[#3182F6]"></i>
@@ -362,7 +362,7 @@
               </div>
             </div>
 
-            <!-- 합계금액 엑셀 바 -->
+            <!-- 합계금액 엑셀 바[cite: 1, 2, 3] -->
             <div class="border border-black bg-slate-100 px-4 py-2.5 flex justify-between items-center mb-4 text-[12px] font-bold">
               <div>
                 <span>합계금액 :</span>
@@ -373,7 +373,7 @@
               </div>
             </div>
 
-            <!-- [디지탈상세 전용] 품명/규격/수량/면수/사양 요약 테이블 -->
+            <!-- [디지탈상세 전용] 품명/규격/수량/면수/사양 요약 테이블[cite: 1] -->
             <div id="paper-injob-summary-box" class="mb-4 hidden">
               <table class="excel-grid-table text-[11px] text-center">
                 <thead class="bg-slate-100 font-bold">
@@ -397,7 +397,7 @@
               </table>
             </div>
 
-            <!-- 실물 엑셀 격자 본문 테이블 -->
+            <!-- 실물 엑셀 격자 본문 테이블[cite: 1, 2, 3] -->
             <div class="overflow-x-auto">
               <table class="excel-grid-table text-[11px] text-left">
                 <thead id="paper-table-thead" class="bg-slate-100 text-center font-bold"></thead>
@@ -870,7 +870,7 @@
       onTemplateChange();
     }
 
-    // 엑셀 3종 원본 서식 1:1 매핑 빌더 (단가 기준 통일)
+    // 엑셀 3종 원본 서식 1:1 매핑 빌더 (단가 기준 통일)[cite: 1, 2, 3]
     function onTemplateChange() {
       const template = document.getElementById('quote-template-select').value;
       const tbody = document.getElementById('quote-items-tbody');
@@ -1232,7 +1232,7 @@
             </tr>
             <tr>
               <td colspan="5" class="text-center py-1.5 font-bold">합계금액 (VAT 제외)</td>
-              <td class="text-right py-1.5 px-2 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
+              <td class="text-right py-2 px-2 font-mono-code font-bold">${subtotal.toLocaleString()}</td>
               <td class="text-center text-slate-400">-</td>
             </tr>
             <tr class="bg-slate-100">
