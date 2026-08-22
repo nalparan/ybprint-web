@@ -437,24 +437,24 @@
         }
       } 
       else {
-        // [옵셋일반: 기획5 + 디자인5 + 제작9(실무공정) + 기타5(배송)]
+        // 💡 [옵셋일반: 기획5 + 디자인5 + 제작(용지2, CTP2, 인쇄2) + 기타(코팅, 제본, 일반관리비, 배송, 빈칸)]
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
-        // 제작 9대 공정
-        addRow('제작', '표지용지', '250스노우 (국2절 0.5연)', 1, 77750, '스노우250g / 고시가');
-        addRow('제작', '내지용지', '모조80 (국전 3연)', 1, 220050, '모조80g / 고시가');
-        addRow('제작', '표지판(CTP)', 'CTP 4판 (4도)', 4, 18000, '4도 칼라');
-        addRow('제작', '내지판(CTP)', 'CTP 4판 (4도/양면)', 4, 18000, '양면 4도/흑백');
-        addRow('제작', '표지인쇄', '옵셋 4도', 4, 18000, '옵셋 본인쇄');
-        addRow('제작', '내지인쇄', '옵셋 4도 (양면)', 4, 18000, '옵셋 본인쇄');
-        addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
-        addRow('제작', '제본', '옵셋 책제본', q, PRICE.bind, '옵셋 무선제본');
-        addRow('제작', '일반관리비', '12% (지대제외)', 1, 0, '재료비제외 12% 자동산출');
+        // 제작 6행 (용지 2 + CTP 2 + 인쇄 2)
+        addRow('제작', '용지', '표지용지 (스노우250 / 국2절 0.5연)', 1, 77750, '스노우250g / 고시가');
+        addRow('제작', '용지', '내지용지 (모조80 / 국전 3연)', 1, 220050, '모조80g / 고시가');
+        addRow('제작', 'CTP', '표지판 (CTP 4판)', 4, 18000, '4도 칼라');
+        addRow('제작', 'CTP', '내지판 (CTP 4판)', 4, 18000, '양면 4도/흑백');
+        addRow('제작', '인쇄', '표지 본인쇄 (옵셋 4도)', 4, 18000, '옵셋 본인쇄');
+        addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도)', 4, 18000, '옵셋 본인쇄');
 
-        // 기타 5행
-        addRow('기타', '납품비용', '안전 직배송', 1, 0, '당일 안전 직배송');
-        addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
+        // 기타 5행 (코팅, 제본, 일반관리비, 배송, 공란)
+        addRow('기타', '코팅', '표지 단면 무광코팅', q, PRICE.coat, '표지 단면무광');
+        addRow('기타', '제본', '옵셋 무선 책제본', q, PRICE.bind, '옵셋 무선제본');
+        addRow('기타', '일반관리비', '12% (지대제외)', 1, 0, '재료비제외 12% 자동산출');
+        addRow('기타', '배송', '납품 배송 (직배송)', 1, 0, '당일 안전 직배송');
+        addRow('기타', '', '', '', '', '');
       }
       calculateAll();
     }
@@ -502,7 +502,7 @@
         tr.querySelector('.i-a').value = amt > 0 ? amt.toLocaleString() : '';
         sub += amt;
 
-        if (name !== '표지용지' && name !== '내지용지' && !name.includes('지대') && name !== '일반관리비' && !desc.includes('12%')) {
+        if (name !== '용지' && !name.includes('용지') && !name.includes('지대') && name !== '일반관리비' && !desc.includes('12%')) {
           excl += amt;
         }
         rows.push({ type, name, desc, qtyStr, priceStr, amt, rem });
@@ -539,7 +539,7 @@
       return r.trim();
     }
 
-    // 대분류 셀병합 렌더링 헬퍼 (동적 개수 자동 병합)
+    // 대분류 셀병합 렌더링 헬퍼 (디지털일반용)
     function renderSectionGroup(categoryName, allRows, minCount = 5) {
       const matched = allRows.filter(r => r.type === categoryName);
       const count = Math.max(matched.length, minCount);
@@ -570,10 +570,11 @@
     function renderPaper(rows, sub, total, cutAmount = 0) {
       const org = document.getElementById('input-org').value || "영신여고";
       const tmpl = document.getElementById('input-template').value;
-      const q = document.getElementById('input-qty').value;
+      const q = parseInt(document.getElementById('input-qty').value) || 100;
       const p = document.getElementById('input-page').value;
       const dt = new Date();
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
+      const unitPrice = q > 0 ? Math.round(total / q) : total;
 
       const stamp = `
         <span style="position:relative; display:inline-block; margin-left:4px;">
@@ -608,11 +609,12 @@
           </div>
         </div>
 
-        <!-- 합계금액 바 -->
+        <!-- 합계금액 바 (1부당 단가지표 탑재) -->
         <div class="border border-black bg-slate-100 px-4 py-1.5 flex justify-between items-center mb-2 font-bold text-xs">
-          <div>
+          <div class="flex items-center gap-2">
             <span>합계금액 :</span>
-            <span class="font-black text-black ml-2 text-sm">일금 ${numToKor(total)} 정</span>
+            <span class="font-black text-black text-sm">일금 ${numToKor(total)} 정</span>
+            <span class="text-[10.5px] font-bold text-blue-900 bg-blue-100 border border-blue-300 px-2 py-0.5 rounded font-mono-code">[ 1부당: ₩ ${unitPrice.toLocaleString()} ]</span>
           </div>
           <div class="font-mono-code text-sm font-black">
             ( ₩ <span>${total.toLocaleString()}</span> )
@@ -653,11 +655,10 @@
           </table>
         `;
       } 
-      else {
-        // [디지털일반 & 옵셋일반 공통 4대 공정 셀병합 렌더링]
+      else if (tmpl === '디지털일반') {
         const planGroupHtml = renderSectionGroup('기획', rows, 5);
         const designGroupHtml = renderSectionGroup('디자인', rows, 5);
-        const produceGroupHtml = renderSectionGroup('제작', rows, (tmpl === '옵셋일반' ? 9 : 5));
+        const produceGroupHtml = renderSectionGroup('제작', rows, 5);
         const otherGroupHtml = renderSectionGroup('기타', rows, 5);
 
         tableHTML = `
@@ -678,6 +679,136 @@
               ${designGroupHtml}
               ${produceGroupHtml}
               ${otherGroupHtml}
+            </tbody>
+            <tfoot class="font-bold">
+              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+              <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-sm font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+            </tfoot>
+          </table>
+        `;
+      } 
+      else {
+        // 💡 [옵셋일반: 용지2, CTP2, 인쇄2 정밀 2단 셀병합 + 기타 5행 렌더링]
+        const planRows = rows.filter(r => r.type === '기획');
+        while (planRows.length < 5) planRows.push({ name: '', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+
+        const designRows = rows.filter(r => r.type === '디자인');
+        while (designRows.length < 5) designRows.push({ name: '', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+
+        const paperRows = rows.filter(r => r.type === '제작' && (r.name === '용지' || r.name.includes('용지') || r.name.includes('지대')));
+        while (paperRows.length < 2) paperRows.push({ name: '용지', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+
+        const ctpRows = rows.filter(r => r.type === '제작' && r.name.toUpperCase().includes('CTP'));
+        while (ctpRows.length < 2) ctpRows.push({ name: 'CTP', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+
+        const printRows = rows.filter(r => r.type === '제작' && (r.name === '인쇄' || r.name.includes('인쇄')));
+        while (printRows.length < 2) printRows.push({ name: '인쇄', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+
+        const otherRows = rows.filter(r => r.type === '기타');
+        while (otherRows.length < 5) otherRows.push({ name: '', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+
+        tableHTML = `
+          <table class="excel-table text-left">
+            <thead>
+              <tr>
+                <th class="w-14">항목</th>
+                <th class="w-20">내역</th>
+                <th>규격</th>
+                <th class="w-14">수량</th>
+                <th class="w-20 text-right">단가</th>
+                <th class="w-24 text-right">공급가액</th>
+                <th class="w-36 text-center">비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 1) 기획 5행 -->
+              ${planRows.slice(0, 5).map((r, idx) => `
+                <tr>
+                  ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">기획</td>` : ''}
+                  <td class="text-center font-bold border border-black">${r.name}</td>
+                  <td class="font-mono-code text-[9.5px] border border-black">${r.desc}</td>
+                  <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${r.rem}</td>
+                </tr>
+              `).join('')}
+
+              <!-- 2) 디자인 5행 -->
+              ${designRows.slice(0, 5).map((r, idx) => `
+                <tr>
+                  ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">디자인</td>` : ''}
+                  <td class="text-center font-bold border border-black">${r.name}</td>
+                  <td class="font-mono-code text-[9.5px] border border-black">${r.desc}</td>
+                  <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${r.rem}</td>
+                </tr>
+              `).join('')}
+
+              <!-- 3) 제작 6행 (용지2, CTP2, 인쇄2) -->
+              <tr>
+                <td rowspan="6" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">제작</td>
+                <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle">용지</td>
+                <td class="font-mono-code text-[9.5px] border border-black">${paperRows[0].desc}</td>
+                <td class="text-center font-mono-code border border-black">${paperRows[0].qtyStr}</td>
+                <td class="text-right font-mono-code border border-black">${paperRows[0].priceStr}</td>
+                <td class="text-right font-mono-code font-bold border border-black">${paperRows[0].amt > 0 ? paperRows[0].amt.toLocaleString() : ''}</td>
+                <td class="text-center text-gray-600 text-[9.5px] border border-black">${paperRows[0].rem}</td>
+              </tr>
+              <tr>
+                <td class="font-mono-code text-[9.5px] border border-black">${paperRows[1].desc}</td>
+                <td class="text-center font-mono-code border border-black">${paperRows[1].qtyStr}</td>
+                <td class="text-right font-mono-code border border-black">${paperRows[1].priceStr}</td>
+                <td class="text-right font-mono-code font-bold border border-black">${paperRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
+                <td class="text-center text-gray-600 text-[9.5px] border border-black">${paperRows[1].rem}</td>
+              </tr>
+              <tr>
+                <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle">CTP</td>
+                <td class="font-mono-code text-[9.5px] border border-black">${ctpRows[0].desc}</td>
+                <td class="text-center font-mono-code border border-black">${ctpRows[0].qtyStr}</td>
+                <td class="text-right font-mono-code border border-black">${ctpRows[0].priceStr}</td>
+                <td class="text-right font-mono-code font-bold border border-black">${ctpRows[0].amt > 0 ? ctpRows[0].amt.toLocaleString() : ''}</td>
+                <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[0].rem}</td>
+              </tr>
+              <tr>
+                <td class="font-mono-code text-[9.5px] border border-black">${ctpRows[1].desc}</td>
+                <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
+                <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
+                <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? ctpRows[1].amt.toLocaleString() : ''}</td>
+                <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[1].rem}</td>
+              </tr>
+              <tr>
+                <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle">인쇄</td>
+                <td class="font-mono-code text-[9.5px] border border-black">${printRows[0].desc}</td>
+                <td class="text-center font-mono-code border border-black">${printRows[0].qtyStr}</td>
+                <td class="text-right font-mono-code border border-black">${printRows[0].priceStr}</td>
+                <td class="text-right font-mono-code font-bold border border-black">${printRows[0].amt > 0 ? printRows[0].amt.toLocaleString() : ''}</td>
+                <td class="text-center text-gray-600 text-[9.5px] border border-black">${printRows[0].rem}</td>
+              </tr>
+              <tr>
+                <td class="font-mono-code text-[9.5px] border border-black">${printRows[1].desc}</td>
+                <td class="text-center font-mono-code border border-black">${printRows[1].qtyStr}</td>
+                <td class="text-right font-mono-code border border-black">${printRows[1].priceStr}</td>
+                <td class="text-right font-mono-code font-bold border border-black">${printRows[1].amt > 0 ? printRows[1].amt.toLocaleString() : ''}</td>
+                <td class="text-center text-gray-600 text-[9.5px] border border-black">${printRows[1].rem}</td>
+              </tr>
+
+              <!-- 4) 기타 5행 (코팅, 제본, 일반관리비, 배송, 빈칸) -->
+              ${otherRows.slice(0, 5).map((r, idx) => `
+                <tr>
+                  ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">기타</td>` : ''}
+                  <td class="text-center font-bold border border-black">${r.name}</td>
+                  <td class="font-mono-code text-[9.5px] border border-black">${r.desc}</td>
+                  <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${r.rem}</td>
+                </tr>
+              `).join('')}
             </tbody>
             <tfoot class="font-bold">
               <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
