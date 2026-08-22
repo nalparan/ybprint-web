@@ -789,6 +789,7 @@
       switchSendChannel('auto');
 
       onTemplateChange();
+      renderStep2Preview();
       updateQuoteStepUI();
       document.getElementById('quote-modal').classList.remove('hidden');
     }
@@ -803,6 +804,7 @@
       onTemplateChange();
     }
 
+    // 엑셀 3종 원본 서식 1:1 매핑 빌더[cite: 1, 2, 3]
     function onTemplateChange() {
       const template = document.getElementById('quote-template-select').value;
       const tbody = document.getElementById('quote-items-tbody');
@@ -844,6 +846,7 @@
         addQuoteDataRow('기타', '배송', '직배송', 1, 0, '안전 직배송');
       }
       calculateQuoteTotals();
+      renderStep2Preview();
     }
 
     function addQuoteDataRow(type, name, desc, qty, price, remark = "") {
@@ -851,14 +854,14 @@
       const tr = document.createElement('tr');
       tr.className = "quote-calc-row hover:bg-slate-50 transition-colors";
       tr.innerHTML = `
-        <td class="py-2 px-2"><input type="text" value="${type}" class="row-type w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:border-[#3182F6] focus:outline-none"></td>
-        <td class="py-2 px-2"><input type="text" value="${name}" class="row-name w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:border-[#3182F6] focus:outline-none"></td>
-        <td class="py-2 px-2"><input type="text" value="${desc}" class="row-desc w-full bg-white border border-[#D1D6DB] rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:border-[#3182F6] focus:outline-none"></td>
-        <td class="py-2 px-2"><input type="number" min="0" step="any" value="${qty}" oninput="calculateQuoteTotals()" class="row-qty w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-center focus:border-[#3182F6] focus:outline-none"></td>
-        <td class="py-2 px-2"><input type="number" min="0" value="${price}" oninput="calculateQuoteTotals()" class="row-price w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-right focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="text" value="${type}" oninput="renderStep2Preview()" class="row-type w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="text" value="${name}" oninput="renderStep2Preview()" class="row-name w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="text" value="${desc}" oninput="renderStep2Preview()" class="row-desc w-full bg-white border border-[#D1D6DB] rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="number" min="0" step="any" value="${qty}" oninput="calculateQuoteTotals(); renderStep2Preview();" class="row-qty w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-center focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2"><input type="number" min="0" value="${price}" oninput="calculateQuoteTotals(); renderStep2Preview();" class="row-price w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-bold text-right focus:border-[#3182F6] focus:outline-none"></td>
         <td class="py-2 px-2"><input type="text" readonly value="0" class="row-amt w-full bg-[#F2F4F6] border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs font-mono-code font-extrabold text-right text-[#191F28] cursor-not-allowed"></td>
-        <td class="py-2 px-2"><input type="text" value="${remark}" placeholder="비고 입력" class="row-remark w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs text-slate-600 focus:border-[#3182F6] focus:outline-none"></td>
-        <td class="py-2 px-2 text-center"><button type="button" onclick="this.closest('tr').remove(); calculateQuoteTotals();" class="text-[#8B95A1] hover:text-[#F04452] transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td>
+        <td class="py-2 px-2"><input type="text" value="${remark}" oninput="renderStep2Preview()" placeholder="비고 입력" class="row-remark w-full bg-white border border-[#D1D6DB] rounded-lg px-2 py-1.5 text-xs text-slate-600 focus:border-[#3182F6] focus:outline-none"></td>
+        <td class="py-2 px-2 text-center"><button type="button" onclick="this.closest('tr').remove(); calculateQuoteTotals(); renderStep2Preview();" class="text-[#8B95A1] hover:text-[#F04452] transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td>
       `;
       tbody.appendChild(tr);
       lucide.createIcons();
@@ -867,6 +870,7 @@
     function addQuoteCustomRow() {
       addQuoteDataRow('기타', '직접입력', '규격 및 내역', 1, 0, '');
       calculateQuoteTotals();
+      renderStep2Preview();
     }
 
     function calculateQuoteTotals() {
@@ -967,7 +971,7 @@
       }
     }
 
-    // 2단계 실물 서식 1:1 완벽 렌더링 함수
+    // 2단계 실물 서식 1:1 완벽 렌더링 함수[cite: 1, 2, 3]
     function renderStep2Preview() {
       try {
         const template = document.getElementById('quote-template-select').value;
@@ -998,6 +1002,7 @@
         if (!printArea) return;
 
         if (template === '디지탈상세') {
+          // 국가공무원인재개발원 원본 서식 1:1
           printArea.innerHTML = `
             <div class="text-center mb-5">
               <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
@@ -1248,9 +1253,7 @@
     }
 
     function goToStep(targetStep) {
-      if (targetStep === 2 || targetStep === 3) {
-        renderStep2Preview();
-      }
+      renderStep2Preview();
       currentQuoteStep = targetStep;
       updateQuoteStepUI();
     }
