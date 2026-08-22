@@ -221,7 +221,7 @@
         <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-full hover:bg-[#F2F4F6] text-[#8B95A1] hover:text-[#191F28] flex items-center justify-center transition-colors">✕</button>
       </div>
 
-      <!-- 상단 단계 네비게이션 탭 (클릭 시 해당 단계로 즉시 이동) -->
+      <!-- 상단 단계 네비게이션 탭 -->
       <div class="flex items-center px-6 py-3.5 bg-[#F9FAFB] border-b border-[#E5E8EB] shrink-0 select-none">
         <div onclick="goToStep(1)" class="flex-1 flex items-center cursor-pointer group py-1">
           <div id="step-dot-1" class="w-7 h-7 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-xs shadow-md transition-all">1</div>
@@ -273,7 +273,7 @@
             <div class="w-full sm:w-60">
               <label class="text-xs font-bold text-[#191F28] block mb-1">제작 요청 부수 (권/부)</label>
               <div class="flex items-center gap-2">
-                <input type="number" id="quote-book-qty" min="1" value="1" oninput="onBookQtyChange()" class="w-full bg-[#F9FAFB] border border-[#D1D6DB] rounded-xl px-3 py-2 text-sm font-bold font-mono-code text-[#191F28] focus:border-[#3182F6] focus:outline-none focus:bg-white" />
+                <input type="number" id="quote-book-qty" min="1" value="100" oninput="onBookQtyChange()" class="w-full bg-[#F9FAFB] border border-[#D1D6DB] rounded-xl px-3 py-2 text-sm font-bold font-mono-code text-[#191F28] focus:border-[#3182F6] focus:outline-none focus:bg-white" />
                 <span class="text-xs font-bold text-[#8B95A1] shrink-0">부</span>
               </div>
             </div>
@@ -328,7 +328,7 @@
           </div>
         </div>
 
-        <!-- STEP 2: 견적 검증 (실제 3종 엑셀/PDF 원본 1:1 완벽 렌더링 컨테이너) -->
+        <!-- STEP 2: 견적 검증 (3종 실물 엑셀/PDF 서식 동적 출력) -->
         <div id="quote-step-2-content" class="space-y-4 hidden">
           <div class="bg-[#E8F3FF] border border-[#BBDDFF] rounded-2xl p-4 flex gap-3 items-start text-left text-sm text-[#1B64DA] font-medium">
             <i data-lucide="shield-check" class="w-5 h-5 shrink-0 mt-0.5 text-[#3182F6]"></i>
@@ -338,7 +338,6 @@
             </div>
           </div>
 
-          <!-- A4 관공서 실제 엑셀 출력 페이퍼 -->
           <div id="quote-printable-area" class="quote-paper p-6 sm:p-10 rounded-2xl border border-slate-300 max-w-3xl mx-auto text-slate-900 text-xs">
           </div>
         </div>
@@ -430,12 +429,11 @@
     let deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items') || '[]');
     let completedItems = JSON.parse(localStorage.getItem('yb_completed_items') || '[]');
 
-    // 청년인쇄사 표준 기본 단가표 (VAT 제외)
     const BASE_PRICES = {
-      print_bw: 50,      // 흑백출력 (page당)
-      cover_print: 1700, // 표지 칼라출력 (부당)
-      cover_coat: 2200,  // 표지 코팅 (부당)
-      bind_perfect: 3300 // 무선제본 (부당)
+      print_bw: 50,
+      cover_print: 1700,
+      cover_coat: 2200,
+      bind_perfect: 3300
     };
 
     let activeInquiry = { org: "영신여고", phone: "serviceonm@naver.com", inquiry: "", spec: "", fileName: "" };
@@ -461,9 +459,11 @@
 
         renderAllViews(allInquiries);
         updateStats(allInquiries);
-        document.getElementById('server-status-label').innerText = "Render Live";
+        const serverStatus = document.getElementById('server-status-label');
+        if (serverStatus) serverStatus.innerText = "Render Live";
       } catch (err) {
-        document.getElementById('server-status-label').innerText = "Connecting...";
+        const serverStatus = document.getElementById('server-status-label');
+        if (serverStatus) serverStatus.innerText = "Connecting...";
         if (allInquiries.length === 0) {
           const emptyHtml = `
             <div class="py-12 text-center text-[#6B7684] flex flex-col items-center justify-center gap-2">
@@ -472,8 +472,10 @@
               <button onclick="fetchInquiries()" class="mt-1 px-3 py-1.5 bg-white hover:bg-[#F2F4F6] rounded-xl text-xs font-bold text-[#191F28] border border-[#E5E8EB]">다시 시도 ↺</button>
             </div>
           `;
-          document.getElementById('mobile-card-container').innerHTML = emptyHtml;
-          document.getElementById('inquiry-table-body').innerHTML = `<tr><td colspan="7">${emptyHtml}</td></tr>`;
+          const mobileContainer = document.getElementById('mobile-card-container');
+          const tableBody = document.getElementById('inquiry-table-body');
+          if (mobileContainer) mobileContainer.innerHTML = emptyHtml;
+          if (tableBody) tableBody.innerHTML = `<tr><td colspan="7">${emptyHtml}</td></tr>`;
           lucide.createIcons();
         }
       } finally {
@@ -800,7 +802,6 @@
       onTemplateChange();
     }
 
-    // 엑셀 3종 원본 서식 1:1 매핑 빌더[cite: 1, 2, 3]
     function onTemplateChange() {
       const template = document.getElementById('quote-template-select').value;
       const tbody = document.getElementById('quote-items-tbody');
@@ -809,8 +810,7 @@
       const totalPageImpressions = detectedPageCount * currentBookCount;
 
       if (template === '디지탈상세') {
-        // 국가공무원인재개발원 원본 서식 1:1
-        const coverAndBindPerBook = BASE_PRICES.cover_print + BASE_PRICES.cover_coat + BASE_PRICES.bind_perfect; // 7,200원
+        const coverAndBindPerBook = BASE_PRICES.cover_print + BASE_PRICES.cover_coat + BASE_PRICES.bind_perfect;
         const totalAmount = (totalPageImpressions * BASE_PRICES.print_bw) + (currentBookCount * coverAndBindPerBook);
         
         addQuoteDataRow(
@@ -823,7 +823,6 @@
         );
         addQuoteDataRow('기타', '배송', '세종청사/공공기관 직배송', 1, 0, '당일 안전 직배송');
       } else if (template === '디지털일반') {
-        // 글로벌리서치 원본 서식 1:1[cite: 2]
         addQuoteDataRow('기획', '-', '-', 0, 0, '');
         addQuoteDataRow('디자인', '-', '-', 0, 0, '');
         addQuoteDataRow('제작', '칼라출력', '표지 (315*468)', currentBookCount, BASE_PRICES.cover_print, '표지/단면/스노우250g');
@@ -832,7 +831,6 @@
         addQuoteDataRow('제작', '제본', '무선제본', currentBookCount, BASE_PRICES.bind_perfect, '무선 책제본');
         addQuoteDataRow('기타', '배송', '세종 직배송', 1, 0, '당일 안전 직배송');
       } else if (template === '옵셋일반') {
-        // 비즈쿡 카탈로그 대량인쇄 원본 서식 1:1[cite: 3]
         addQuoteDataRow('기획', '-', '-', 0, 0, '');
         addQuoteDataRow('디자인', '-', '-', 0, 0, '');
         addQuoteDataRow('제작', '지대', '표지: 420*297 (0.5연)', 1, 77750, '스노우250/고시가');
@@ -881,7 +879,6 @@
         const qty = parseFloat(row.querySelector('.row-qty').value) || 0;
         let price = parseFloat(row.querySelector('.row-price').value) || 0;
         
-        // 옵셋 일반관리비 12% 자동 계산[cite: 3]
         if (template === '옵셋일반' && name === '일반관리비') {
           price = Math.round(paperTotalExcludingMaterial * 0.12);
           row.querySelector('.row-price').value = price;
@@ -969,7 +966,6 @@
       }
     }
 
-    // [2단계 진입 시] 3종 실물 엑셀/PDF 서식 동적 완전 렌더링[cite: 1, 2, 3]
     function renderStep2Preview() {
       const template = document.getElementById('quote-template-select').value;
       const titleEl = document.getElementById('preview-template-title');
@@ -999,7 +995,6 @@
       if (!printArea) return;
 
       if (template === '디지탈상세') {
-        // 국가공무원인재개발원 원본 서식 1:1[cite: 1]
         printArea.innerHTML = `
           <div class="text-center mb-5">
             <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
@@ -1102,7 +1097,6 @@
           </div>
         `;
       } else {
-        // 글로벌리서치 / 옵셋일반 7열 원본 서식 1:1[cite: 2, 3]
         printArea.innerHTML = `
           <div class="text-center mb-5">
             <h2 class="text-2xl sm:text-3xl font-black tracking-[0.35em] border-b-2 border-black pb-1.5 inline-block px-12">견 &nbsp; 적 &nbsp; 서</h2>
