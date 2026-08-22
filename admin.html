@@ -194,7 +194,7 @@
         </div>
         <div onclick="goToStep(2)" class="flex-1 flex items-center cursor-pointer">
           <div id="step-dot-2" class="w-7 h-7 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xs">2</div>
-          <span id="step-text-2" class="ml-2 font-bold text-gray-500 text-sm">② 정식 견적서 검증 (셀병합 뷰)</span><div class="flex-1 h-px bg-gray-200 mx-3"></div>
+          <span id="step-text-2" class="ml-2 font-bold text-gray-500 text-sm">② 정식 견적서 검증 (1,000원 절사)</span><div class="flex-1 h-px bg-gray-200 mx-3"></div>
         </div>
         <div onclick="goToStep(3)" class="flex-1 flex items-center cursor-pointer">
           <div id="step-dot-3" class="w-7 h-7 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xs">3</div>
@@ -257,7 +257,8 @@
             <div class="bg-gray-50 border rounded-lg p-4 text-right space-y-1.5">
               <div class="text-xs font-bold text-gray-500">공급가액 소계: <span id="val-sub" class="w-32 inline-block font-mono-code text-gray-900">0</span></div>
               <div class="text-xs font-bold text-gray-500">부가가치세 (10%): <span id="val-vat" class="w-32 inline-block font-mono-code text-gray-900">0</span></div>
-              <div class="text-lg font-black pt-2 border-t mt-2 text-gray-900">총 견적합계 (VAT포함): <span id="val-total" class="w-32 inline-block font-mono-code text-blue-600">0</span></div>
+              <div class="text-xs font-bold text-red-500">1,000원 미만 절사: <span id="val-cut" class="w-32 inline-block font-mono-code text-red-500">- 0</span></div>
+              <div class="text-lg font-black pt-2 border-t mt-2 text-gray-900">총 견적합계 (VAT포함/절사적용): <span id="val-total" class="w-32 inline-block font-mono-code text-blue-600">0</span></div>
             </div>
           </div>
         </div>
@@ -265,7 +266,7 @@
         <!-- STEP 2: 정식 엑셀 원본 1:1 서식 뷰 (인쇄 영역) -->
         <div id="quote-step-2-content" style="display: none;">
           <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 mb-4 text-xs text-blue-800 font-medium flex items-center justify-between">
-            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>기획(5)·디자인(5)·제작(5)·기타(5) 중앙 셀병합 20행 서식이 완벽히 정렬되었습니다.</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>기획(5)·디자인(5)·제작(5)·기타(5) 중앙 셀병합 20행 서식 및 ROUNDDOWN(-3) 절사가 적용되었습니다.</span>
             <span class="font-bold font-mono-code text-blue-900" id="preview-badge-total"></span>
           </div>
           <div id="quote-printable-area" class="quote-paper p-8 sm:p-10 rounded-xl max-w-4xl mx-auto bg-white border border-gray-400 shadow-sm">
@@ -403,7 +404,6 @@
     }
     function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
 
-    // 💡 [핵심] 기획(5) + 디자인(5) + 제작(5) + 기타(5) = 총 20행 초기화 함수
     function onTemplateChange() {
       const tmpl = document.getElementById('input-template').value;
       const q = parseInt(document.getElementById('input-qty').value)||100;
@@ -431,7 +431,7 @@
         addRow('제작', '흑백출력', '210*297', tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
         addRow('제작', '코팅', '단면무광', q, PRICE.coat, '표지/단면무광');
         addRow('제작', '제본', '무선제본', q, PRICE.bind, '무선 책제본');
-        addRow('제작', '', '', '', '', ''); // 5번째 제작 추가행
+        addRow('제작', '', '', '', '', '');
 
         // 4) 기타 (5행)
         addRow('기타', '배송', '직배송', 1, 0, '당일 안전 직배송');
@@ -444,7 +444,6 @@
         addRow('교재제작', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
         addRow('기타', '배송', '세종청사/공공기관 직배송', 1, 0, '당일 안전 직배송');
       } else {
-        // 옵셋일반 (5+5+5+5행)
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
@@ -479,6 +478,7 @@
     }
     function addEmptyRow() { addRow('기타','','', '', '', ''); calculateAll(); }
 
+    // 💡 [핵심] ROUNDDOWN -3 (1,000원 미만 절사) 수식 적용
     function calculateAll() {
       let sub = 0, excl = 0; const rows = [];
       document.querySelectorAll('.row-item').forEach(tr => {
@@ -506,15 +506,22 @@
       });
 
       const vat = Math.floor(sub * 0.1);
-      const total = sub + vat;
+      const rawTotal = sub + vat;
+      
+      // 💡 엑셀 =ROUNDDOWN(금액, -3) 구현
+      const total = Math.floor(rawTotal / 1000) * 1000;
+      const cutAmount = rawTotal - total; // 1,000원 미만 절사 금액
 
-      document.getElementById('val-sub').innerText = sub.toLocaleString();
-      document.getElementById('val-vat').innerText = vat.toLocaleString();
-      document.getElementById('val-total').innerText = total.toLocaleString();
+      document.getElementById('val-sub').innerText = sub.toLocaleString() + " 원";
+      document.getElementById('val-vat').innerText = vat.toLocaleString() + " 원";
+      const cutEl = document.getElementById('val-cut');
+      if (cutEl) cutEl.innerText = "- " + cutAmount.toLocaleString() + " 원";
+      document.getElementById('val-total').innerText = total.toLocaleString() + " 원";
+      
       const badgeTotal = document.getElementById('preview-badge-total');
       if (badgeTotal) badgeTotal.innerText = `총 견적금액: ₩ ${total.toLocaleString()}`;
 
-      renderPaper(rows, sub, total);
+      renderPaper(rows, sub, total, cutAmount);
     }
 
     function numToKor(n) {
@@ -529,9 +536,7 @@
       return r.trim();
     }
 
-    // 💡 [핵심] 대분류 5행 셀병합 렌더링 헬퍼 함수
     function renderSectionGroup(categoryName, allRows, targetCount = 5) {
-      // 해당 카테고리의 행들을 추출 (모자라면 빈 줄 채움)
       const matched = allRows.filter(r => r.type === categoryName);
       while (matched.length < targetCount) {
         matched.push({ type: categoryName, name: '', desc: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
@@ -539,7 +544,6 @@
       const sectionRows = matched.slice(0, targetCount);
 
       return sectionRows.map((r, idx) => {
-        // 첫 번째 행에서만 5칸을 세로로 병합(rowspan=5)하고 정중앙 정렬
         const firstCell = idx === 0 
           ? `<td rowspan="${targetCount}" class="text-center font-bold bg-slate-50 text-gray-900 align-middle text-[11px]">${categoryName}</td>`
           : '';
@@ -559,7 +563,7 @@
     }
 
     // 2단계 실물 서식 렌더러
-    function renderPaper(rows, sub, total) {
+    function renderPaper(rows, sub, total, cutAmount = 0) {
       const org = document.getElementById('input-org').value || "영신여고";
       const tmpl = document.getElementById('input-template').value;
       const q = document.getElementById('input-qty').value;
@@ -629,13 +633,12 @@
             </tbody>
             <tfoot class="font-bold">
               <tr><td colspan="2" class="text-center">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code">${sub.toLocaleString()}</td><td class="text-center">-</td></tr>
-              <tr><td colspan="2" class="text-center">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code">0</td><td class="text-center">-</td></tr>
+              <tr><td colspan="2" class="text-center">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code">${cutAmount.toLocaleString()}</td><td class="text-center">-</td></tr>
               <tr class="bg-slate-100"><td colspan="2" class="text-center py-1.5 text-xs">총 견적합계 (VAT 포함)</td><td class="text-right py-1.5 text-blue-900 font-mono-code text-sm">${total.toLocaleString()}</td><td class="text-center">-</td></tr>
             </tfoot>
           </table>
         `;
       } else {
-        // 💡 [핵심] 기획(5) + 디자인(5) + 제작(5) + 기타(5) 정밀 셀병합 테이블 조립
         const planGroupHtml = renderSectionGroup('기획', rows, 5);
         const designGroupHtml = renderSectionGroup('디자인', rows, 5);
         const produceGroupHtml = renderSectionGroup('제작', rows, 5);
@@ -668,7 +671,7 @@
               </tr>
               <tr>
                 <td colspan="5" class="text-center py-0.5 bg-slate-50">절 &nbsp; &nbsp; 사</td>
-                <td class="text-right font-mono-code">0</td>
+                <td class="text-right font-mono-code">${cutAmount.toLocaleString()}</td>
                 <td class="text-center text-gray-400">-</td>
               </tr>
               <tr>
