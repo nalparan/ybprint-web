@@ -37,21 +37,32 @@
 <body class="min-h-screen flex flex-col antialiased">
 
   <!-- 상단 네비게이션 바 -->
-  <header class="bg-white/95 border-b border-[#E5E8EB] px-4 sm:px-[5vw] py-3.5 sm:h-20 flex items-center justify-between sticky top-0 z-40">
+  <header class="bg-white/95 backdrop-blur-md border-b border-[#E5E8EB] px-4 sm:px-[5vw] py-3.5 sm:py-0 sm:h-20 flex items-center justify-between sticky top-0 z-40 shadow-xs">
     <div class="flex items-center gap-3">
-      <img src="/favicon.png" alt="청년인쇄사 로고" class="w-10 h-10 rounded-2xl border p-1 shrink-0">
+      <img src="/favicon.png" alt="청년인쇄사 로고" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl object-contain shadow-xs border border-[#E5E8EB] p-1 bg-white shrink-0">
       <div>
-        <h1 class="font-extrabold text-lg">청년인쇄사 <span class="text-[10px] font-mono-code bg-[#E8F3FF] text-[#1B64DA] border px-2 py-0.5 rounded-full ml-1">ADMIN</span></h1>
-        <p class="text-[12px] text-[#8B95A1] font-medium">실시간 견적 문의 현황판</p>
+        <div class="flex items-center gap-2">
+          <h1 class="font-extrabold text-base sm:text-xl text-[#191F28] tracking-tight">청년인쇄사</h1>
+          <span class="text-[10px] sm:text-[11px] font-mono-code font-bold bg-[#E8F3FF] text-[#1B64DA] border border-[#BBDDFF] px-2 py-0.5 rounded-full">ADMIN</span>
+        </div>
+        <p class="text-[11px] sm:text-[13px] text-[#8B95A1] font-medium truncate max-w-[180px] sm:max-w-none">실시간 견적 문의 현황판</p>
       </div>
     </div>
-    <div class="flex items-center gap-2 shrink-0">
-      <div class="hidden lg:flex items-center gap-2 bg-[#F2F4F6] border px-3.5 py-1.5 rounded-xl">
+
+    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div class="hidden lg:flex items-center gap-2 bg-[#F2F4F6] border border-[#E5E8EB] px-3.5 py-1.5 rounded-xl">
         <span class="w-2.5 h-2.5 rounded-full bg-[#00B46B] live-indicator shadow-[0_0_8px_#00B46B]"></span>
         <span class="text-xs font-mono-code font-bold text-[#4E5968]" id="server-status-label">Render Live</span>
       </div>
-      <button onclick="fetchInquiries()" class="flex items-center gap-1.5 px-4 py-2 bg-[#3182F6] text-white rounded-xl text-sm font-bold shadow-md">
-        <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> 새로고침
+      
+      <!-- 복원된 홈 이동 버튼 (←) -->
+      <a href="/" class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-white hover:bg-[#F2F4F6] text-[#4E5968] hover:text-[#191F28] rounded-xl border border-[#E5E8EB] transition-all cursor-pointer shadow-xs" title="메인 홈페이지로 이동">
+        <i data-lucide="arrow-left" class="w-4 h-4 text-[#8B95A1]"></i>
+      </a>
+
+      <button onclick="fetchInquiries()" class="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-600/20 transition-all active:scale-95 cursor-pointer">
+        <i data-lucide="refresh-cw" id="refresh-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+        <span>새로고침</span>
       </button>
     </div>
   </header>
@@ -457,14 +468,12 @@
       });
     }
 
-    // 💡 [핵심 방어 코드] 숨겨진 2단계 서식을 오프스크린으로 렌더링 (백지 버그 원천 차단)
     async function getPdfBase64() {
       const step2 = document.getElementById('quote-step-2-content');
       const el = document.getElementById('quote-printable-area');
       const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_');
       const fileName = `청년인쇄사_견적서_${org}.pdf`;
 
-      // 1) 화면을 숨기지 않고 바깥으로 날림 (html2pdf 렌더링 인식 허용)
       const origDisplay = step2.style.display;
       step2.style.display = 'block';
       step2.style.position = 'absolute';
@@ -474,9 +483,7 @@
       const worker = html2pdf().set(opt).from(el);
       const pdfBase64String = await worker.outputPdf('datauristring');
       
-      // 2) 원상복구
       step2.style.position = ''; step2.style.left = ''; step2.style.display = origDisplay;
-      
       return { base64: pdfBase64String.split('base64,')[1], fileName, worker };
     }
 
@@ -484,7 +491,7 @@
       const btn = document.getElementById('btn-download');
       const origHtml = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> 생성중...`; lucide.createIcons();
       try {
-        const { worker, fileName } = await getPdfBase64();
+        const { worker } = await getPdfBase64();
         worker.save();
         toggleComp(document.getElementById('input-phone').dataset.timeKey);
         setTimeout(closeQuoteModal, 1500);
