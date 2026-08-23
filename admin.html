@@ -20,7 +20,7 @@
     @keyframes liveDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
     .live-indicator { animation: liveDot 2s infinite ease-in-out; }
 
-    /* 청년인쇄사 A4 정규 규격 1:1 출력 스타일 */
+    /* 청년인쇄사 정식 A4 1:1 출력 스타일 */
     .quote-paper-wrapper {
       width: 100%;
       overflow-x: auto;
@@ -314,7 +314,7 @@
     let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [];
     let currentQuoteStep = 1;
 
-    // 💡 [청년인쇄사 실제 인감 직인: 우측 90도 회전 정립 무손실 Base64]
+    // 💡 [청년인쇄사 실제 인감 직인 원본 Base64 - 마감 패딩 '=' 완벽 적용]
     const STAMP_BASE64 = "data:image/png;base64,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";
 
     const PRICE = { bw: 50, cover: 1700, coat: 2200, bind: 3300 };
@@ -323,6 +323,239 @@
       deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items')) || [];
       completedItems = JSON.parse(localStorage.getItem('yb_completed_items')) || [];
     } catch(e) {}
+
+    async function fetchInquiries() {
+      const icon = document.getElementById('refresh-icon');
+      if(icon) icon.classList.add('animate-spin');
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const rawList = Array.isArray(data) ? data : (data.inquiries || []);
+        inquiries = rawList.filter(item => !deletedItems.includes(item.timestamp || item.created_at || item.time));
+        displayedInquiries = [...inquiries].reverse();
+        renderTable();
+        document.getElementById('stat-today-count').innerText = inquiries.length;
+        document.getElementById('stat-file-count').innerText = inquiries.filter(i => i.file_name && i.file_name !== "첨부파일 없음").length;
+      } catch(e) {
+        document.getElementById('inquiry-table-body').innerHTML = `<tr><td colspan="7" class="text-center py-10 text-red-500">서버 연결 지연 (Render 부팅 대기중...)</td></tr>`;
+      } finally {
+        if(icon) setTimeout(() => icon.classList.remove('animate-spin'), 500);
+      }
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('inquiry-table-body');
+      document.getElementById('total-badge').innerText = `${displayedInquiries.length}건`;
+      if(displayedInquiries.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-16 text-gray-500">접수 내역이 없습니다.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = displayedInquiries.map((item, i) => {
+        const no = displayedInquiries.length - i;
+        const time = item.timestamp || item.created_at || item.time || "-";
+        const org = item.org || item.name || "-";
+        const phone = item.phone || "-";
+        const text = item.inquiry || "내용 없음";
+        const files = item.file_name && item.file_name !== "첨부파일 없음" ? item.file_name.split(',') : [];
+        const isComp = completedItems.includes(time);
+
+        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend-1.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : '<span class="text-xs text-gray-400">첨부 없음</span>';
+        
+        let pMatch = text.match(/(\d+)\s*p/i) || item.spec?.match(/(\d+)\s*p/i);
+        let qMatch = text.match(/(\d+)\s*부/);
+        let p = pMatch ? pMatch[1] : 26;
+        let q = qMatch ? qMatch[1] : 100;
+
+        return `
+          <tr class="hover:bg-gray-50 border-b ${isComp ? 'opacity-60 bg-gray-50' : ''}">
+            <td class="py-4 px-5 text-center font-mono-code text-gray-400">${no}</td>
+            <td class="py-4 px-4 font-mono-code text-xs">${time.split(' ')[0]}<br><span class="text-gray-400">${time.split(' ')[1]||''}</span></td>
+            <td class="py-4 px-5 font-bold">${org}</td>
+            <td class="py-4 px-4 text-blue-600 font-mono-code font-bold">${phone}</td>
+            <td class="py-4 px-5 space-y-1">${fileHtml}<div class="text-[11px] text-gray-500 bg-gray-100 px-2 py-1 rounded inline-block">${item.spec||'-'}</div></td>
+            <td class="py-4 px-5 text-sm text-gray-600 max-w-[200px] truncate">${text}</td>
+            <td class="py-4 px-4 text-center">
+              <div class="flex flex-col gap-1 w-[100px] mx-auto">
+                <button onclick="openQuoteModal('${encodeURIComponent(org)}','${encodeURIComponent(phone)}',${q},${p},'${time}')" class="w-full py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow">견적작성</button>
+                <div class="flex gap-1">
+                  <button onclick="toggleComp('${time}')" class="flex-1 py-1 bg-gray-100 rounded text-[10px] font-bold ${isComp?'text-green-600 bg-green-50 border border-green-200':''}">${isComp?'완료':'대기'}</button>
+                  <button onclick="deleteItem('${time}')" class="px-2 bg-red-50 text-red-500 rounded border border-red-100"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function toggleComp(t){ completedItems.includes(t) ? completedItems=completedItems.filter(x=>x!==t) : completedItems.push(t); localStorage.setItem('yb_completed_items', JSON.stringify(completedItems)); renderTable(); }
+    function deleteItem(t){ if(confirm("삭제하시겠습니까?")){ deletedItems.push(t); localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); fetchInquiries(); } }
+
+    function openQuoteModal(org, phone, qty, page, timeKey) {
+      document.getElementById('input-org').value = decodeURIComponent(org);
+      document.getElementById('input-phone').value = decodeURIComponent(phone);
+      document.getElementById('input-phone').dataset.timeKey = timeKey;
+      document.getElementById('input-qty').value = qty;
+      document.getElementById('input-page').value = page;
+      onTemplateChange();
+      goToStep(1);
+      document.getElementById('quote-modal').classList.remove('hidden');
+    }
+    function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
+
+    function onTemplateChange() {
+      const tmpl = document.getElementById('input-template').value;
+      const q = parseInt(document.getElementById('input-qty').value)||100;
+      const p = parseInt(document.getElementById('input-page').value)||26;
+      const tp = q * p;
+      document.getElementById('quote-tbody').innerHTML = '';
+
+      if (tmpl === '디지털일반') {
+        addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
+        addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
+        
+        addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
+        addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
+        addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
+        addRow('제작', '제본', '무선 책제본', q, PRICE.bind, '무선 책제본');
+        addRow('제작', '', '', '', '', '');
+
+        addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
+        addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
+      } 
+      else if (tmpl === '디지탈상세') {
+        const coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
+        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
+        addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
+        
+        for (let i = 3; i <= 20; i++) {
+          addRow('', '', '', '', '', '');
+        }
+      } 
+      else {
+        addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
+        addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
+        
+        addRow('제작', '용지', '표지용지 (스노우250 / 국2절 0.5연)', 1, 77750, '스노우250g / 고시가');
+        addRow('제작', '용지', '내지용지 (모조80 / 국전 3연)', 1, 220050, '모조80g / 고시가');
+        addRow('제작', 'CTP', '표지판 CTP (4판/4도)', 4, 18000, '4도 칼라');
+        addRow('제작', 'CTP', '내지판 CTP (4판/양면)', 4, 18000, '양면 4도/흑백');
+        addRow('제작', '인쇄', '표지 본인쇄 (옵셋 4도 컬러)', 4, 18000, '옵셋 본인쇄');
+        addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
+
+        addRow('기타', '코팅', '표지 단면 무광코팅', q, PRICE.coat, '표지 단면무광');
+        addRow('기타', '제본', '옵셋 무선 책제본', q, PRICE.bind, '옵셋 책제본');
+        addRow('기타', '관리비', '일반관리비 (12% 지대제외)', 1, 0, '재료비제외 12% 자동산출');
+        addRow('기타', '배송', '납품 배송 (안전 직배송)', 1, 0, '당일 안전 직배송');
+        addRow('기타', '', '', '', '', '');
+      }
+      calculateAll();
+    }
+
+    function addRow(t, m, n, q, p, r) {
+      const tr = document.createElement('tr'); tr.className = "row-item";
+      const qVal = (q !== '' && q !== undefined) ? q : '';
+      const pVal = (p !== '' && p !== undefined) ? p : '';
+      tr.innerHTML = `
+        <td class="p-1"><input type="text" class="i-t w-full border rounded p-1 text-center font-bold text-xs bg-gray-50" value="${t}" oninput="calculateAll()"></td>
+        <td class="p-1"><input type="text" class="i-m w-full border rounded p-1 text-center font-bold text-xs bg-gray-50" value="${m}" oninput="calculateAll()"></td>
+        <td class="p-1"><input type="text" class="i-n w-full border rounded p-1 text-xs font-bold" value="${n}" oninput="calculateAll()"></td>
+        <td class="p-1"><input type="text" class="i-q w-full border rounded p-1 text-center text-xs font-mono-code" value="${qVal}" oninput="calculateAll()"></td>
+        <td class="p-1"><input type="text" class="i-p w-full border rounded p-1 text-right text-xs font-mono-code" value="${pVal}" oninput="calculateAll()"></td>
+        <td class="p-1"><input type="text" class="i-a w-full bg-gray-100 border rounded p-1 text-right text-xs font-bold font-mono-code" readonly></td>
+        <td class="p-1"><input type="text" class="i-r w-full border rounded p-1 text-xs text-gray-500" value="${r}" oninput="calculateAll()"></td>
+        <td class="p-1 text-center"><button class="text-red-400 hover:text-red-600 font-bold" onclick="this.closest('tr').remove(); calculateAll()">✕</button></td>
+      `;
+      document.getElementById('quote-tbody').appendChild(tr);
+    }
+    function addEmptyRow() { addRow('','','', '', '', ''); calculateAll(); }
+
+    function calculateAll() {
+      let sub = 0, excl = 0; const rows = [];
+      const tmpl = document.getElementById('input-template').value;
+
+      document.querySelectorAll('.row-item').forEach(tr => {
+        const type = tr.querySelector('.i-t').value.trim();
+        const mid = tr.querySelector('.i-m').value.trim();
+        const name = tr.querySelector('.i-n').value.trim();
+        const qtyStr = tr.querySelector('.i-q').value.trim();
+        const priceStr = tr.querySelector('.i-p').value.trim();
+        const rem = tr.querySelector('.i-r').value.trim();
+
+        const qty = qtyStr === '' ? 0 : Number(qtyStr.replace(/,/g, ''));
+        let price = priceStr === '' ? 0 : Number(priceStr.replace(/,/g, ''));
+
+        if (tmpl === '옵셋일반' && (mid.includes('관리비') || name.includes('관리비') || name.includes('12%'))) {
+          price = Math.round(excl * 0.12);
+          tr.querySelector('.i-p').value = price;
+        }
+
+        const amt = (qtyStr !== '' && priceStr !== '') ? (qty * price) : 0;
+        tr.querySelector('.i-a').value = amt > 0 ? amt.toLocaleString() : '';
+        sub += amt;
+
+        if (mid !== '용지' && !name.includes('용지') && !name.includes('지대') && !name.includes('관리비') && !name.includes('12%')) {
+          excl += amt;
+        }
+        rows.push({ type, mid, name, qtyStr, priceStr, amt, rem });
+      });
+
+      const vat = Math.floor(sub * 0.1);
+      const rawTotal = sub + vat;
+      
+      const total = Math.floor(rawTotal / 1000) * 1000;
+      const cutAmount = rawTotal - total;
+
+      document.getElementById('val-sub').innerText = sub.toLocaleString() + " 원";
+      document.getElementById('val-vat').innerText = vat.toLocaleString() + " 원";
+      const cutEl = document.getElementById('val-cut');
+      if (cutEl) cutEl.innerText = "- " + cutAmount.toLocaleString() + " 원";
+      document.getElementById('val-total').innerText = total.toLocaleString() + " 원";
+      
+      const badgeTotal = document.getElementById('preview-badge-total');
+      if (badgeTotal) badgeTotal.innerText = `총 견적금액: ₩ ${total.toLocaleString()}`;
+
+      renderPaper(rows, sub, total, cutAmount);
+    }
+
+    function numToKor(n) {
+      if(!n) return "영";
+      const u=["","만 ","억 ","조 "], su=["","십","백","천"], d=["","일","이","삼","사","오","육","칠","팔","구"];
+      let r="", c=0;
+      while(n>0){
+        let m=n%10000, s="";
+        for(let i=0;i<4;i++){ let di=m%10; if(di>0) s=d[di]+su[i]+s; m=Math.floor(m/10); }
+        if(s) r=s+u[c]+r; c++; n=Math.floor(n/10000);
+      }
+      return r.trim();
+    }
+
+    function renderSectionGroup7Col(categoryName, allRows, minCount = 5) {
+      const matched = allRows.filter(r => r.type === categoryName);
+      const count = Math.max(matched.length, minCount);
+      while (matched.length < count) {
+        matched.push({ type: categoryName, mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
+      }
+
+      return matched.map((r, idx) => {
+        const firstCell = idx === 0 
+          ? `<td rowspan="${count}" class="text-center font-bold bg-slate-50 text-gray-900 align-middle text-[11px] border border-black">${categoryName}</td>`
+          : '';
+
+        return `
+          <tr>
+            ${firstCell}
+            <td class="text-center font-bold border border-black">${r.mid}</td>
+            <td class="font-bold border border-black pl-1.5">${r.name}</td>
+            <td class="text-center font-mono-code border border-black">${r.qtyStr !== '' ? Number(r.qtyStr).toLocaleString() : ''}</td>
+            <td class="text-right font-mono-code border border-black">${r.priceStr !== '' ? Number(r.priceStr).toLocaleString() : ''}</td>
+            <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+            <td class="text-center text-gray-600 text-[10px] border border-black">${r.rem}</td>
+          </tr>
+        `;
+      }).join('');
+    }
 
     function renderPaper(rows, sub, total, cutAmount = 0) {
       const org = document.getElementById('input-org').value || "영신여고";
@@ -333,7 +566,7 @@
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
 
-      // 💡 [실제 청년인쇄사 대표직인 원본 HTML - 무수정]
+      // 💡 [실제 청년인쇄사 대표직인: 원본 정상 렌더링]
       const stamp = `
         <span style="position:relative; display:inline-block; vertical-align:middle; margin-left:4px;">
           <strong style="font-weight:900; font-size:12.5px; letter-spacing:1.5px;">임 형 택</strong>
@@ -341,7 +574,7 @@
         </span>
       `;
 
-      // 💡 [① 언더바 제거 제목 + ② 대표/이메일 135px 1:1 수직 칼정렬]
+      // 💡 [① 언더바 제거 깔끔한 제목 + ② 공급자 정보 135px 1:1 수직 칼정렬]
       const headerBox = `
         <div class="text-center mb-5 pt-1">
           <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
@@ -533,7 +766,7 @@
                 <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">CTP</td>
                 <td class="font-bold border border-black text-[10px] pl-1.5">${ctpRows[0].name}</td>
                 <td class="text-center font-mono-code border border-black">${ctpRows[0].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
+                <td class="text-right font-mono-code border border-black">${ctpRows[0].priceStr}</td>
                 <td class="text-right font-mono-code font-bold border border-black">${ctpRows[0].amt > 0 ? ctpRows[0].amt.toLocaleString() : ''}</td>
                 <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[0].rem}</td>
               </tr>
@@ -614,175 +847,6 @@
         else{ d.className="w-7 h-7 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xs"; d.innerHTML=i; t.className="ml-2 font-bold text-gray-500 text-sm"; }
       });
     }
-
-    function addEmptyRow() { addRow('','','', '', '', ''); calculateAll(); }
-
-    function onTemplateChange() {
-      const tmpl = document.getElementById('input-template').value;
-      const q = parseInt(document.getElementById('input-qty').value)||100;
-      const p = parseInt(document.getElementById('input-page').value)||26;
-      const tp = q * p;
-      document.getElementById('quote-tbody').innerHTML = '';
-
-      if (tmpl === '디지털일반') {
-        addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
-        addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
-        
-        addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, 1700, '표지/단면/스노우250g');
-        addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, 50, `${p}p x ${q}부/모조80g`);
-        addRow('제작', '코팅', '표지 단면 무광', q, 2200, '표지 단면무광');
-        addRow('제작', '제본', '무선 책제본', q, 3300, '무선 책제본');
-        addRow('제작', '', '', '', '', '');
-
-        addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
-        addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
-      } 
-      else if (tmpl === '디지탈상세') {
-        const coverAndBind = 1700 + 2200 + 3300;
-        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x 50원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*50)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
-        addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
-        
-        for (let i = 3; i <= 20; i++) {
-          addRow('', '', '', '', '', '');
-        }
-      } 
-      else {
-        addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
-        addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
-        
-        addRow('제작', '용지', '표지용지 (스노우250 / 국2절 0.5연)', 1, 77750, '스노우250g / 고시가');
-        addRow('제작', '용지', '내지용지 (모조80 / 국전 3연)', 1, 220050, '모조80g / 고시가');
-        addRow('제작', 'CTP', '표지판 CTP (4판/4도)', 4, 18000, '4도 칼라');
-        addRow('제작', 'CTP', '내지판 CTP (4판/양면)', 4, 18000, '양면 4도/흑백');
-        addRow('제작', '인쇄', '표지 본인쇄 (옵셋 4도 컬러)', 4, 18000, '옵셋 본인쇄');
-        addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
-
-        addRow('기타', '코팅', '표지 단면 무광코팅', q, 2200, '표지 단면무광');
-        addRow('기타', '제본', '옵셋 무선 책제본', q, 3300, '옵셋 책제본');
-        addRow('기타', '관리비', '일반관리비 (12% 지대제외)', 1, 0, '재료비제외 12% 자동산출');
-        addRow('기타', '배송', '납품 배송 (안전 직배송)', 1, 0, '당일 안전 직배송');
-        addRow('기타', '', '', '', '', '');
-      }
-      calculateAll();
-    }
-
-    function addRow(t, m, n, q, p, r) {
-      const tr = document.createElement('tr'); tr.className = "row-item";
-      const qVal = (q !== '' && q !== undefined) ? q : '';
-      const pVal = (p !== '' && p !== undefined) ? p : '';
-      tr.innerHTML = `
-        <td class="p-1"><input type="text" class="i-t w-full border rounded p-1 text-center font-bold text-xs bg-gray-50" value="${t}" oninput="calculateAll()"></td>
-        <td class="p-1"><input type="text" class="i-m w-full border rounded p-1 text-center font-bold text-xs bg-gray-50" value="${m}" oninput="calculateAll()"></td>
-        <td class="p-1"><input type="text" class="i-n w-full border rounded p-1 text-xs font-bold" value="${n}" oninput="calculateAll()"></td>
-        <td class="p-1"><input type="text" class="i-q w-full border rounded p-1 text-center text-xs font-mono-code" value="${qVal}" oninput="calculateAll()"></td>
-        <td class="p-1"><input type="text" class="i-p w-full border rounded p-1 text-right text-xs font-mono-code" value="${pVal}" oninput="calculateAll()"></td>
-        <td class="p-1"><input type="text" class="i-a w-full bg-gray-100 border rounded p-1 text-right text-xs font-bold font-mono-code" readonly></td>
-        <td class="p-1"><input type="text" class="i-r w-full border rounded p-1 text-xs text-gray-500" value="${r}" oninput="calculateAll()"></td>
-        <td class="p-1 text-center"><button class="text-red-400 hover:text-red-600 font-bold" onclick="this.closest('tr').remove(); calculateAll()">✕</button></td>
-      `;
-      document.getElementById('quote-tbody').appendChild(tr);
-    }
-
-    function calculateAll() {
-      let sub = 0, excl = 0; const rows = [];
-      const tmpl = document.getElementById('input-template').value;
-
-      document.querySelectorAll('.row-item').forEach(tr => {
-        const type = tr.querySelector('.i-t').value.trim();
-        const mid = tr.querySelector('.i-m').value.trim();
-        const name = tr.querySelector('.i-n').value.trim();
-        const qtyStr = tr.querySelector('.i-q').value.trim();
-        const priceStr = tr.querySelector('.i-p').value.trim();
-        const rem = tr.querySelector('.i-r').value.trim();
-
-        const qty = qtyStr === '' ? 0 : Number(qtyStr.replace(/,/g, ''));
-        let price = priceStr === '' ? 0 : Number(priceStr.replace(/,/g, ''));
-
-        if (tmpl === '옵셋일반' && (mid.includes('관리비') || name.includes('관리비') || name.includes('12%'))) {
-          price = Math.round(excl * 0.12);
-          tr.querySelector('.i-p').value = price;
-        }
-
-        const amt = (qtyStr !== '' && priceStr !== '') ? (qty * price) : 0;
-        tr.querySelector('.i-a').value = amt > 0 ? amt.toLocaleString() : '';
-        sub += amt;
-
-        if (mid !== '용지' && !name.includes('용지') && !name.includes('지대') && !name.includes('관리비') && !name.includes('12%')) {
-          excl += amt;
-        }
-        rows.push({ type, mid, name, qtyStr, priceStr, amt, rem });
-      });
-
-      const vat = Math.floor(sub * 0.1);
-      const rawTotal = sub + vat;
-      
-      const total = Math.floor(rawTotal / 1000) * 1000;
-      const cutAmount = rawTotal - total;
-
-      document.getElementById('val-sub').innerText = sub.toLocaleString() + " 원";
-      document.getElementById('val-vat').innerText = vat.toLocaleString() + " 원";
-      const cutEl = document.getElementById('val-cut');
-      if (cutEl) cutEl.innerText = "- " + cutAmount.toLocaleString() + " 원";
-      document.getElementById('val-total').innerText = total.toLocaleString() + " 원";
-      
-      const badgeTotal = document.getElementById('preview-badge-total');
-      if (badgeTotal) badgeTotal.innerText = `총 견적금액: ₩ ${total.toLocaleString()}`;
-
-      renderPaper(rows, sub, total, cutAmount);
-    }
-
-    function numToKor(n) {
-      if(!n) return "영";
-      const u=["","만 ","억 ","조 "], su=["","십","백","천"], d=["","일","이","삼","사","오","육","칠","팔","구"];
-      let r="", c=0;
-      while(n>0){
-        let m=n%10000, s="";
-        for(let i=0;i<4;i++){ let di=m%10; if(di>0) s=d[di]+su[i]+s; m=Math.floor(m/10); }
-        if(s) r=s+u[c]+r; c++; n=Math.floor(n/10000);
-      }
-      return r.trim();
-    }
-
-    function renderSectionGroup7Col(categoryName, allRows, minCount = 5) {
-      const matched = allRows.filter(r => r.type === categoryName);
-      const count = Math.max(matched.length, minCount);
-      while (matched.length < count) {
-        matched.push({ type: categoryName, mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
-      }
-
-      return matched.map((r, idx) => {
-        const firstCell = idx === 0 
-          ? `<td rowspan="${count}" class="text-center font-bold bg-slate-50 text-gray-900 align-middle text-[11px] border border-black">${categoryName}</td>`
-          : '';
-
-        return `
-          <tr>
-            ${firstCell}
-            <td class="text-center font-bold border border-black">${r.mid}</td>
-            <td class="font-bold border border-black pl-1.5">${r.name}</td>
-            <td class="text-center font-mono-code border border-black">${r.qtyStr !== '' ? Number(r.qtyStr).toLocaleString() : ''}</td>
-            <td class="text-right font-mono-code border border-black">${r.priceStr !== '' ? Number(r.priceStr).toLocaleString() : ''}</td>
-            <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
-            <td class="text-center text-gray-600 text-[10px] border border-black">${r.rem}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function openQuoteModal(org, phone, qty, page, timeKey) {
-      document.getElementById('input-org').value = decodeURIComponent(org);
-      document.getElementById('input-phone').value = decodeURIComponent(phone);
-      document.getElementById('input-phone').dataset.timeKey = timeKey;
-      document.getElementById('input-qty').value = qty;
-      document.getElementById('input-page').value = page;
-      onTemplateChange();
-      goToStep(1);
-      document.getElementById('quote-modal').classList.remove('hidden');
-    }
-    function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
-
-    function toggleComp(t){ completedItems.includes(t) ? completedItems=completedItems.filter(x=>x!==t) : completedItems.push(t); localStorage.setItem('yb_completed_items', JSON.stringify(completedItems)); renderTable(); }
-    function deleteItem(t){ if(confirm("삭제하시겠습니까?")){ deletedItems.push(t); localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); fetchInquiries(); } }
 
     async function getJpgBlob() {
       const el = document.getElementById('quote-printable-area');
