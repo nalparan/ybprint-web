@@ -151,6 +151,49 @@
     </div>
   </main>
 
+  <!-- 💡 [복원] 문의 및 요청사항 상세내역 전용 팝업 모달 -->
+  <div id="detail-modal" class="fixed inset-0 z-[70] hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b flex justify-between items-center bg-gray-50">
+        <h3 class="font-extrabold text-base flex items-center gap-2 text-gray-900">
+          <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
+          <span>접수 상세 내역</span>
+        </h3>
+        <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex justify-center items-center text-gray-500">✕</button>
+      </div>
+      
+      <div class="p-6 overflow-y-auto space-y-4 text-sm text-gray-700">
+        <div class="grid grid-cols-2 gap-3 bg-gray-50 p-4 rounded-2xl border">
+          <div><span class="text-xs font-bold text-gray-400 block mb-0.5">소속 / 성함</span><strong id="modal-detail-org" class="text-gray-900 font-bold text-base"></strong></div>
+          <div><span class="text-xs font-bold text-gray-400 block mb-0.5">연락처 (이메일/전화번호)</span><span id="modal-detail-phone" class="font-mono-code font-bold text-blue-600"></span></div>
+          <div><span class="text-xs font-bold text-gray-400 block mb-0.5">접수 일시</span><span id="modal-detail-time" class="font-mono-code text-xs text-gray-600"></span></div>
+          <div><span class="text-xs font-bold text-gray-400 block mb-0.5">원고 판형 실측 / 변환 권장</span><span id="modal-detail-spec" class="text-xs font-bold text-indigo-600"></span></div>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-gray-500 block mb-1.5 flex items-center gap-1">
+            <i data-lucide="paperclip" class="w-3.5 h-3.5 text-gray-400"></i> 첨부 파일
+          </label>
+          <div id="modal-detail-files" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-gray-500 block mb-1.5 flex items-center gap-1">
+            <i data-lucide="message-square" class="w-3.5 h-3.5 text-gray-400"></i> 문의 및 요청사항 전문
+          </label>
+          <div id="modal-detail-text" class="bg-gray-50 p-4 rounded-2xl border text-gray-900 whitespace-pre-wrap leading-relaxed min-h-[100px] text-sm"></div>
+        </div>
+      </div>
+
+      <div class="p-4 border-t bg-gray-50 flex justify-end gap-2">
+        <button onclick="closeDetailModal()" class="px-5 py-2.5 bg-white border text-gray-700 rounded-xl font-bold hover:bg-gray-100 transition-all">닫기</button>
+        <button id="modal-detail-btn-quote" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-700 transition-all flex items-center gap-1.5">
+          <i data-lucide="calculator" class="w-4 h-4"></i> 이 내용으로 견적 작성
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- 견적 발송 메인 모달 -->
   <div id="quote-modal" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-5xl rounded-3xl flex flex-col shadow-2xl h-[94vh] sm:h-[90vh] overflow-hidden">
@@ -199,11 +242,12 @@
               <input type="number" id="input-page" min="1" value="26" class="w-full text-sm font-bold border rounded-lg px-2.5 py-1.5 font-mono-code" oninput="onTemplateChange()">
             </div>
             <div class="bg-white p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/30">
-              <label class="text-xs font-bold text-indigo-800 block mb-1">제본 방식 감지</label>
+              <label class="text-xs font-bold text-indigo-800 block mb-1">제본 방식 선택</label>
               <select id="input-binding" class="w-full text-sm font-bold border rounded-lg px-2.5 py-1.5 text-indigo-700 bg-white focus:outline-none" onchange="onTemplateChange()">
-                <option value="perfect">📕 무선제본 (책제본/떡제본)</option>
-                <option value="wire">🌀 와이어제본 (스프링/트윈링)</option>
-                <option value="saddle">📑 중철제본 (스테이플/소책자)</option>
+                <option value="perfect">📕 무선제본 (스노우250g+코팅+제본 7,200원)</option>
+                <option value="wire31">🌀 와이어 3:1 제본 (PP커버포함 3,300원)</option>
+                <option value="wire21">🌀 와이어 2:1 제본 (두꺼운책/PP포함 4,400원)</option>
+                <option value="saddle">📑 중철제본 (펼침표지+스테이플 3,200원)</option>
               </select>
             </div>
             <div class="bg-white p-3.5 rounded-xl border border-blue-200 bg-blue-50/30">
@@ -348,12 +392,17 @@
         const files = item.file_name && item.file_name !== "첨부파일 없음" ? item.file_name.split(',') : [];
         const isComp = completedItems.includes(time);
 
-        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend-1.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : '<span class="text-xs text-gray-400">첨부 없음</span>';
+        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend-1.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : '<span class="text-xs text-gray-400">첨부 없음</span>';
         
         let pMatch = text.match(/(\d+)\s*p/i) || item.spec?.match(/(\d+)\s*p/i);
         let qMatch = text.match(/(\d+)\s*부/);
         let p = pMatch ? pMatch[1] : 26;
         let q = qMatch ? qMatch[1] : 100;
+
+        let rawSpec = item.spec || '-';
+        if (/338|190|16:9|와이드/i.test(rawSpec)) {
+          rawSpec = `${rawSpec} ➔ A4 가로(297×210) 권장`;
+        }
 
         return `
           <tr class="hover:bg-gray-50 border-b ${isComp ? 'opacity-60 bg-gray-50' : ''}">
@@ -361,14 +410,19 @@
             <td class="py-4 px-4 font-mono-code text-xs">${time.split(' ')[0]}<br><span class="text-gray-400">${time.split(' ')[1]||''}</span></td>
             <td class="py-4 px-5 font-bold">${org}</td>
             <td class="py-4 px-4 text-blue-600 font-mono-code font-bold">${phone}</td>
-            <td class="py-4 px-5 space-y-1">${fileHtml}<div class="text-[11px] text-gray-500 bg-gray-100 px-2 py-1 rounded inline-block">${item.spec||'-'}</div></td>
-            <td class="py-4 px-5 text-sm text-gray-600 max-w-[200px] truncate">${text}</td>
+            <td class="py-4 px-5 space-y-1">${fileHtml}<div class="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded inline-block font-medium">${rawSpec}</div></td>
+            <td class="py-4 px-5 text-sm text-gray-700">
+              <div class="flex items-center justify-between gap-2 max-w-[280px]">
+                <span class="truncate">${text}</span>
+                <button onclick="openDetailModal(${i})" class="shrink-0 text-xs text-blue-600 font-bold bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-1 rounded-md transition-all">상세보기</button>
+              </div>
+            </td>
             <td class="py-4 px-4 text-center">
               <div class="flex flex-col gap-1 w-[100px] mx-auto">
-                <button onclick="openQuoteModal('${encodeURIComponent(org)}','${encodeURIComponent(phone)}',${q},${p},'${time}','${encodeURIComponent(text + ' ' + (item.spec||''))}')" class="w-full py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow">견적작성</button>
+                <button onclick="openQuoteModal('${encodeURIComponent(org)}','${encodeURIComponent(phone)}',${q},${p},'${time}','${encodeURIComponent(text)}','${encodeURIComponent(rawSpec)}')" class="w-full py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow hover:bg-blue-700 transition-all">견적작성</button>
                 <div class="flex gap-1">
                   <button onclick="toggleComp('${time}')" class="flex-1 py-1 bg-gray-100 rounded text-[10px] font-bold ${isComp?'text-green-600 bg-green-50 border border-green-200':''}">${isComp?'완료':'대기'}</button>
-                  <button onclick="deleteItem('${time}')" class="px-2 bg-red-50 text-red-500 rounded border border-red-100"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                  <button onclick="deleteItem('${time}')" class="px-2 bg-red-50 text-red-500 rounded border border-red-100 hover:bg-red-100"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                 </div>
               </div>
             </td>
@@ -378,11 +432,60 @@
       lucide.createIcons();
     }
 
+    // 💡 [상세보기 모달 열기/닫기]
+    function openDetailModal(index) {
+      const item = displayedInquiries[index];
+      if (!item) return;
+
+      const time = item.timestamp || item.created_at || item.time || "-";
+      const org = item.org || item.name || "-";
+      const phone = item.phone || "-";
+      const text = item.inquiry || "내용 없음";
+      const files = item.file_name && item.file_name !== "첨부파일 없음" ? item.file_name.split(',') : [];
+      let rawSpec = item.spec || '-';
+      if (/338|190|16:9|와이드/i.test(rawSpec)) {
+        rawSpec = `${rawSpec} ➔ A4 가로(297×210mm) 비율 맞춤 출력 권장`;
+      }
+
+      let pMatch = text.match(/(\d+)\s*p/i) || rawSpec.match(/(\d+)\s*p/i);
+      let qMatch = text.match(/(\d+)\s*부/);
+      let p = pMatch ? pMatch[1] : 26;
+      let q = qMatch ? qMatch[1] : 100;
+
+      document.getElementById('modal-detail-org').innerText = org;
+      document.getElementById('modal-detail-phone').innerText = phone;
+      document.getElementById('modal-detail-time').innerText = time;
+      document.getElementById('modal-detail-spec').innerText = rawSpec;
+      document.getElementById('modal-detail-text').innerText = text;
+
+      const filesContainer = document.getElementById('modal-detail-files');
+      if (files.length > 0) {
+        filesContainer.innerHTML = files.map(f => `
+          <a href="https://ybprint-backend-1.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-xl text-xs font-bold border border-blue-200 hover:bg-blue-100 transition-all">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> ${f.trim()}
+          </a>
+        `).join('');
+      } else {
+        filesContainer.innerHTML = '<span class="text-xs text-gray-400">첨부된 원고가 없습니다.</span>';
+      }
+
+      document.getElementById('modal-detail-btn-quote').onclick = function() {
+        closeDetailModal();
+        openQuoteModal(encodeURIComponent(org), encodeURIComponent(phone), q, p, time, encodeURIComponent(text), encodeURIComponent(rawSpec));
+      };
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
     function toggleComp(t){ completedItems.includes(t) ? completedItems=completedItems.filter(x=>x!==t) : completedItems.push(t); localStorage.setItem('yb_completed_items', JSON.stringify(completedItems)); renderTable(); }
     function deleteItem(t){ if(confirm("삭제하시겠습니까?")){ deletedItems.push(t); localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); fetchInquiries(); } }
 
     // 💡 제본 키워드 자동 감지 및 모달 오픈
-    function openQuoteModal(org, phone, qty, page, timeKey, rawInquiryEncoded = '') {
+    function openQuoteModal(org, phone, qty, page, timeKey, rawInquiryEncoded = '', rawSpecEncoded = '') {
       document.getElementById('input-org').value = decodeURIComponent(org);
       document.getElementById('input-phone').value = decodeURIComponent(phone);
       document.getElementById('input-phone').dataset.timeKey = timeKey;
@@ -390,11 +493,15 @@
       document.getElementById('input-page').value = page;
 
       const rawInquiry = decodeURIComponent(rawInquiryEncoded);
+      const rawSpec = decodeURIComponent(rawSpecEncoded);
+      const combined = rawInquiry + " " + rawSpec;
       
       // 제본 동의어 사전 매핑
-      if (/와이어|스프링|트윈링|코일링|링제본/i.test(rawInquiry)) {
-        document.getElementById('input-binding').value = 'wire';
-      } else if (/중철|스테이플|소책자/i.test(rawInquiry)) {
+      if (/2:1|투투원|두꺼운|150p|200p/i.test(combined) && /와이어|스프링|트윈링|코일링|링제본/i.test(combined)) {
+        document.getElementById('input-binding').value = 'wire21';
+      } else if (/와이어|스프링|트윈링|코일링|링제본/i.test(combined)) {
+        document.getElementById('input-binding').value = 'wire31';
+      } else if (/중철|스테이플|소책자/i.test(combined)) {
         document.getElementById('input-binding').value = 'saddle';
       } else {
         document.getElementById('input-binding').value = 'perfect';
@@ -406,7 +513,7 @@
     }
     function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
 
-    // 💡 제본 방식 및 서식에 따른 공정 자동 매핑 (배송 항목 기본 제외)
+    // 💡 제본 방식 및 서식에 따른 공정 자동 매핑 (배송 항목 기본 제외 / 청년인쇄사 표준 지종)
     function onTemplateChange() {
       const tmpl = document.getElementById('input-template').value;
       const binding = document.getElementById('input-binding').value;
@@ -416,26 +523,32 @@
       document.getElementById('quote-tbody').innerHTML = '';
 
       if (tmpl === '디지털일반') {
-        // [디지털일반: 기획5 + 디자인5 + 제작5 + 기타5]
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
-        if (binding === 'wire') {
-          // 와이어/스프링 전용 사양 (낱장 표지 + 앞뒤 PP커버 + 트윈링 가공)
-          addRow('제작', '칼라출력', '표지 (A4 낱장 단면 2매)', q, PRICE.cover, '표지 앞/뒤 낱장 스노우250g');
+        if (binding === 'wire31') {
+          // 와이어 3:1 (앞뒤 PP커버 기본 포함 3,300원)
           addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
-          addRow('제작', 'PP커버', '앞뒤 반투명 사선PP', q, 800, '투명/반투명 보호커버');
-          addRow('제작', '제본', '와이어 제본 (트윈링)', q, 3000, '와이어 스프링 제본');
+          addRow('제작', '제본', '와이어 제본 (3:1 트윈링)', q, 3300, '앞뒤 반투명PP커버 기본포함');
+          addRow('제작', '', '', '', '', '');
+          addRow('제작', '', '', '', '', '');
+          addRow('제작', '', '', '', '', '');
+        } else if (binding === 'wire21') {
+          // 와이어 2:1 (두꺼운 원고용 / 앞뒤 PP커버 기본 포함 4,400원)
+          addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
+          addRow('제작', '제본', '와이어 제본 (2:1 트윈링)', q, 4400, '대용량/앞뒤 반투명PP 기본포함');
+          addRow('제작', '', '', '', '', '');
+          addRow('제작', '', '', '', '', '');
           addRow('제작', '', '', '', '', '');
         } else if (binding === 'saddle') {
-          // 중철제본 전용 사양
+          // 중철제본
           addRow('제작', '칼라출력', '표지 (A3 펼침 4P)', q, PRICE.cover, '표지 칼라/스노우200g');
           addRow('제작', '흑백출력', `본문 (A4 2단접지 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
           addRow('제작', '제본', '중철 제본 (스테이플)', q, 1500, '중철 제본 마감');
           addRow('제작', '', '', '', '', '');
           addRow('제작', '', '', '', '', '');
         } else {
-          // 무선제본 (기본 사양)
+          // 무선제본 (기본 실무 세트: 표지 1,700 + 코팅 2,200 + 무선 3,300)
           addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
           addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
           addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
@@ -448,14 +561,17 @@
       } 
       else if (tmpl === '디지탈상세') {
         let coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
-        let specText = '표지칼라/본문흑백/무선제본';
+        let specText = '표지칼라(스노우250g)/본문흑백(모조80g)/무선제본';
 
-        if (binding === 'wire') {
-          coverAndBind = PRICE.cover + 800 + 3000;
-          specText = '표지칼라/본문흑백/와이어(스프링)제본/PP커버';
+        if (binding === 'wire31') {
+          coverAndBind = 3300;
+          specText = '본문흑백(모조80g)/3:1와이어제본/앞뒤PP커버포함';
+        } else if (binding === 'wire21') {
+          coverAndBind = 4400;
+          specText = '본문흑백(모조80g)/2:1와이어제본/앞뒤PP커버포함';
         } else if (binding === 'saddle') {
           coverAndBind = PRICE.cover + 1500;
-          specText = '표지칼라/본문흑백/중철제본';
+          specText = '표지칼라/본문흑백(모조80g)/중철제본';
         }
 
         addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), specText);
@@ -477,9 +593,12 @@
         addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
 
         // 기타 (배송 제외)
-        if (binding === 'wire') {
-          addRow('기타', '커버', '앞뒤 반투명 사선PP', q, 800, '보호커버');
-          addRow('기타', '제본', '와이어 제본 (트윈링)', q, 3000, '스프링 제본');
+        if (binding === 'wire31') {
+          addRow('기타', '제본', '와이어 제본 (3:1 트윈링)', q, 3300, '앞뒤 반투명PP 포함');
+          addRow('기타', '', '', '', '', '');
+        } else if (binding === 'wire21') {
+          addRow('기타', '제본', '와이어 제본 (2:1 트윈링)', q, 4400, '앞뒤 반투명PP 포함');
+          addRow('기타', '', '', '', '', '');
         } else if (binding === 'saddle') {
           addRow('기타', '제본', '옵셋 중철 제본', q, 1500, '중철 제본');
           addRow('기타', '', '', '', '', '');
@@ -659,9 +778,10 @@
           paddedRows.push({ type: '', mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
         }
 
-        let summarySpec = '표지칼라 / 본문흑백 / 무선제본';
-        if (binding === 'wire') summarySpec = '표지칼라 / 본문흑백 / 와이어(스프링)제본 / PP커버';
-        else if (binding === 'saddle') summarySpec = '표지칼라 / 본문흑백 / 중철제본';
+        let summarySpec = '표지칼라(스노우250g) / 본문흑백(모조80g) / 무선제본';
+        if (binding === 'wire31') summarySpec = '본문흑백(모조80g) / 3:1와이어제본 / 앞뒤PP커버포함';
+        else if (binding === 'wire21') summarySpec = '본문흑백(모조80g) / 2:1와이어제본 / 앞뒤PP커버포함';
+        else if (binding === 'saddle') summarySpec = '표지칼라 / 본문흑백(모조80g) / 중철제본';
 
         tableHTML = `
           <table class="excel-table text-center mb-2">
@@ -853,7 +973,7 @@
         `;
       }
 
-      // 💡 [수정된 유효기간 안내 문구]
+      // 💡 [수정된 15일 유효기간 안내 문구]
       const footerNotice = `
         <div class="mt-2.5 text-[10px] text-gray-600 space-y-0.5 leading-tight">
           <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
