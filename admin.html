@@ -732,7 +732,7 @@
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
 
-      // 💡 [수정] 텍스트 정렬 및 세로선 일치 (정규 테이블 그리드)
+      // 💡 [개편] html2canvas에서 오차 없는 정밀 그리드 & 수직 정렬 레이아웃
       const headerBox = `
         <div class="text-center mb-5 pt-1">
           <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
@@ -740,64 +740,63 @@
 
         <div class="grid grid-cols-2 gap-3 mb-2.5">
           <!-- 좌측: 수신처 박스 -->
-          <div class="border border-black p-2.5 bg-white">
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; line-height: 1.75;">
-              <tr>
-                <td style="width: 55px; font-weight: bold;">수 &nbsp; &nbsp; 신 :</td>
-                <td style="font-weight: 900; color: #1e3a8a; font-size: 12.5px;">${org}</td>
-              </tr>
-              <tr>
-                <td style="font-weight: bold;">발 &nbsp; &nbsp; 신 :</td>
-                <td style="font-weight: bold;">청년인쇄사</td>
-              </tr>
-              <tr>
-                <td style="font-weight: bold;">일 &nbsp; &nbsp; 자 :</td>
-                <td class="font-mono-code">${ds}</td>
-              </tr>
-              <tr>
-                <td style="font-weight: bold;">제 &nbsp; &nbsp; 목 :</td>
-                <td>인쇄 및 제본 제작 견적의 件</td>
-              </tr>
-            </table>
+          <div class="border border-black p-2.5 bg-white flex flex-col justify-between" style="height: 100px;">
+            <div style="display: flex; align-items: baseline; font-size: 11px; line-height: 1.65;">
+              <span style="width: 52px; font-weight: bold; letter-spacing: 1px;">수 &nbsp; &nbsp; 신 :</span>
+              <span style="font-weight: 900; color: #1e3a8a; font-size: 13px;">${org}</span>
+            </div>
+            <div style="display: flex; align-items: baseline; font-size: 11px; line-height: 1.65;">
+              <span style="width: 52px; font-weight: bold; letter-spacing: 1px;">발 &nbsp; &nbsp; 신 :</span>
+              <span style="font-weight: bold; font-size: 11px;">청년인쇄사</span>
+            </div>
+            <div style="display: flex; align-items: baseline; font-size: 11px; line-height: 1.65;">
+              <span style="width: 52px; font-weight: bold; letter-spacing: 1px;">일 &nbsp; &nbsp; 자 :</span>
+              <span class="font-mono-code" style="font-size: 11px;">${ds}</span>
+            </div>
+            <div style="display: flex; align-items: baseline; font-size: 11px; line-height: 1.65;">
+              <span style="width: 52px; font-weight: bold; letter-spacing: 1px;">제 &nbsp; &nbsp; 목 :</span>
+              <span style="font-size: 11px;">인쇄 및 제본 제작 견적의 件</span>
+            </div>
           </div>
 
-          <!-- 우측: 공급자 박스 (정밀 2열 세로 정렬 및 직인 고정) -->
-          <div class="border border-black p-2.5 bg-white" style="overflow: visible;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; line-height: 1.6;">
-              <tr>
-                <td colspan="2" style="border-bottom: 1px solid #d1d5db; padding-bottom: 3px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
-                    <span style="font-size: 11px;">청 년 인 쇄 사</span>
-                    <span class="font-mono-code" style="font-size: 10.5px;">등록번호 : 119-22-03638</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td style="width: 48%; padding-top: 4px; vertical-align: middle;">
-                  <span style="font-weight: bold;">상 &nbsp; &nbsp; 호 :</span> 청년인쇄사
-                </td>
-                <td style="width: 52%; padding-top: 4px; vertical-align: middle; position: relative;">
-                  <span style="font-weight: bold;">대 &nbsp; &nbsp; 표 :</span> 
-                  <span style="display: inline-block; font-weight: 900; letter-spacing: 1.5px; margin-left: 2px; position: relative;">
-                    임 형 택
-                    <img src="${STAMP_BASE64}" style="position: absolute; left: 24px; top: -14px; width: 44px; height: 44px; max-width: none; object-fit: contain; mix-blend-mode: multiply; pointer-events: none; z-index: 30;" alt="청년인쇄사 직인">
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" style="padding-top: 3px;">
-                  <span style="font-weight: bold;">소 재 지 :</span> 세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)
-                </td>
-              </tr>
-              <tr>
-                <td style="padding-top: 3px; vertical-align: middle;">
-                  <span style="font-weight: bold;">직통전화 :</span> <span class="font-mono-code">044-862-4803</span>
-                </td>
-                <td style="padding-top: 3px; vertical-align: middle;">
-                  <span style="font-weight: bold;">E-mail :</span> <span class="font-mono-code">admin@ybprint.co.kr</span>
-                </td>
-              </tr>
-            </table>
+          <!-- 우측: 공급자 박스 (대표/이메일 세로선 1:1 정렬, 직인 영점 고정) -->
+          <div class="border border-black p-2.5 bg-white flex flex-col justify-between" style="height: 100px; position: relative;">
+            <!-- 1행: 상호/등록번호 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; padding-bottom: 2px;">
+              <span style="font-weight: 900; font-size: 11.5px; letter-spacing: 2px;">청 년 인 쇄 사</span>
+              <span class="font-mono-code" style="font-size: 10px; font-weight: bold;">등록번호 : 119-22-03638</span>
+            </div>
+
+            <!-- 2행: 상호 / 대표 (동일 그리드 컬럼 1fr : 1.15fr) -->
+            <div style="display: grid; grid-template-columns: 1fr 1.15fr; font-size: 10px; align-items: center;">
+              <div>
+                <span style="font-weight: bold; width: 44px; display: inline-block;">상 &nbsp; &nbsp; 호 :</span>
+                <span>청년인쇄사</span>
+              </div>
+              <div style="position: relative; height: 18px; line-height: 18px;">
+                <span style="font-weight: bold; width: 44px; display: inline-block;">대 &nbsp; &nbsp; 표 :</span>
+                <span style="font-weight: 900; letter-spacing: 2px;">임 형 택</span>
+                <img src="${STAMP_BASE64}" style="position: absolute; left: 58px; top: -12px; width: 42px; height: 42px; pointer-events: none;" alt="직인">
+              </div>
+            </div>
+
+            <!-- 3행: 소재지 (줄바꿈 방지) -->
+            <div style="font-size: 9.5px; white-space: nowrap; letter-spacing: -0.03em;">
+              <span style="font-weight: bold; width: 44px; display: inline-block;">소 재 지 :</span>
+              <span>세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</span>
+            </div>
+
+            <!-- 4행: 직통전화 / E-mail (2행과 완벽한 1:1 수직 정렬) -->
+            <div style="display: grid; grid-template-columns: 1fr 1.15fr; font-size: 10px; align-items: center;">
+              <div>
+                <span style="font-weight: bold; width: 44px; display: inline-block;">직통전화 :</span>
+                <span class="font-mono-code" style="font-size: 9.5px;">044-862-4803</span>
+              </div>
+              <div>
+                <span style="font-weight: bold; width: 44px; display: inline-block;">E-mail :</span>
+                <span class="font-mono-code" style="font-size: 9.5px;">admin@ybprint.co.kr</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1046,7 +1045,7 @@
       }
     }
 
-    // A4 정규 규격 캡처 엔진 (정밀 table 레이아웃 기반)
+    // A4 정규 규격 캡처 엔진 (정밀 그리드 기반)
     async function getJpgBlob() {
       const el = document.getElementById('quote-printable-area');
       const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_');
@@ -1202,7 +1201,6 @@
       } finally {
         btn.disabled = false; 
         btn.innerHTML = origHtml;
-        lucide.createIcons();
       }
     }
 
