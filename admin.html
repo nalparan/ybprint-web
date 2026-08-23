@@ -277,7 +277,7 @@
               <p>■ 견적 양식 : <span id="msg-target-template"></span></p>
               <p class="text-blue-700 font-bold mt-1">■ 총 견적금액 : <span id="msg-target-total" class="font-mono-code"></span> 원 (VAT 포함)</p>
             </div>
-            <p class="mt-4 text-xs text-gray-500">※ 세부 공정 내역과 결재 서류 안내는 첨부된 PDF 견적서를 확인해 주시기 바랍니다.</p>
+            <p class="mt-4 text-xs text-gray-500">※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
           </div>
         </div>
 
@@ -817,8 +817,7 @@
 
       const footerNotice = `
         <div class="mt-2 text-[9px] text-gray-500 space-y-0.5 leading-tight">
-          <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
-          <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
+          <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
         </div>
       `;
 
@@ -909,7 +908,7 @@
             <p style="margin:4px 0;">■ 수신처 : ${org}</p>
             <p style="margin:4px 0; color:#2563eb; font-weight:bold; font-size:16px;">■ 총 금액 : ${total} 원 (VAT 포함)</p>
           </div>
-          <p style="font-size:12px; color:#6b7280;">※ 법인카드 결제 및 세금계산서 정산 가능 (첨부파일 참조)</p>
+          <p style="font-size:12px; color:#6b7280;">※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
         </div>`;
 
         const res = await fetch('/api/send-estimate', {
