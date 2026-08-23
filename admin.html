@@ -20,13 +20,13 @@
     @keyframes liveDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
     .live-indicator { animation: liveDot 2s infinite ease-in-out; }
 
-    /* 청년인쇄사 정식 A4 1:1 출력 규격 (794px * 1123px, 1:1.414 단일 페이지 완벽 비율) */
+    /* 청년인쇄사 정식 A4 1:1 출력 규격 (794px * 1120px 단일 페이지 완벽 비율) */
     .quote-paper-wrapper {
       width: 100%;
       overflow-x: auto;
       display: flex;
       justify-content: center;
-      padding: 20px 0;
+      padding: 15px 0;
       background: #E2E8F0;
     }
     .quote-paper {
@@ -34,10 +34,10 @@
       font-family: 'Malgun Gothic', "Pretendard Variable", 'Noto Sans KR', sans-serif;
       color: #000000;
       width: 794px;
-      min-height: 1123px;
-      height: 1123px;
+      min-height: 1120px;
+      height: 1120px;
       box-sizing: border-box;
-      padding: 48px 45px;
+      padding: 40px 42px 35px 42px;
       margin: 0 auto;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       border: 1px solid #CBD5E1;
@@ -53,10 +53,10 @@
     }
     .excel-table th, .excel-table td {
       border: 1px solid #000000 !important;
-      padding: 3.5px 6px !important;
+      padding: 3px 5px !important;
       font-size: 11px;
-      height: 24px;
-      line-height: 1.35;
+      height: 23px;
+      line-height: 1.3;
       vertical-align: middle;
       word-break: break-all;
     }
@@ -211,7 +211,6 @@
         <!-- STEP 1: 세부 작성 및 수기 입력 화면 -->
         <div id="quote-step-1-content" class="space-y-4" style="display: block;">
           
-          <!-- 💡 제본형태 추가 및 6열 구조 개편 -->
           <div class="grid grid-cols-1 lg:grid-cols-6 gap-3">
             <div class="lg:col-span-2 bg-white p-3.5 rounded-xl border">
               <label class="text-xs font-bold text-gray-500 block mb-1">수신 고객 / 기관명 (직접 수정 가능)</label>
@@ -290,7 +289,7 @@
         <!-- STEP 2: 정식 A4 1:1.414 서식 뷰 (검증 & 즉시 출력/발송) -->
         <div id="quote-step-2-content" style="display: none;">
           <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 text-xs text-blue-800 font-medium flex items-center justify-between">
-            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>정규 A4 비율(794px × 1123px)과 실물 직인 날인이 적용되었습니다.</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>정규 A4 비율(794px × 1120px)과 실물 직인 날인이 적용되었습니다.</span>
             <span class="font-bold font-mono-code text-blue-900" id="preview-badge-total"></span>
           </div>
           <div class="quote-paper-wrapper">
@@ -516,14 +515,14 @@
         addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
         addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
         addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
-        addRow('제작', '제본', bindingText, q, bindingPrice, bindingText); // 제본 동기화
+        addRow('제작', '제본', bindingText, q, bindingPrice, bindingText);
         addRow('제작', '', '', '', '', '');
 
         addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
       } 
       else if (tmpl === '디지탈 상세') {
-        const coverAndBind = PRICE.cover + PRICE.coat + bindingPrice; // 제본 단가 동기화 반영
+        const coverAndBind = PRICE.cover + PRICE.coat + bindingPrice;
         addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), `표지칼라/본문흑백/${bindingText}`);
         addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
         
@@ -543,7 +542,7 @@
         addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
 
         addRow('기타', '코팅', '표지 단면 무광코팅', q, PRICE.coat, '표지 단면무광');
-        addRow('기타', '제본', `옵셋 ${bindingText}`, q, bindingPrice, `옵셋 ${bindingText}`); // 제본 동기화
+        addRow('기타', '제본', `옵셋 ${bindingText}`, q, bindingPrice, `옵셋 ${bindingText}`);
         addRow('기타', '관리비', '일반관리비 (12% 지대제외)', 1, 0, '재료비제외 12% 자동산출');
         addRow('기타', '배송', '납품 배송 (안전 직배송)', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', '');
@@ -675,29 +674,29 @@
         </span>
       `;
 
-      // 💡 [상단 헤더 정보 박스: 글자 잘림 완벽 해결 및 칼정렬]
+      // 💡 [상단 헤더 정보 박스: flex 기반 1:1 완벽 정렬로 PDF 변환 겹침 방지]
       const headerBox = `
         <div>
-          <div class="text-center mb-6 pt-1">
-            <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
+          <div style="text-align:center; margin-bottom:16px; padding-top:4px;">
+            <h1 style="font-size:26px; font-weight:900; letter-spacing:0.8em; padding-left:12px; color:#000000; margin:0;">견 &nbsp; 적 &nbsp; 서</h1>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 mb-3 text-[11px] leading-relaxed">
-            <!-- 좌측: 수신처 -->
-            <div class="border border-black p-3 bg-white flex flex-col justify-between" style="min-height: 96px;">
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">수 &nbsp; &nbsp; 신 :</span> <span class="font-black text-blue-950 text-sm truncate">${org}</span></div>
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">발 &nbsp; &nbsp; 신 :</span> <span class="font-bold">청년인쇄사</span></div>
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">일 &nbsp; &nbsp; 자 :</span> <span class="font-mono-code">${ds}</span></div>
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">제 &nbsp; &nbsp; 목 :</span> <span class="truncate font-medium">인쇄 및 제본 제작 견적의 件</span></div>
+          <div style="display:flex; gap:10px; margin-bottom:10px; font-size:11px; line-height:1.45;">
+            <!-- 좌측: 수신처 (50%) -->
+            <div style="flex:1; border:1px solid #000000; padding:10px; background:#FFFFFF; display:flex; flex-direction:column; justify-content:space-between; min-height:92px; box-sizing:border-box;">
+              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">수 &nbsp; &nbsp; 신 :</span> <span style="font-weight:900; color:#1e3a8a; font-size:12.5px;" class="truncate">${org}</span></div>
+              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">발 &nbsp; &nbsp; 신 :</span> <span style="font-weight:bold;">청년인쇄사</span></div>
+              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">일 &nbsp; &nbsp; 자 :</span> <span style="font-family:'Fira Code', monospace;">${ds}</span></div>
+              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">제 &nbsp; &nbsp; 목 :</span> <span class="truncate">인쇄 및 제본 제작 견적의 件</span></div>
             </div>
 
-            <!-- 우측: 공급자 정보 (4열 micro-table 적용으로 세로선 1:1 완벽 정렬) -->
-            <div class="border border-black p-3 bg-white flex flex-col justify-between" style="min-height: 96px;">
-              <div class="flex justify-between font-bold text-xs border-b border-gray-300 pb-1 mb-1">
+            <!-- 우측: 공급자 정보 (50%) -->
+            <div style="flex:1; border:1px solid #000000; padding:10px; background:#FFFFFF; display:flex; flex-direction:column; justify-content:space-between; min-height:92px; box-sizing:border-box;">
+              <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:11px; border-bottom:1px solid #e2e8f0; padding-bottom:3px; margin-bottom:3px;">
                 <span>청 년 인 쇄 사</span>
-                <span class="font-mono-code">등록번호: 119-22-03638</span>
+                <span style="font-family:'Fira Code', monospace;">등록번호: 119-22-03638</span>
               </div>
-              <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.5;">
+              <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.45;">
                 <tr>
                   <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
                   <td style="width:82px; vertical-align:middle;">청년인쇄사</td>
@@ -719,13 +718,13 @@
           </div>
 
           <!-- 합계금액 바 -->
-          <div class="border border-black bg-slate-100 px-4 py-2 flex justify-between items-center mb-3 font-bold text-xs">
-            <div class="flex items-center gap-3">
+          <div style="border:1px solid #000000; background:#f1f5f9; padding:6px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-weight:bold; font-size:11.5px;">
+            <div style="display:flex; align-items:center; gap:10px;">
               <span>합계금액 :</span>
-              <span class="font-black text-black text-sm">일금 ${numToKor(total)} 정</span>
-              <span class="text-[11px] font-bold text-blue-900 bg-white border border-blue-400 shadow-xs px-2.5 py-0.5 rounded font-mono-code">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
+              <span style="font-weight:900; color:#000000; font-size:13px;">일금 ${numToKor(total)} 정</span>
+              <span style="font-size:10.5px; font-weight:bold; color:#1e3a8a; background:#FFFFFF; border:1px solid #93c5fd; padding:1px 8px; border-radius:4px; font-family:'Fira Code', monospace;">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
             </div>
-            <div class="font-mono-code text-sm font-black">
+            <div style="font-family:'Fira Code', monospace; font-size:13px; font-weight:900;">
               ( ₩ <span>${total.toLocaleString()}</span> )
             </div>
           </div>
@@ -741,8 +740,8 @@
         }
 
         tableHTML = `
-          <div class="flex-1 flex flex-col justify-start">
-            <table class="excel-table text-center mb-2">
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:start;">
+            <table class="excel-table text-center mb-1.5">
               <thead><tr><th>품명</th><th class="w-20">규격</th><th class="w-16">수량</th><th class="w-16">면수</th><th>사양</th></tr></thead>
               <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / ${bindingText}</td></tr></tbody>
             </table>
@@ -774,7 +773,7 @@
         const otherGroupHtml = renderSectionGroup7Col('기타', rows, 5);
 
         tableHTML = `
-          <div class="flex-1 flex flex-col justify-start">
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:start;">
             <table class="excel-table text-left">
               <thead>
                 <tr>
@@ -823,7 +822,7 @@
         while (otherRows.length < 5) otherRows.push({ mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
 
         tableHTML = `
-          <div class="flex-1 flex flex-col justify-start">
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:start;">
             <table class="excel-table text-left">
               <thead>
                 <tr>
@@ -892,7 +891,7 @@
                   <td class="font-bold border border-black text-[10px] pl-1.5">${ctpRows[1].name}</td>
                   <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
                   <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? ctpRows[1].amt.toLocaleString() : ''}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
                   <td class="text-center text-gray-600 text-[9px] border border-black">${ctpRows[1].rem}</td>
                 </tr>
                 <tr>
@@ -936,8 +935,8 @@
       }
 
       const footerNotice = `
-        <div class="mt-4 text-[10px] text-gray-500 space-y-0.5 leading-tight pb-1">
-          <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
+        <div style="margin-top:12px; font-size:10px; color:#4b5563; line-height:1.4; padding-bottom:2px;">
+          <p style="margin:0;">※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
         </div>
       `;
 
@@ -1073,28 +1072,22 @@
       }
     }
 
+    // 💡 [완벽한 1페이지 A4 1:1 출력 엔진]
     async function getPdfBase64() {
-      const step2 = document.getElementById('quote-step-2-content');
       const el = document.getElementById('quote-printable-area');
       const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_') || '견적서';
       const fileName = `청년인쇄사_견적서_${org}.pdf`;
 
-      const origDisplay = step2.style.display;
-      step2.style.display = 'block';
-      step2.style.position = 'absolute';
-      step2.style.left = '-9999px';
-
       const opt = { 
-        margin: [8, 8, 8, 8], 
+        margin: [0, 0, 0, 0], 
         filename: fileName, 
         image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { scale: 2, useCORS: true, logging: false }, 
+        html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 }, 
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
       };
       const worker = html2pdf().set(opt).from(el);
       const pdfBase64String = await worker.outputPdf('datauristring');
       
-      step2.style.position = ''; step2.style.left = ''; step2.style.display = origDisplay;
       return { base64: pdfBase64String.split('base64,')[1], fileName, worker };
     }
 
