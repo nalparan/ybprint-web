@@ -299,7 +299,7 @@
 
       </div>
 
-      <!-- 하단 액션 버튼 바 -->
+      <!-- 하단 액션 버튼 바 (카톡 멘트 복사 버튼 추가) -->
       <div class="p-4 border-t bg-white flex justify-between items-center shrink-0">
         <button id="btn-prev" onclick="goToStep(1)" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hidden transition-colors hover:bg-gray-200 cursor-pointer">이전 단계</button>
         <div class="flex-1"></div>
@@ -310,17 +310,29 @@
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
         
-        <!-- 2단계 전용: 4종 다중 출력 액션 버튼 -->
+        <!-- 2단계 전용: 5종 다중 출력 액션 버튼 -->
         <div id="action-buttons" class="hidden flex flex-wrap items-center gap-2">
-          <button onclick="copyJpgToClipboard()" id="btn-copy" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-700 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
-            <i data-lucide="copy" class="w-4 h-4"></i> 견적서 이미지 복사 (카톡용)
+          <!-- 1. 이미지 복사 -->
+          <button onclick="copyJpgToClipboard()" id="btn-copy" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-700 transition-all flex items-center gap-1.5 text-sm cursor-pointer" title="카카오톡에 견적서 이미지를 붙여넣습니다.">
+            <i data-lucide="copy" class="w-4 h-4"></i> 견적서 이미지 복사
           </button>
+          
+          <!-- 2. 카톡 멘트 복사 (신규) -->
+          <button onclick="copyKakaoMessage()" id="btn-copy-msg" class="px-4 py-2.5 bg-[#FEE500] text-[#191919] hover:bg-[#FDD835] rounded-xl font-bold shadow-md transition-all flex items-center gap-1.5 text-sm cursor-pointer" title="카카오톡 대화창에 보낼 요약 안내 문구를 복사합니다.">
+            <i data-lucide="message-circle" class="w-4 h-4 text-[#191919]"></i> 카톡 멘트 복사
+          </button>
+
+          <!-- 3. JPG 저장 -->
           <button onclick="downloadJPG()" id="btn-download-jpg" class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
             <i data-lucide="image" class="w-4 h-4"></i> JPG 저장
           </button>
+
+          <!-- 4. PDF 저장 -->
           <button onclick="downloadPDF()" id="btn-download" class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
             <i data-lucide="download" class="w-4 h-4"></i> PDF 저장
           </button>
+
+          <!-- 5. 고객 메일 발송 -->
           <button onclick="sendEmail()" id="btn-email" class="px-4 py-2.5 bg-green-600 text-white rounded-xl font-bold shadow-md hover:bg-green-700 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
             <i data-lucide="mail" class="w-4 h-4"></i> 고객 메일 발송
           </button>
@@ -922,8 +934,8 @@
                   <td class="font-bold border border-black text-[10px] pl-1.5">${ctpRows[1].name}</td>
                   <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
                   <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[1].rem}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? ctpRows[1].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9px] border border-black">${ctpRows[1].rem}</td>
                 </tr>
                 <tr>
                   <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">인쇄</td>
@@ -1002,6 +1014,38 @@
           d.innerHTML = i;
           t.className = "ml-2 font-bold text-gray-500 text-sm";
         }
+      });
+    }
+
+    // 💡 [카카오톡 안내 멘트 복사 기능]
+    function copyKakaoMessage() {
+      const org = document.getElementById('input-org').value || '고객';
+      const tmpl = document.getElementById('input-template').value;
+      const q = document.getElementById('input-qty').value;
+      const p = document.getElementById('input-page').value;
+      const bindingSelect = document.getElementById('input-binding');
+      const bindingText = bindingSelect ? bindingSelect.value : '무선제본';
+      const total = document.getElementById('val-total').innerText;
+      const numTotal = parseInt(total.replace(/[^0-9]/g, '')) || 0;
+      const unitPrice = q > 0 ? Math.round(numTotal / parseInt(q)) : numTotal;
+
+      const kakaoMsg = `[청년인쇄사] 견적 안내드립니다.
+
+■ 수신처 : ${org} 담당자님
+■ 제작 사양 : ${tmpl} (${q}부 / ${p}p / ${bindingText})
+■ 총 견적금액 : ${total} (VAT 포함)
+■ 1부당 단가 : ₩ ${unitPrice.toLocaleString()}원
+
+※ 세부 공정 내역은 첨부해 드린 정식 견적서 이미지를 확인해 주시기 바랍니다.
+※ 법인카드 결제 및 세금계산서 후불 정산이 가능합니다.
+☎ 직통 문의: 044-862-4803`;
+
+      navigator.clipboard.writeText(kakaoMsg).then(() => {
+        alert("카카오톡 안내 문구가 복사되었습니다!\n\n카카오톡 대화창에서 [ Ctrl + V ]로 전송하세요.");
+        recordManualInquiry();
+        toggleComp(document.getElementById('input-phone').dataset.timeKey);
+      }).catch(() => {
+        prompt("아래 텍스트를 복사하여 카카오톡에 붙여넣으세요:", kakaoMsg);
       });
     }
 
@@ -1103,7 +1147,6 @@
       }
     }
 
-    // 💡 [완벽한 1페이지 A4 1:1 출력 엔진]
     async function getPdfBase64() {
       const el = document.getElementById('quote-printable-area');
       const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_') || '견적서';
