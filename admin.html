@@ -182,7 +182,7 @@
       <div class="p-5 border-b flex justify-between items-center shrink-0">
         <div>
           <h3 class="font-extrabold text-lg flex items-center gap-2"><i data-lucide="calculator" class="w-5 h-5 text-[#3182F6]"></i>청년인쇄사 공식 견적서 엔진</h3>
-          <p class="text-[#8B95A1] text-xs mt-1">디지털일반·디지탈상세·옵셋일반 3종 실무 규격 공식 견적서</p>
+          <p class="text-[#8B95A1] text-xs mt-1">디지탈 일반·디지탈 상세·옵셋 일반 3종 실무 규격 공식 견적서</p>
         </div>
         <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex justify-center items-center cursor-pointer">✕</button>
       </div>
@@ -221,9 +221,9 @@
             <div class="flex-1 bg-white p-4 rounded-xl border border-blue-200">
               <label class="text-xs font-bold text-gray-500 block mb-1">견적서 서식 선택</label>
               <select id="input-template" class="w-full text-sm font-bold border rounded-lg px-3 py-2 text-blue-700 bg-blue-50 focus:outline-none" onchange="onTemplateChange()">
-                <option value="디지털일반">📄 디지털일반 (글로벌리서치 4대공정 표준형)</option>
-                <option value="디지탈상세">🏛️ 디지탈상세 (국가공무원인재개발원 20행 산출식형)</option>
-                <option value="옵셋일반">🖨️ 옵셋일반 (충무로 옵셋 실무 2단 공정형)</option>
+                <option value="디지탈 일반">디지탈 일반 (글로벌리서치 4대공정 표준형)</option>
+                <option value="디지탈 상세">디지탈 상세 (국가공무원인재개발원 20행 산출식형)</option>
+                <option value="옵셋 일반">옵셋 일반 (충무로 옵셋 실무 2단 공정형)</option>
               </select>
             </div>
           </div>
@@ -409,7 +409,7 @@
       const tp = q * p;
       document.getElementById('quote-tbody').innerHTML = '';
 
-      if (tmpl === '디지털일반') {
+      if (tmpl === '디지탈 일반') {
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
@@ -422,7 +422,7 @@
         addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
       } 
-      else if (tmpl === '디지탈상세') {
+      else if (tmpl === '디지탈 상세') {
         const coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
         addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
         addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
@@ -484,7 +484,7 @@
         const qty = qtyStr === '' ? 0 : Number(qtyStr.replace(/,/g, ''));
         let price = priceStr === '' ? 0 : Number(priceStr.replace(/,/g, ''));
 
-        if (tmpl === '옵셋일반' && (mid.includes('관리비') || name.includes('관리비') || name.includes('12%'))) {
+        if (tmpl === '옵셋 일반' && (mid.includes('관리비') || name.includes('관리비') || name.includes('12%'))) {
           price = Math.round(excl * 0.12);
           tr.querySelector('.i-p').value = price;
         }
@@ -631,7 +631,7 @@
 
       let tableHTML = '';
 
-      if (tmpl === '디지탈상세') {
+      if (tmpl === '디지탈 상세') {
         const paddedRows = [...rows];
         while (paddedRows.length < 20) {
           paddedRows.push({ type: '', mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
@@ -664,7 +664,7 @@
           </div>
         `;
       } 
-      else if (tmpl === '디지털일반') {
+      else if (tmpl === '디지탈 일반') {
         const planGroupHtml = renderSectionGroup7Col('기획', rows, 5);
         const designGroupHtml = renderSectionGroup7Col('디자인', rows, 5);
         const produceGroupHtml = renderSectionGroup7Col('제작', rows, 5);
