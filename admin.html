@@ -903,12 +903,18 @@
     }
 
     async function sendEmail() {
+      const defaultEmail = /[a-zA-Z@]/.test(document.getElementById('input-phone').value) ? document.getElementById('input-phone').value : 'admin@ybprint.co.kr';
+      const toEmail = prompt("고객에게 견적서를 발송할 이메일 주소를 입력해주세요.", defaultEmail);
+      
+      if (!toEmail || toEmail.trim() === '') {
+        return; 
+      }
+
       const btn = document.getElementById('btn-email');
       const origHtml = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> 발송중...`; lucide.createIcons();
 
       try {
         const { base64, fileName } = await getPdfBase64();
-        const toEmail = /[a-zA-Z@]/.test(document.getElementById('input-phone').value) ? document.getElementById('input-phone').value : 'admin@ybprint.co.kr';
         const org = document.getElementById('input-org').value;
         const total = document.getElementById('msg-target-total').innerText;
 
