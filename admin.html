@@ -221,9 +221,9 @@
             <div class="flex-1 bg-white p-4 rounded-xl border border-blue-200">
               <label class="text-xs font-bold text-gray-500 block mb-1">견적서 서식 선택</label>
               <select id="input-template" class="w-full text-sm font-bold border rounded-lg px-3 py-2 text-blue-700 bg-blue-50 focus:outline-none" onchange="onTemplateChange()">
-                <option value="디지탈 일반">디지탈 일반 (글로벌리서치 4대공정 표준형)</option>
-                <option value="디지탈 상세">디지탈 상세 (국가공무원인재개발원 20행 산출식형)</option>
-                <option value="옵셋 일반">옵셋 일반 (충무로 옵셋 실무 2단 공정형)</option>
+                <option value="디지탈 일반">디지탈 일반</option>
+                <option value="디지탈 상세">디지탈 상세</option>
+                <option value="옵셋 일반">옵셋 일반</option>
               </select>
             </div>
           </div>
@@ -694,7 +694,7 @@
                 <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
                 <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
                 <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-                <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-sm font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-xs font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
               </tfoot>
             </table>
           </div>
@@ -790,7 +790,7 @@
                   <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
                   <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
                   <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? ctpRows[1].amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[1].rem}</td>
+                  <td class="text-center text-gray-600 text-[9px] border border-black">${ctpRows[1].rem}</td>
                 </tr>
                 <tr>
                   <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">인쇄</td>
