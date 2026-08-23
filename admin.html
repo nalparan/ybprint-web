@@ -303,15 +303,23 @@
     let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [];
     let currentQuoteStep = 1;
 
-    // 💡 [무손실 정규 벡터 직인: 깨짐 및 엑박 100% 방지 SVG Data URI]
+    // 💡 [청년인쇄사 공식 법인 직인: 청년인쇄사 대표의인 정밀 벡터 각인]
     const STAMP_BASE64 = "data:image/svg+xml;utf8," + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#C82333" stroke-width="4.5"/>
-        <circle cx="50" cy="50" r="41" fill="none" stroke="#C82333" stroke-width="1.2"/>
-        <text x="68" y="42" font-family="'Gungsuh', 'Batang', 'Noto Serif KR', serif" font-size="25" font-weight="900" fill="#C82333" text-anchor="middle">임</text>
-        <text x="68" y="74" font-family="'Gungsuh', 'Batang', 'Noto Serif KR', serif" font-size="25" font-weight="900" fill="#C82333" text-anchor="middle">형</text>
-        <text x="32" y="42" font-family="'Gungsuh', 'Batang', 'Noto Serif KR', serif" font-size="25" font-weight="900" fill="#C82333" text-anchor="middle">택</text>
-        <text x="32" y="74" font-family="'Gungsuh', 'Batang', 'Noto Serif KR', serif" font-size="25" font-weight="900" fill="#C82333" text-anchor="middle">인</text>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#C82333" stroke-width="4.5"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#C82333" stroke-width="1.2"/>
+        <circle cx="60" cy="60" r="25" fill="none" stroke="#C82333" stroke-width="1.5"/>
+        <g font-family="'Batang', 'Gungsuh', 'Noto Serif KR', serif" font-size="14" font-weight="900" fill="#C82333" text-anchor="middle">
+          <text x="60" y="23" transform="rotate(-72 60 60)">청</text>
+          <text x="60" y="23" transform="rotate(-36 60 60)">년</text>
+          <text x="60" y="23" transform="rotate(0 60 60)">인</text>
+          <text x="60" y="23" transform="rotate(36 60 60)">쇄</text>
+          <text x="60" y="23" transform="rotate(72 60 60)">사</text>
+        </g>
+        <g font-family="'Batang', 'Gungsuh', 'Noto Serif KR', serif" font-weight="900" fill="#C82333" text-anchor="middle">
+          <text x="60" y="54" font-size="12">대표</text>
+          <text x="60" y="71" font-size="12">의인</text>
+        </g>
       </svg>
     `);
 
@@ -564,11 +572,11 @@
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
 
-      // 💡 [대표자 직인: 임형택 텍스트 가로 정렬 및 직인 42px 자연스러운 날인 배치]
+      // 💡 [청년인쇄사 법인 직인: '임형택' 우측에 자연스러운 날인 배치]
       const stamp = `
         <span style="position:relative; display:inline-block; vertical-align:middle;">
           <strong style="font-weight:900; font-size:11.5px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
-          <img src="${STAMP_BASE64}" style="position:absolute; left:26px; top:-12px; width:42px; height:42px; min-width:42px; min-height:42px; object-fit:contain; pointer-events:none;" alt="직인">
+          <img src="${STAMP_BASE64}" style="position:absolute; left:26px; top:-12px; width:42px; height:42px; min-width:42px; min-height:42px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
         </span>
       `;
 
