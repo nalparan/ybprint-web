@@ -20,7 +20,7 @@
     @keyframes liveDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
     .live-indicator { animation: liveDot 2s infinite ease-in-out; }
 
-    /* 청년인쇄사 정식 A4 1:1 출력 규격 (794px * 1120px 단일 페이지 완벽 비율) */
+    /* 청년인쇄사 정식 A4 1:1 출력 규격 (외곽선/그림자 제거, A4 완벽 중앙 배치) */
     .quote-paper-wrapper {
       width: 100%;
       overflow-x: auto;
@@ -37,10 +37,8 @@
       min-height: 1120px;
       height: 1120px;
       box-sizing: border-box;
-      padding: 40px 42px 35px 42px;
+      padding: 45px 42px 35px 42px;
       margin: 0 auto;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      border: 1px solid #CBD5E1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -88,7 +86,7 @@
         <span class="text-xs font-mono-code font-bold text-[#4E5968]" id="server-status-label">Render Live</span>
       </div>
 
-      <!-- 전화/수기 견적 작성 신규 버튼 -->
+      <!-- 전화/수기 견적 작성 버튼 -->
       <button onclick="openManualQuoteModal()" class="flex items-center gap-1.5 px-4 py-2 bg-[#00B46B] hover:bg-[#009257] text-white rounded-xl text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer">
         <i data-lucide="phone-call" class="w-4 h-4"></i>
         <span>+ 전화/수기 견적</span>
@@ -180,7 +178,7 @@
     </div>
   </main>
 
-  <!-- 견적 발송 메인 모달 (2단계 슬림 개편 + 제본 동기화) -->
+  <!-- 견적 발송 메인 모달 -->
   <div id="quote-modal" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-5xl rounded-3xl flex flex-col shadow-2xl h-[94vh] sm:h-[90vh] overflow-hidden">
       
@@ -217,8 +215,8 @@
               <input type="text" id="input-org" placeholder="예: 영신여고 / 대덕연구원 김팀장" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
             </div>
             <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
-              <label class="text-xs font-bold text-gray-500 block mb-1">연락처 / 이메일</label>
-              <input type="text" id="input-phone" placeholder="010-0000-0000 또는 메일" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
+              <label class="text-xs font-bold text-gray-500 block mb-1">연락처 / 이메일 (자동 하이픈)</label>
+              <input type="text" id="input-phone" oninput="formatPhoneInput(this)" placeholder="010-0000-0000 또는 메일" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none font-mono-code">
             </div>
             <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border border-blue-100">
               <label class="text-xs font-bold text-blue-800 block mb-1">제본 형태 선택</label>
@@ -348,6 +346,32 @@
       manualInquiries = JSON.parse(localStorage.getItem('yb_manual_inquiries')) || [];
     } catch(e) {}
 
+    // 💡 [전화번호 입력 시 자동 하이픈 포맷터 (이메일은 제외)]
+    function formatPhoneInput(input) {
+      let val = input.value;
+      if (val.includes('@') || /[a-zA-Z]/.test(val)) return;
+      let num = val.replace(/[^0-9]/g, '').substring(0, 11);
+      if (!num) { input.value = ''; return; }
+      
+      let res = '';
+      if (num.startsWith('02')) {
+        if (num.length <= 2) res = num;
+        else if (num.length <= 5) res = num.replace(/(\d{2})(\d+)/, '$1-$2');
+        else if (num.length <= 9) res = num.replace(/(\d{2})(\d{3})(\d+)/, '$1-$2-$3');
+        else res = num.replace(/(\d{2})(\d{4})(\d+)/, '$1-$2-$3');
+      } else if (num.startsWith('0')) {
+        if (num.length <= 3) res = num;
+        else if (num.length <= 6) res = num.replace(/(\d{3})(\d+)/, '$1-$2');
+        else if (num.length <= 10) res = num.replace(/(\d{3})(\d{3})(\d+)/, '$1-$2-$3');
+        else res = num.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+      } else if (num.length === 8) {
+        res = num.replace(/(\d{4})(\d{4})/, '$1-$2');
+      } else {
+        res = num;
+      }
+      input.value = res;
+    }
+
     async function fetchInquiries() {
       const icon = document.getElementById('refresh-icon');
       if(icon) icon.classList.add('animate-spin');
@@ -356,7 +380,6 @@
         const data = await res.json();
         const rawList = Array.isArray(data) ? data : (data.inquiries || []);
         
-        // 서버 접수 건 + 수기/전화 접수 건 통합
         const combined = [...manualInquiries, ...rawList];
         inquiries = combined.filter(item => !deletedItems.includes(item.timestamp || item.created_at || item.time));
         displayedInquiries = [...inquiries].reverse();
@@ -501,7 +524,6 @@
       const p = parseInt(document.getElementById('input-page').value)||26;
       const tp = q * p;
       
-      // 선택된 제본 형태 및 단가 가져오기
       const bindingSelect = document.getElementById('input-binding');
       const bindingText = bindingSelect.options[bindingSelect.selectedIndex].value;
       const bindingPrice = parseInt(bindingSelect.options[bindingSelect.selectedIndex].dataset.price) || 3300;
@@ -669,65 +691,74 @@
       // 💡 [저장소의 stamp.png 직접 연동 및 44x44 정비율 배치]
       const stamp = `
         <span style="position:relative; display:inline-block; vertical-align:middle;">
-          <strong style="font-weight:900; font-size:12px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
-          <img src="${STAMP_SRC}" style="position:absolute; left:28px; top:-12px; width:44px; height:44px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
+          <strong style="font-weight:900; font-size:11.5px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
+          <img src="${STAMP_SRC}" style="position:absolute; left:26px; top:-12px; width:44px; height:44px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
         </span>
       `;
 
-      // 💡 [상단 헤더 정보 박스: flex 기반 1:1 완벽 정렬로 PDF 변환 겹침 방지]
+      // 💡 [순수 100% Table 구조 - PDF 변환 시 글자 겹침 및 좌측 세로선 원천 차단]
       const headerBox = `
-        <div>
-          <div style="text-align:center; margin-bottom:16px; padding-top:4px;">
-            <h1 style="font-size:26px; font-weight:900; letter-spacing:0.8em; padding-left:12px; color:#000000; margin:0;">견 &nbsp; 적 &nbsp; 서</h1>
+        <div style="width:100%;">
+          <div style="text-align:center; margin-bottom:14px;">
+            <h1 style="font-size:26px; font-weight:900; letter-spacing:0.8em; padding-left:12px; color:#000000; margin:0; line-height:1.2;">견 &nbsp; 적 &nbsp; 서</h1>
           </div>
 
-          <div style="display:flex; gap:10px; margin-bottom:10px; font-size:11px; line-height:1.45;">
-            <!-- 좌측: 수신처 (50%) -->
-            <div style="flex:1; border:1px solid #000000; padding:10px; background:#FFFFFF; display:flex; flex-direction:column; justify-content:space-between; min-height:92px; box-sizing:border-box;">
-              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">수 &nbsp; &nbsp; 신 :</span> <span style="font-weight:900; color:#1e3a8a; font-size:12.5px;" class="truncate">${org}</span></div>
-              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">발 &nbsp; &nbsp; 신 :</span> <span style="font-weight:bold;">청년인쇄사</span></div>
-              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">일 &nbsp; &nbsp; 자 :</span> <span style="font-family:'Fira Code', monospace;">${ds}</span></div>
-              <div style="display:flex; align-items:center;"><span style="width:60px; font-weight:bold; flex-shrink:0;">제 &nbsp; &nbsp; 목 :</span> <span class="truncate">인쇄 및 제본 제작 견적의 件</span></div>
-            </div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:8px;">
+            <tr>
+              <!-- 좌측: 수신처 (49%) -->
+              <td style="width:49%; vertical-align:top; border:1px solid #000000; padding:8px 10px; background:#FFFFFF;">
+                <table style="width:100%; border-collapse:collapse; font-size:11px; line-height:1.5;">
+                  <tr><td style="width:55px; font-weight:bold;">수 &nbsp; &nbsp; 신 :</td><td style="font-weight:900; color:#1e3a8a; font-size:12px;" class="truncate">${org}</td></tr>
+                  <tr><td style="font-weight:bold;">발 &nbsp; &nbsp; 신 :</td><td style="font-weight:bold;">청년인쇄사</td></tr>
+                  <tr><td style="font-weight:bold;">일 &nbsp; &nbsp; 자 :</td><td style="font-family:'Fira Code', monospace;">${ds}</td></tr>
+                  <tr><td style="font-weight:bold;">제 &nbsp; &nbsp; 목 :</td><td class="truncate">인쇄 및 제본 제작 견적의 件</td></tr>
+                </table>
+              </td>
 
-            <!-- 우측: 공급자 정보 (50%) -->
-            <div style="flex:1; border:1px solid #000000; padding:10px; background:#FFFFFF; display:flex; flex-direction:column; justify-content:space-between; min-height:92px; box-sizing:border-box;">
-              <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:11px; border-bottom:1px solid #e2e8f0; padding-bottom:3px; margin-bottom:3px;">
-                <span>청 년 인 쇄 사</span>
-                <span style="font-family:'Fira Code', monospace;">등록번호: 119-22-03638</span>
-              </div>
-              <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.45;">
-                <tr>
-                  <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
-                  <td style="width:82px; vertical-align:middle;">청년인쇄사</td>
-                  <td style="width:48px; font-weight:bold; vertical-align:middle;">대 &nbsp; 표 :</td>
-                  <td style="vertical-align:middle;">${stamp}</td>
-                </tr>
-                <tr>
-                  <td style="font-weight:bold; vertical-align:middle;">소 재 지 :</td>
-                  <td colspan="3" style="vertical-align:middle; font-size:10px;" class="truncate">세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</td>
-                </tr>
-                <tr>
-                  <td style="font-weight:bold; vertical-align:middle;">직통전화 :</td>
-                  <td style="font-family:'Fira Code', monospace; vertical-align:middle;">044-862-4803</td>
-                  <td style="font-weight:bold; vertical-align:middle;">E-mail :</td>
-                  <td style="font-family:'Fira Code', monospace; vertical-align:middle;" class="truncate">admin@ybprint.co.kr</td>
-                </tr>
-              </table>
-            </div>
-          </div>
+              <!-- 가운데 여백 (2%) -->
+              <td style="width:2%;"></td>
+
+              <!-- 우측: 공급자 정보 (49%) -->
+              <td style="width:49%; vertical-align:top; border:1px solid #000000; padding:8px 10px; background:#FFFFFF;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:11px; border-bottom:1px solid #e2e8f0; padding-bottom:2px; margin-bottom:3px;">
+                  <span>청 년 인 쇄 사</span>
+                  <span style="font-family:'Fira Code', monospace;">등록번호: 119-22-03638</span>
+                </div>
+                <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.45;">
+                  <tr>
+                    <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
+                    <td style="width:78px; vertical-align:middle;">청년인쇄사</td>
+                    <td style="width:44px; font-weight:bold; vertical-align:middle;">대 &nbsp; 표 :</td>
+                    <td style="vertical-align:middle;">${stamp}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold; vertical-align:middle;">소 재 지 :</td>
+                    <td colspan="3" style="vertical-align:middle; font-size:9.5px;" class="truncate">세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold; vertical-align:middle;">직통전화 :</td>
+                    <td style="font-family:'Fira Code', monospace; vertical-align:middle;">044-862-4803</td>
+                    <td style="font-weight:bold; vertical-align:middle;">E-mail :</td>
+                    <td style="font-family:'Fira Code', monospace; vertical-align:middle;" class="truncate">admin@ybprint.co.kr</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
 
           <!-- 합계금액 바 -->
-          <div style="border:1px solid #000000; background:#f1f5f9; padding:6px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-weight:bold; font-size:11.5px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span>합계금액 :</span>
-              <span style="font-weight:900; color:#000000; font-size:13px;">일금 ${numToKor(total)} 정</span>
-              <span style="font-size:10.5px; font-weight:bold; color:#1e3a8a; background:#FFFFFF; border:1px solid #93c5fd; padding:1px 8px; border-radius:4px; font-family:'Fira Code', monospace;">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
-            </div>
-            <div style="font-family:'Fira Code', monospace; font-size:13px; font-weight:900;">
-              ( ₩ <span>${total.toLocaleString()}</span> )
-            </div>
-          </div>
+          <table style="width:100%; border-collapse:collapse; border:1px solid #000000; background:#f1f5f9; margin-bottom:8px;">
+            <tr>
+              <td style="padding:6px 12px; font-weight:bold; font-size:11.5px; vertical-align:middle;">
+                <span>합계금액 :</span>
+                <span style="font-weight:900; color:#000000; font-size:12.5px; margin-left:6px;">일금 ${numToKor(total)} 정</span>
+                <span style="font-size:10.5px; font-weight:bold; color:#1e3a8a; background:#FFFFFF; border:1px solid #93c5fd; padding:1px 8px; border-radius:4px; font-family:'Fira Code', monospace; margin-left:8px;">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
+              </td>
+              <td style="padding:6px 12px; text-align:right; font-family:'Fira Code', monospace; font-size:13px; font-weight:900; vertical-align:middle;">
+                ( ₩ <span>${total.toLocaleString()}</span> )
+              </td>
+            </tr>
+          </table>
         </div>
       `;
 
@@ -892,7 +923,7 @@
                   <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
                   <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
                   <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9px] border border-black">${ctpRows[1].rem}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[1].rem}</td>
                 </tr>
                 <tr>
                   <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">인쇄</td>
