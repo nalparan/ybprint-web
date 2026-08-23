@@ -363,7 +363,7 @@
     let currentQuoteStep = 1;
 
     // 청년인쇄사 실제 인감 직인 Base64
-    const STAMP_BASE64 = "data:image/png;base64,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";
+    const STAMP_BASE64 = "data:image/png;base64,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";
 
     const PRICE = { bw: 50, cover: 1700, coat: 2200, bind: 3300 };
 
@@ -732,92 +732,67 @@
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
 
-      // 💡 [검증된 원본 직인 렌더링 + 정밀 수직 정렬 테이블]
+      // 💡 [검증된 실물 직인 원본 레이어 복원]
+      const stamp = `
+        <span style="position:relative; display:inline-block; vertical-align:middle; margin-left:4px;">
+          <strong style="font-weight:900; font-size:12px; letter-spacing:1.5px;">임 형 택</strong>
+          <img src="${STAMP_BASE64}" style="position:absolute; left:28px; top:-12px; width:48px; height:48px; max-width:none; object-fit:contain; pointer-events:none; z-index:50;" alt="청년인쇄사 직인">
+        </span>
+      `;
+
+      // 💡 [2단 플렉스 박스 & 세로선 1:1 완벽 일치 레이아웃]
       const headerBox = `
-        <div style="text-align: center; margin-bottom: 16px; padding-top: 2px;">
+        <div style="text-align: center; margin-bottom: 18px; padding-top: 2px;">
           <span style="font-size: 28px; font-weight: 900; letter-spacing: 0.8em; padding-left: 0.8em; color: #000000; display: inline-block;">견적서</span>
         </div>
 
-        <table style="width: 100%; border-collapse: separate; border-spacing: 8px 0; margin-left: -4px; width: calc(100% + 8px); margin-bottom: 8px;">
-          <tr>
-            <!-- 좌측: 수신처 박스 -->
-            <td style="width: 44%; border: 1.5px solid #000000; padding: 8px 10px; vertical-align: top; background-color: #ffffff;">
-              <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; line-height: 1.75;">
-                <tr>
-                  <td style="width: 48px; font-weight: bold; white-space: nowrap;">수&nbsp;&nbsp;&nbsp;&nbsp;신 :</td>
-                  <td style="font-weight: 900; color: #1e3a8a; font-size: 12.5px; white-space: nowrap;">${org}</td>
-                </tr>
-                <tr>
-                  <td style="width: 48px; font-weight: bold; white-space: nowrap;">발&nbsp;&nbsp;&nbsp;&nbsp;신 :</td>
-                  <td style="font-weight: bold; white-space: nowrap;">청년인쇄사</td>
-                </tr>
-                <tr>
-                  <td style="width: 48px; font-weight: bold; white-space: nowrap;">일&nbsp;&nbsp;&nbsp;&nbsp;자 :</td>
-                  <td style="font-family: 'Fira Code', monospace; white-space: nowrap;">${ds}</td>
-                </tr>
-                <tr>
-                  <td style="width: 48px; font-weight: bold; white-space: nowrap;">제&nbsp;&nbsp;&nbsp;&nbsp;목 :</td>
-                  <td style="white-space: nowrap;">인쇄 및 제본 제작 견적의 件</td>
-                </tr>
-              </table>
-            </td>
+        <div class="grid grid-cols-[4.2fr_5.8fr] gap-3 mb-2.5 text-[11px] leading-relaxed">
+          <!-- 좌측: 수신 고객 정보 -->
+          <div class="border border-black p-2.5 bg-white flex flex-col justify-between" style="height: 104px;">
+            <div style="white-space: nowrap;"><span style="display:inline-block; width:54px; font-weight:bold;">수 &nbsp; &nbsp; 신 :</span> <span class="font-black text-blue-950 text-[13px]">${org}</span></div>
+            <div style="white-space: nowrap;"><span style="display:inline-block; width:54px; font-weight:bold;">발 &nbsp; &nbsp; 신 :</span> <span class="font-bold">청년인쇄사</span></div>
+            <div style="white-space: nowrap;"><span style="display:inline-block; width:54px; font-weight:bold;">일 &nbsp; &nbsp; 자 :</span> <span class="font-mono-code">${ds}</span></div>
+            <div style="white-space: nowrap;"><span style="display:inline-block; width:54px; font-weight:bold;">제 &nbsp; &nbsp; 목 :</span> <span>인쇄 및 제본 제작 견적의 件</span></div>
+          </div>
 
-            <!-- 우측: 공급자 박스 (대표/이메일 세로선 1:1 일치 및 검증된 실물 직인 레이어) -->
-            <td style="width: 56%; border: 1.5px solid #000000; padding: 8px 10px; vertical-align: top; background-color: #ffffff; overflow: visible;">
-              <table style="width: 100%; border-collapse: collapse; font-size: 10px; line-height: 1.65;">
-                <tr>
-                  <td colspan="2" style="border-bottom: 1px solid #000000; padding-bottom: 3px;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                      <tr>
-                        <td style="font-weight: 900; font-size: 11px; letter-spacing: 2px; white-space: nowrap;">청 년 인 쇄 사</td>
-                        <td style="text-align: right; font-family: 'Fira Code', monospace; font-size: 10px; font-weight: bold; white-space: nowrap;">등록번호 : 119-22-03638</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="width: 46%; padding-top: 4px; vertical-align: middle; white-space: nowrap;">
-                    <span style="font-weight: bold;">상&nbsp;&nbsp;&nbsp;&nbsp;호 :</span> 청년인쇄사
-                  </td>
-                  <td style="width: 54%; padding-top: 4px; vertical-align: middle; white-space: nowrap; position: relative;">
-                    <span style="font-weight: bold;">대&nbsp;&nbsp;&nbsp;&nbsp;표 :</span>
-                    <span style="position: relative; display: inline-block; vertical-align: middle; margin-left: 2px;">
-                      <strong style="font-weight: 900; font-size: 11.5px; letter-spacing: 2px;">임 형 택</strong>
-                      <img src="${STAMP_BASE64}" style="position: absolute; left: 24px; top: -12px; width: 44px; height: 44px; min-width: 44px; min-height: 44px; object-fit: contain; pointer-events: none; z-index: 50; display: block;" alt="청년인쇄사 직인">
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="padding-top: 2px; white-space: nowrap; font-size: 9.5px; letter-spacing: -0.02em;">
-                    <span style="font-weight: bold;">소 재 지 :</span> 세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)
-                  </td>
-                </tr>
-                <tr>
-                  <td style="width: 46%; padding-top: 2px; vertical-align: middle; white-space: nowrap;">
-                    <span style="font-weight: bold;">직통전화 :</span> <span style="font-family: 'Fira Code', monospace; font-size: 9.5px;">044-862-4803</span>
-                  </td>
-                  <td style="width: 54%; padding-top: 2px; vertical-align: middle; white-space: nowrap;">
-                    <span style="font-weight: bold;">E-mail :</span> <span style="font-family: 'Fira Code', monospace; font-size: 9.5px;">admin@ybprint.co.kr</span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+          <!-- 우측: 공급자 정보 (대표/이메일 세로선 1:1 칼정렬 및 도장 날인) -->
+          <div class="border border-black p-2.5 bg-white text-[10.5px] relative flex flex-col justify-between" style="height: 104px; overflow: visible;">
+            <div class="flex justify-between font-bold text-xs border-b border-black pb-1 mb-0.5">
+              <span style="letter-spacing: 2px; font-weight: 900;">청 년 인 쇄 사</span>
+              <span class="font-mono-code" style="font-size: 10px; font-weight: bold;">등록번호: 119-22-03638</span>
+            </div>
+            
+            <div class="flex items-center" style="white-space: nowrap;">
+              <span style="display:inline-block; width:65px; font-weight:bold;">상 &nbsp; &nbsp; 호 :</span> 
+              <span style="display:inline-block; width:100px;">청년인쇄사</span> 
+              <span style="font-weight:bold; margin-left:10px;">대 &nbsp; &nbsp; 표 :</span> 
+              ${stamp}
+            </div>
 
-        <!-- 합계금액 띠 -->
-        <table style="width: 100%; border: 1.5px solid #000000; border-collapse: collapse; background-color: #f1f5f9; margin-bottom: 8px;">
-          <tr>
-            <td style="padding: 5px 10px; font-size: 11.5px; font-weight: bold; vertical-align: middle; white-space: nowrap;">
-              <span>합계금액 :</span>
-              <span style="font-weight: 900; font-size: 13px; margin: 0 6px;">일금 ${numToKor(total)} 정</span>
-              <span style="font-size: 10.5px; font-weight: bold; color: #1e3a8a; background-color: #ffffff; border: 1px solid #93c5fd; padding: 2px 6px; border-radius: 4px; font-family: 'Fira Code', monospace;">[ 1부당 제작단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
-            </td>
-            <td style="text-align: right; padding: 5px 10px; font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 900; vertical-align: middle; white-space: nowrap;">
-              ( ₩ ${total.toLocaleString()} )
-            </td>
-          </tr>
-        </table>
+            <div class="flex items-center" style="white-space: nowrap; font-size: 10px; letter-spacing: -0.02em;">
+              <span style="display:inline-block; width:65px; font-weight:bold;">소 재 지 :</span> 
+              <span>세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</span>
+            </div>
+
+            <div class="flex items-center" style="white-space: nowrap;">
+              <span style="display:inline-block; width:65px; font-weight:bold;">직통전화 :</span> 
+              <span class="font-mono-code" style="display:inline-block; width:100px; font-size: 10px;">044-862-4803</span> 
+              <span style="font-weight:bold; margin-left:10px;">E-mail :</span> 
+              <span class="font-mono-code" style="margin-left:4px; font-size: 10px;">admin@ybprint.co.kr</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-black bg-slate-100 px-4 py-2.5 flex justify-between items-center mb-2.5 font-bold text-xs">
+          <div class="flex items-center gap-3">
+            <span>합계금액 :</span>
+            <span class="font-black text-black text-sm">일금 ${numToKor(total)} 정</span>
+            <span class="text-[11px] font-bold text-blue-900 bg-white border border-blue-400 shadow-xs px-2.5 py-0.5 rounded-md font-mono-code">[ 1부당 제작단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
+          </div>
+          <div class="font-mono-code text-sm font-black">
+            ( ₩ <span>${total.toLocaleString()}</span> )
+          </div>
+        </div>
       `;
 
       let tableHTML = '';
@@ -1053,21 +1028,11 @@
       }
     }
 
-    // A4 정규 규격 캡처 엔진 (도장 이미지 완전 로딩 보증)
+    // A4 정규 규격 캡처 엔진
     async function getJpgBlob() {
       const el = document.getElementById('quote-printable-area');
       const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_');
       const fileName = `청년인쇄사_견적서_${org}.jpg`;
-
-      // 💡 도장 이미지가 브라우저에 100% 로드될 때까지 대기
-      const imgs = el.querySelectorAll('img');
-      await Promise.all(Array.from(imgs).map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        });
-      }));
 
       const canvas = await html2canvas(el, {
         scale: 2.2,
