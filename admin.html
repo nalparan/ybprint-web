@@ -732,34 +732,36 @@
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
 
+      // 💡 [수정] 도장 위치 영점 조절 (이름 위로 정확히 안착)
       const stamp = `
-        <span style="position:relative; display:inline-block; vertical-align:middle; margin-left:6px;">
+        <span style="position:relative; display:inline-block; vertical-align:middle; margin-left:4px;">
           <strong style="font-weight:900; font-size:12.5px; letter-spacing:1.5px;">임 형 택</strong>
-          <img src="${STAMP_BASE64}" style="position:absolute; left:28px; top:-12px; width:48px; height:48px; max-width:none; object-fit:contain; mix-blend-mode:multiply; pointer-events:none; z-index:20;" alt="청년인쇄사 직인">
+          <img src="${STAMP_BASE64}" style="position:absolute; right:-22px; top:-16px; width:48px; height:48px; max-width:none; object-fit:contain; mix-blend-mode:multiply; pointer-events:none; z-index:20;" alt="청년인쇄사 직인">
         </span>
       `;
 
+      // 💡 [수정] 우측 박스 여유 공간 확보 (grid 비율 4.5:5.5 변경 및 패딩 최적화)
       const headerBox = `
-        <div class="text-center mb-6 pt-1">
+        <div class="text-center mb-5 pt-1">
           <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-2.5 text-[11px] leading-relaxed">
-          <div class="border border-black p-3 bg-white space-y-1">
+        <div class="grid grid-cols-[4.5fr_5.5fr] gap-3 mb-2.5 text-[11px] leading-relaxed">
+          <div class="border border-black p-2.5 bg-white space-y-1">
             <div class="flex"><span class="w-16 font-bold">수 &nbsp; &nbsp; 신 :</span> <span class="font-black text-blue-950 text-sm">${org}</span></div>
             <div class="flex"><span class="w-16 font-bold">발 &nbsp; &nbsp; 신 :</span> <span class="font-bold">청년인쇄사</span></div>
             <div class="flex"><span class="w-16 font-bold">일 &nbsp; &nbsp; 자 :</span> <span class="font-mono-code">${ds}</span></div>
             <div class="flex"><span class="w-16 font-bold">제 &nbsp; &nbsp; 목 :</span> <span>인쇄 및 제본 제작 견적의 件</span></div>
           </div>
 
-          <div class="border border-black p-3 bg-white text-[10.5px] relative space-y-1" style="overflow: visible;">
+          <div class="border border-black p-2.5 bg-white text-[10px] relative space-y-1" style="overflow: visible;">
             <div class="flex justify-between font-bold text-xs border-b border-gray-300 pb-1 mb-0.5">
               <span>청 년 인 쇄 사</span>
-              <span class="font-mono-code">등록번호: 119-22-03638</span>
+              <span class="font-mono-code text-[11px]">등록번호: 119-22-03638</span>
             </div>
-            <div class="flex items-center"><span class="w-16 font-bold">상 &nbsp; &nbsp; 호 :</span> <span>청년인쇄사 &nbsp;|&nbsp; <strong>대 표 :</strong> ${stamp}</span></div>
-            <div class="flex"><span class="w-16 font-bold">소 재 지 :</span> <span>세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</span></div>
-            <div class="flex"><span class="w-16 font-bold">직통전화 :</span> <span class="font-mono-code">044-862-4803 &nbsp;|&nbsp; <strong>E-mail :</strong> admin@ybprint.co.kr</span></div>
+            <div class="flex items-center"><span class="w-14 font-bold">상 &nbsp; &nbsp; 호 :</span> <span>청년인쇄사 &nbsp;|&nbsp; <strong>대 표 :</strong> ${stamp}</span></div>
+            <div class="flex"><span class="w-14 font-bold">소 재 지 :</span> <span>세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</span></div>
+            <div class="flex"><span class="w-14 font-bold">직통전화 :</span> <span class="font-mono-code">044-862-4803 &nbsp;|&nbsp; <strong>E-mail :</strong> admin@ybprint.co.kr</span></div>
           </div>
         </div>
 
@@ -1117,11 +1119,9 @@
     }
 
     async function sendEmail() {
-      // 💡 [수정됨] 발송 전 이메일 주소를 입력/확인받는 프롬프트 띄우기
       const defaultEmail = /[a-zA-Z@]/.test(document.getElementById('input-phone').value) ? document.getElementById('input-phone').value : '';
       const toEmail = prompt("고객에게 견적서를 발송할 이메일 주소를 입력해주세요.", defaultEmail);
       
-      // 💡 취소를 누르거나 아무것도 입력하지 않았을 경우 발송 중단
       if (!toEmail || toEmail.trim() === '') {
         return; 
       }
