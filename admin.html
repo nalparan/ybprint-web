@@ -180,7 +180,7 @@
     </div>
   </main>
 
-  <!-- 견적 발송 메인 모달 (2단계 슬림 개편) -->
+  <!-- 견적 발송 메인 모달 (2단계 슬림 개편 + 제본 동기화) -->
   <div id="quote-modal" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-5xl rounded-3xl flex flex-col shadow-2xl h-[94vh] sm:h-[90vh] overflow-hidden">
       
@@ -210,20 +210,31 @@
         
         <!-- STEP 1: 세부 작성 및 수기 입력 화면 -->
         <div id="quote-step-1-content" class="space-y-4" style="display: block;">
-          <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-            <div class="sm:col-span-2 bg-white p-3.5 rounded-xl border">
+          
+          <!-- 💡 제본형태 추가 및 6열 구조 개편 -->
+          <div class="grid grid-cols-1 lg:grid-cols-6 gap-3">
+            <div class="lg:col-span-2 bg-white p-3.5 rounded-xl border">
               <label class="text-xs font-bold text-gray-500 block mb-1">수신 고객 / 기관명 (직접 수정 가능)</label>
               <input type="text" id="input-org" placeholder="예: 영신여고 / 대덕연구원 김팀장" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
             </div>
-            <div class="sm:col-span-1 bg-white p-3.5 rounded-xl border">
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
               <label class="text-xs font-bold text-gray-500 block mb-1">연락처 / 이메일</label>
               <input type="text" id="input-phone" placeholder="010-0000-0000 또는 메일" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
             </div>
-            <div class="bg-white p-3.5 rounded-xl border">
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border border-blue-100">
+              <label class="text-xs font-bold text-blue-800 block mb-1">제본 형태 선택</label>
+              <select id="input-binding" class="w-full text-sm font-bold border rounded-lg px-2 py-2 bg-blue-50 text-blue-700 focus:outline-none" onchange="onTemplateChange()">
+                <option value="무선제본" data-price="3300">무선제본 (책자)</option>
+                <option value="중철제본" data-price="1500">중철제본 (스템플러)</option>
+                <option value="스프링제본" data-price="3000">스프링제본 (트윈링)</option>
+                <option value="양장제본" data-price="15000">양장제본 (하드커버)</option>
+              </select>
+            </div>
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
               <label class="text-xs font-bold text-gray-500 block mb-1">제작 부수 (부)</label>
               <input type="number" id="input-qty" min="1" value="100" class="w-full text-sm font-bold border rounded-lg px-3 py-2 font-mono-code focus:border-blue-500 focus:outline-none" oninput="onTemplateChange()">
             </div>
-            <div class="bg-white p-3.5 rounded-xl border">
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
               <label class="text-xs font-bold text-gray-500 block mb-1">원고 페이지 (p)</label>
               <input type="number" id="input-page" min="1" value="26" class="w-full text-sm font-bold border rounded-lg px-3 py-2 font-mono-code focus:border-blue-500 focus:outline-none" oninput="onTemplateChange()">
             </div>
@@ -330,7 +341,7 @@
     // 💡 [저장소에 업로드된 실물 직인 파일 경로 직접 연결]
     const STAMP_SRC = "/stamp.png";
 
-    const PRICE = { bw: 50, cover: 1700, coat: 2200, bind: 3300 };
+    const PRICE = { bw: 50, cover: 1700, coat: 2200 };
 
     try {
       deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items')) || [];
@@ -429,6 +440,7 @@
       document.getElementById('input-phone').dataset.isManual = 'true';
       document.getElementById('input-qty').value = 100;
       document.getElementById('input-page').value = 26;
+      document.getElementById('input-binding').value = '무선제본';
       document.getElementById('input-template').value = '디지탈 일반';
       onTemplateChange();
       goToStep(1);
@@ -442,10 +454,12 @@
       document.getElementById('input-phone').dataset.isManual = 'false';
       document.getElementById('input-qty').value = qty;
       document.getElementById('input-page').value = page;
+      document.getElementById('input-binding').value = '무선제본';
       onTemplateChange();
       goToStep(1);
       document.getElementById('quote-modal').classList.remove('hidden');
     }
+    
     function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
 
     // 전화/수기 작성 건 저장 함수
@@ -456,6 +470,7 @@
         const phone = document.getElementById('input-phone').value || '-';
         const qty = document.getElementById('input-qty').value;
         const page = document.getElementById('input-page').value;
+        const binding = document.getElementById('input-binding').value;
         const tmpl = document.getElementById('input-template').value;
         const total = document.getElementById('val-total').innerText;
 
@@ -467,7 +482,7 @@
           timestamp: timeStr,
           org: org,
           phone: phone,
-          spec: `${tmpl} / ${qty}부 / ${page}p`,
+          spec: `${tmpl} / ${qty}부 / ${page}p / ${binding}`,
           inquiry: `[전화 견적] 총 ${total} (VAT 포함)`,
           file_name: '전화 접수',
           is_manual: true
@@ -480,11 +495,18 @@
       }
     }
 
+    // 💡 [동기화 핵심] 서식 또는 제본 형태 변경 시 테이블 갱신
     function onTemplateChange() {
       const tmpl = document.getElementById('input-template').value;
       const q = parseInt(document.getElementById('input-qty').value)||100;
       const p = parseInt(document.getElementById('input-page').value)||26;
       const tp = q * p;
+      
+      // 선택된 제본 형태 및 단가 가져오기
+      const bindingSelect = document.getElementById('input-binding');
+      const bindingText = bindingSelect.options[bindingSelect.selectedIndex].value;
+      const bindingPrice = parseInt(bindingSelect.options[bindingSelect.selectedIndex].dataset.price) || 3300;
+
       document.getElementById('quote-tbody').innerHTML = '';
 
       if (tmpl === '디지탈 일반') {
@@ -494,15 +516,15 @@
         addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
         addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
         addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
-        addRow('제작', '제본', '무선 책제본', q, PRICE.bind, '무선 책제본');
+        addRow('제작', '제본', bindingText, q, bindingPrice, bindingText); // 제본 동기화
         addRow('제작', '', '', '', '', '');
 
         addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
       } 
       else if (tmpl === '디지탈 상세') {
-        const coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
-        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
+        const coverAndBind = PRICE.cover + PRICE.coat + bindingPrice; // 제본 단가 동기화 반영
+        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), `표지칼라/본문흑백/${bindingText}`);
         addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
         
         for (let i = 3; i <= 20; i++) {
@@ -521,7 +543,7 @@
         addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
 
         addRow('기타', '코팅', '표지 단면 무광코팅', q, PRICE.coat, '표지 단면무광');
-        addRow('기타', '제본', '옵셋 무선 책제본', q, PRICE.bind, '옵셋 책제본');
+        addRow('기타', '제본', `옵셋 ${bindingText}`, q, bindingPrice, `옵셋 ${bindingText}`); // 제본 동기화
         addRow('기타', '관리비', '일반관리비 (12% 지대제외)', 1, 0, '재료비제외 12% 자동산출');
         addRow('기타', '배송', '납품 배송 (안전 직배송)', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', '');
@@ -638,6 +660,9 @@
       const tmpl = document.getElementById('input-template').value;
       const q = parseInt(document.getElementById('input-qty').value) || 100;
       const p = document.getElementById('input-page').value;
+      const bindingSelect = document.getElementById('input-binding');
+      const bindingText = bindingSelect ? bindingSelect.value : '무선제본';
+      
       const dt = new Date();
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
@@ -719,7 +744,7 @@
           <div class="flex-1 flex flex-col justify-start">
             <table class="excel-table text-center mb-2">
               <thead><tr><th>품명</th><th class="w-20">규격</th><th class="w-16">수량</th><th class="w-16">면수</th><th>사양</th></tr></thead>
-              <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / 무선제본</td></tr></tbody>
+              <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / ${bindingText}</td></tr></tbody>
             </table>
             <table class="excel-table text-left">
               <thead><tr><th class="w-28 text-center">항목</th><th>산출내역 및 사양</th><th class="w-28 text-right">금액(원)</th><th class="w-36 text-center">비고</th></tr></thead>
