@@ -80,7 +80,7 @@
         <span class="text-xs font-mono-code font-bold text-[#4E5968]" id="server-status-label">Render Live</span>
       </div>
       
-      <!-- 메인 홈 이동 버튼 (←) -->
+      <!-- 메인 홈 이동 버튼 -->
       <a href="/" class="flex items-center justify-center w-10 h-10 bg-white hover:bg-[#F2F4F6] rounded-xl border border-[#E5E8EB] transition-all cursor-pointer shadow-xs" title="메인 홈페이지로 이동">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="m12 19-7-7 7-7"/>
@@ -256,7 +256,7 @@
           </div>
         </div>
 
-        <!-- STEP 2: 정식 엑셀 원본 1:1 서식 뷰 (A4 정규 규격 중앙 배치) -->
+        <!-- STEP 2: 정식 A4 1:1 서식 뷰 -->
         <div id="quote-step-2-content" style="display: none;">
           <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 mb-4 text-xs text-blue-800 font-medium flex items-center justify-between">
             <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>A4 정규 서식 및 1:1 수직 정렬 규격이 적용되었습니다.</span>
@@ -264,7 +264,7 @@
           </div>
           <div class="quote-paper-wrapper">
             <div id="quote-printable-area" class="quote-paper">
-              <!-- 엑셀 원본 1:1 서식 렌더링 영역 -->
+              <!-- 견적서 본문 렌더링 영역 -->
             </div>
           </div>
         </div>
@@ -313,16 +313,6 @@
     const API_URL = "https://ybprint-backend-1.onrender.com/inquiries";
     let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [];
     let currentQuoteStep = 1;
-
-    // 💡 [청년인쇄사 실제 인감 직인 원본 Base64 - 무수정]
-    const STAMP_BASE64 = "data:image/png;base64,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";
-
-    const PRICE = { bw: 50, cover: 1700, coat: 2200, bind: 3300 };
-
-    try {
-      deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items')) || [];
-      completedItems = JSON.parse(localStorage.getItem('yb_completed_items')) || [];
-    } catch(e) {}
 
     async function fetchInquiries() {
       const icon = document.getElementById('refresh-icon');
@@ -415,18 +405,18 @@
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
-        addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
-        addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
-        addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
-        addRow('제작', '제본', '무선 책제본', q, PRICE.bind, '무선 책제본');
+        addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, 1700, '표지/단면/스노우250g');
+        addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, 50, `${p}p x ${q}부/모조80g`);
+        addRow('제작', '코팅', '표지 단면 무광', q, 2200, '표지 단면무광');
+        addRow('제작', '제본', '무선 책제본', q, 3300, '무선 책제본');
         addRow('제작', '', '', '', '', '');
 
         addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
       } 
       else if (tmpl === '디지탈상세') {
-        const coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
-        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
+        const coverAndBind = 1700 + 2200 + 3300;
+        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x 50원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*50)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
         addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
         
         for (let i = 3; i <= 20; i++) {
@@ -444,8 +434,8 @@
         addRow('제작', '인쇄', '표지 본인쇄 (옵셋 4도 컬러)', 4, 18000, '옵셋 본인쇄');
         addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
 
-        addRow('기타', '코팅', '표지 단면 무광코팅', q, PRICE.coat, '표지 단면무광');
-        addRow('기타', '제본', '옵셋 무선 책제본', q, PRICE.bind, '옵셋 책제본');
+        addRow('기타', '코팅', '표지 단면 무광코팅', q, 2200, '표지 단면무광');
+        addRow('기타', '제본', '옵셋 무선 책제본', q, 3300, '옵셋 책제본');
         addRow('기타', '관리비', '일반관리비 (12% 지대제외)', 1, 0, '재료비제외 12% 자동산출');
         addRow('기타', '배송', '납품 배송 (안전 직배송)', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', '');
@@ -566,15 +556,24 @@
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
 
-      // 💡 [실제 청년인쇄사 대표직인 원본 HTML]
+      // 💡 [절대 깨지지 않는 100% 선명한 인라인 벡터 정식 직인]
       const stamp = `
         <span style="position:relative; display:inline-block; vertical-align:middle; margin-left:4px;">
           <strong style="font-weight:900; font-size:12.5px; letter-spacing:1.5px;">임 형 택</strong>
-          <img src="${STAMP_BASE64}" style="position:absolute; left:32px; top:-11px; width:44px; height:44px; min-width:44px; min-height:44px; object-fit:contain; mix-blend-mode:multiply; pointer-events:none;" alt="청년인쇄사 직인">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="position:absolute; left:20px; top:-12px; width:46px; height:46px; pointer-events:none; z-index:30;">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="#cf2222" stroke-width="4.5" opacity="0.88"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#cf2222" stroke-width="1.8" opacity="0.88"/>
+            <g fill="#cf2222" font-family="'Batang', 'Malgun Gothic', 'Noto Serif KR', serif" font-weight="900" font-size="25" text-anchor="middle" opacity="0.92">
+              <text x="33" y="42">청</text>
+              <text x="67" y="42">년</text>
+              <text x="33" y="75">인</text>
+              <text x="67" y="75">쇄</text>
+            </g>
+          </svg>
         </span>
       `;
 
-      // 💡 [① 언더바 제거 제목 + ② 대표/이메일 1:1 수직 정렬 공급자 박스]
+      // 💡 [① 언더바 제거 제목 + ② 대표/이메일 135px 1:1 수직 칼정렬]
       const headerBox = `
         <div class="text-center mb-5 pt-1">
           <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
@@ -817,8 +816,7 @@
 
       const footerNotice = `
         <div class="mt-4 text-[10px] text-gray-600 space-y-0.5 leading-tight">
-          <p>※ 본 견적서는 세종특별자치시 관공서 및 국책연구원 행정 정산 규격에 맞추어 발행되었습니다.</p>
-          <p>※ 법인카드 현장/온라인 결제 및 세금계산서 후불 정산이 가능하며, 필수 4대 서류(사업자등록증, 통장사본 등)가 동봉됩니다.</p>
+          <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
         </div>
       `;
 
