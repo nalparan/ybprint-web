@@ -65,7 +65,7 @@
         <span class="text-xs font-mono-code font-bold text-[#4E5968]" id="server-status-label">Render Live</span>
       </div>
       
-      <!-- 메인 홈 이동 버튼 (←) -->
+      <!-- 메인 홈 이동 버튼 -->
       <a href="/" class="flex items-center justify-center w-10 h-10 bg-white hover:bg-[#F2F4F6] rounded-xl border border-[#E5E8EB] transition-all cursor-pointer shadow-xs" title="메인 홈페이지로 이동">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="m12 19-7-7 7-7"/>
@@ -151,7 +151,7 @@
     </div>
   </main>
 
-  <!-- 💡 [복원] 문의 및 요청사항 상세내역 전용 팝업 모달 -->
+  <!-- 문의 및 요청사항 상세내역 전용 팝업 모달 -->
   <div id="detail-modal" class="fixed inset-0 z-[70] hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
       <div class="p-5 border-b flex justify-between items-center bg-gray-50">
@@ -159,7 +159,7 @@
           <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
           <span>접수 상세 내역</span>
         </h3>
-        <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex justify-center items-center text-gray-500">✕</button>
+        <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex justify-center items-center text-gray-500 font-bold">✕</button>
       </div>
       
       <div class="p-6 overflow-y-auto space-y-4 text-sm text-gray-700">
@@ -202,9 +202,9 @@
       <div class="p-5 border-b flex justify-between items-center shrink-0">
         <div>
           <h3 class="font-extrabold text-lg flex items-center gap-2"><i data-lucide="calculator" class="w-5 h-5 text-[#3182F6]"></i>청년인쇄사 공식 견적서 엔진</h3>
-          <p class="text-[#8B95A1] text-xs mt-1">디지털일반·디지탈상세·옵셋일반 3종 실무 규격 공식 견적서</p>
+          <p class="text-[#8B95A1] text-xs mt-1">디지탈 일반·디지탈 상세·옵셋 일반 3종 실무 규격 공식 견적서</p>
         </div>
-        <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex justify-center items-center">✕</button>
+        <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex justify-center items-center font-bold">✕</button>
       </div>
 
       <!-- 상단 단계 탭 -->
@@ -244,18 +244,18 @@
             <div class="bg-white p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/30">
               <label class="text-xs font-bold text-indigo-800 block mb-1">제본 방식 선택</label>
               <select id="input-binding" class="w-full text-sm font-bold border rounded-lg px-2.5 py-1.5 text-indigo-700 bg-white focus:outline-none" onchange="onTemplateChange()">
-                <option value="perfect">📕 무선제본 (스노우250g+코팅+제본 7,200원)</option>
-                <option value="wire31">🌀 와이어 3:1 제본 (PP커버포함 3,300원)</option>
-                <option value="wire21">🌀 와이어 2:1 제본 (두꺼운책/PP포함 4,400원)</option>
-                <option value="saddle">📑 중철제본 (펼침표지+스테이플 3,200원)</option>
+                <option value="perfect">무선제본 (스노우250g+코팅+제본 7,200원)</option>
+                <option value="wire31">와이어 3:1 제본 (PP커버포함 3,300원)</option>
+                <option value="wire21">와이어 2:1 제본 (두꺼운책/PP포함 4,400원)</option>
+                <option value="saddle">중철제본 (펼침표지+스테이플 3,200원)</option>
               </select>
             </div>
             <div class="bg-white p-3.5 rounded-xl border border-blue-200 bg-blue-50/30">
               <label class="text-xs font-bold text-blue-800 block mb-1">견적서 서식 선택</label>
               <select id="input-template" class="w-full text-sm font-bold border rounded-lg px-2.5 py-1.5 text-blue-700 bg-white focus:outline-none" onchange="onTemplateChange()">
-                <option value="디지털일반">📄 디지털일반 (표준 4대공정형)</option>
-                <option value="디지탈상세">🏛️ 디지탈상세 (20행 산출식형)</option>
-                <option value="옵셋일반">🖨️ 옵셋일반 (충무로 옵셋 실무형)</option>
+                <option value="디지탈 일반">디지탈 일반</option>
+                <option value="디지탈 상세">디지탈 상세</option>
+                <option value="옵셋 일반">옵셋 일반</option>
               </select>
             </div>
           </div>
@@ -347,7 +347,7 @@
     let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [];
     let currentQuoteStep = 1;
 
-    // 💡 청년인쇄사 실제 인감 직인 Base64 (우측 90도 회전 정립)
+    // 청년인쇄사 실제 인감 직인 Base64 (우측 90도 회전 정립)
     const STAMP_BASE64 = "data:image/png;base64,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";
 
     const PRICE = { bw: 50, cover: 1700, coat: 2200, bind: 3300 };
@@ -401,7 +401,7 @@
 
         let rawSpec = item.spec || '-';
         if (/338|190|16:9|와이드/i.test(rawSpec)) {
-          rawSpec = `${rawSpec} ➔ A4 가로(297×210) 권장`;
+          rawSpec = `${rawSpec} (A4 가로 297*210 권장)`;
         }
 
         return `
@@ -422,7 +422,7 @@
                 <button onclick="openQuoteModal('${encodeURIComponent(org)}','${encodeURIComponent(phone)}',${q},${p},'${time}','${encodeURIComponent(text)}','${encodeURIComponent(rawSpec)}')" class="w-full py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow hover:bg-blue-700 transition-all">견적작성</button>
                 <div class="flex gap-1">
                   <button onclick="toggleComp('${time}')" class="flex-1 py-1 bg-gray-100 rounded text-[10px] font-bold ${isComp?'text-green-600 bg-green-50 border border-green-200':''}">${isComp?'완료':'대기'}</button>
-                  <button onclick="deleteItem('${time}')" class="px-2 bg-red-50 text-red-500 rounded border border-red-100 hover:bg-red-100"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                  <button onclick="deleteItem('${time}')" class="px-2 bg-red-50 text-red-500 rounded border border-red-100 hover:bg-red-100 font-bold"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                 </div>
               </div>
             </td>
@@ -432,7 +432,7 @@
       lucide.createIcons();
     }
 
-    // 💡 [상세보기 모달 열기/닫기]
+    // 문의 및 요청사항 상세 팝업
     function openDetailModal(index) {
       const item = displayedInquiries[index];
       if (!item) return;
@@ -444,7 +444,7 @@
       const files = item.file_name && item.file_name !== "첨부파일 없음" ? item.file_name.split(',') : [];
       let rawSpec = item.spec || '-';
       if (/338|190|16:9|와이드/i.test(rawSpec)) {
-        rawSpec = `${rawSpec} ➔ A4 가로(297×210mm) 비율 맞춤 출력 권장`;
+        rawSpec = `${rawSpec} (A4 가로 297*210 권장)`;
       }
 
       let pMatch = text.match(/(\d+)\s*p/i) || rawSpec.match(/(\d+)\s*p/i);
@@ -482,9 +482,8 @@
     }
 
     function toggleComp(t){ completedItems.includes(t) ? completedItems=completedItems.filter(x=>x!==t) : completedItems.push(t); localStorage.setItem('yb_completed_items', JSON.stringify(completedItems)); renderTable(); }
-    function deleteItem(t){ if(confirm("삭제하시겠습니까?")){ deletedItems.push(t); localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); fetchInquiries(); } }
+    function deleteItem(t){ if(confirm("해당 접수 내역을 삭제하시겠습니까?")){ deletedItems.push(t); localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); fetchInquiries(); } }
 
-    // 💡 제본 키워드 자동 감지 및 모달 오픈
     function openQuoteModal(org, phone, qty, page, timeKey, rawInquiryEncoded = '', rawSpecEncoded = '') {
       document.getElementById('input-org').value = decodeURIComponent(org);
       document.getElementById('input-phone').value = decodeURIComponent(phone);
@@ -496,7 +495,7 @@
       const rawSpec = decodeURIComponent(rawSpecEncoded);
       const combined = rawInquiry + " " + rawSpec;
       
-      // 제본 동의어 사전 매핑
+      // 제본 방식 자동 감지
       if (/2:1|투투원|두꺼운|150p|200p/i.test(combined) && /와이어|스프링|트윈링|코일링|링제본/i.test(combined)) {
         document.getElementById('input-binding').value = 'wire21';
       } else if (/와이어|스프링|트윈링|코일링|링제본/i.test(combined)) {
@@ -513,7 +512,7 @@
     }
     function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
 
-    // 💡 제본 방식 및 서식에 따른 공정 자동 매핑 (배송 항목 기본 제외 / 청년인쇄사 표준 지종)
+    // 공정 자동 산출 (배송비 기본 제외, 청년인쇄사 표준 규격)
     function onTemplateChange() {
       const tmpl = document.getElementById('input-template').value;
       const binding = document.getElementById('input-binding').value;
@@ -522,7 +521,7 @@
       const tp = q * p;
       document.getElementById('quote-tbody').innerHTML = '';
 
-      if (tmpl === '디지털일반') {
+      if (tmpl === '디지탈 일반') {
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
@@ -534,7 +533,7 @@
           addRow('제작', '', '', '', '', '');
           addRow('제작', '', '', '', '', '');
         } else if (binding === 'wire21') {
-          // 와이어 2:1 (두꺼운 원고용 / 앞뒤 PP커버 기본 포함 4,400원)
+          // 와이어 2:1 (대용량 / 앞뒤 PP커버 기본 포함 4,400원)
           addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
           addRow('제작', '제본', '와이어 제본 (2:1 트윈링)', q, 4400, '대용량/앞뒤 반투명PP 기본포함');
           addRow('제작', '', '', '', '', '');
@@ -548,7 +547,7 @@
           addRow('제작', '', '', '', '', '');
           addRow('제작', '', '', '', '', '');
         } else {
-          // 무선제본 (기본 실무 세트: 표지 1,700 + 코팅 2,200 + 무선 3,300)
+          // 무선제본 (기본 실무 세트)
           addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
           addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
           addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
@@ -556,10 +555,9 @@
           addRow('제작', '', '', '', '', '');
         }
 
-        // 기타 5행 (배송 기본 제외)
         addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
       } 
-      else if (tmpl === '디지탈상세') {
+      else if (tmpl === '디지탈 상세') {
         let coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
         let specText = '표지칼라(스노우250g)/본문흑백(모조80g)/무선제본';
 
@@ -581,7 +579,7 @@
         }
       } 
       else {
-        // 옵셋일반: 기획5 + 디자인5 + 제작6(용지2/CTP2/인쇄2) + 기타5
+        // 옵셋 일반
         addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', ''); addRow('기획', '', '', '', '', '');
         addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', ''); addRow('디자인', '', '', '', '', '');
         
@@ -592,7 +590,6 @@
         addRow('제작', '인쇄', '표지 본인쇄 (옵셋 4도 컬러)', 4, 18000, '옵셋 본인쇄');
         addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
 
-        // 기타 (배송 제외)
         if (binding === 'wire31') {
           addRow('기타', '제본', '와이어 제본 (3:1 트윈링)', q, 3300, '앞뒤 반투명PP 포함');
           addRow('기타', '', '', '', '', '');
@@ -646,7 +643,7 @@
         const qty = qtyStr === '' ? 0 : Number(qtyStr.replace(/,/g, ''));
         let price = priceStr === '' ? 0 : Number(priceStr.replace(/,/g, ''));
 
-        if (tmpl === '옵셋일반' && (mid.includes('관리비') || name.includes('관리비') || name.includes('12%'))) {
+        if (tmpl === '옵셋 일반' && (mid.includes('관리비') || name.includes('관리비') || name.includes('12%'))) {
           price = Math.round(excl * 0.12);
           tr.querySelector('.i-p').value = price;
         }
@@ -772,7 +769,7 @@
 
       let tableHTML = '';
 
-      if (tmpl === '디지탈상세') {
+      if (tmpl === '디지탈 상세') {
         const paddedRows = [...rows];
         while (paddedRows.length < 20) {
           paddedRows.push({ type: '', mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
@@ -808,7 +805,7 @@
           </table>
         `;
       } 
-      else if (tmpl === '디지털일반') {
+      else if (tmpl === '디지탈 일반') {
         const planGroupHtml = renderSectionGroup7Col('기획', rows, 5);
         const designGroupHtml = renderSectionGroup7Col('디자인', rows, 5);
         const produceGroupHtml = renderSectionGroup7Col('제작', rows, 5);
@@ -843,7 +840,7 @@
         `;
       } 
       else {
-        // 옵셋일반 렌더링
+        // 옵셋 일반
         const planRows = rows.filter(r => r.type === '기획');
         while (planRows.length < 5) planRows.push({ mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
 
@@ -876,7 +873,6 @@
               </tr>
             </thead>
             <tbody>
-              <!-- 1) 기획 5행 -->
               ${planRows.slice(0, 5).map((r, idx) => `
                 <tr>
                   ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">기획</td>` : ''}
@@ -889,7 +885,6 @@
                 </tr>
               `).join('')}
 
-              <!-- 2) 디자인 5행 -->
               ${designRows.slice(0, 5).map((r, idx) => `
                 <tr>
                   ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">디자인</td>` : ''}
@@ -902,7 +897,6 @@
                 </tr>
               `).join('')}
 
-              <!-- 3) 제작 6행 (용지 2행, CTP 2행, 인쇄 2행) -->
               <tr>
                 <td rowspan="6" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">제작</td>
                 <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">용지</td>
@@ -950,7 +944,6 @@
                 <td class="text-center text-gray-600 text-[9.5px] border border-black">${printRows[1].rem}</td>
               </tr>
 
-              <!-- 4) 기타 5행 (코팅/제본/관리비, 배송 제외) -->
               ${otherRows.slice(0, 5).map((r, idx) => `
                 <tr>
                   ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">기타</td>` : ''}
@@ -973,7 +966,6 @@
         `;
       }
 
-      // 💡 [수정된 15일 유효기간 안내 문구]
       const footerNotice = `
         <div class="mt-2.5 text-[10px] text-gray-600 space-y-0.5 leading-tight">
           <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
@@ -1033,7 +1025,7 @@
         worker.save();
         toggleComp(document.getElementById('input-phone').dataset.timeKey);
         setTimeout(closeQuoteModal, 1500);
-      } catch(e) { alert("PDF 저장 실패"); }
+      } catch(e) { alert("PDF 저장에 실패했습니다."); }
       btn.disabled = false; btn.innerHTML = origHtml;
     }
 
@@ -1049,7 +1041,7 @@
 
         const html = `<div style="font-family:sans-serif; max-width:600px; padding:20px; border:1px solid #e5e7eb; border-radius:8px;">
           <h2 style="color:#2563eb; border-bottom:2px solid #2563eb; padding-bottom:8px;">[청년인쇄사] 견적서 안내</h2>
-          <p>안녕하세요, <strong>${org}</strong> 담당자님!</p>
+          <p>안녕하세요, <strong>${org}</strong> 담당자님.</p>
           <p>청년인쇄사에 인쇄 및 제본 견적을 문의해 주셔서 진심으로 감사드립니다.<br>요청하신 공식 견적서를 <strong>PDF 파일로 첨부</strong>해 드립니다.</p>
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:15px; margin:15px 0;">
             <p style="margin:4px 0;">■ 수신처 : ${org}</p>
@@ -1067,14 +1059,14 @@
         const result = await res.json().catch(() => ({}));
 
         if (res.ok && result.success) { 
-          alert(`🎉 발송 성공! (${toEmail})\n요약 본문과 정식 PDF 견적서가 정상 첨부되어 전송되었습니다.`); 
+          alert(`발송 완료 (${toEmail})\n요약 본문과 정식 PDF 견적서가 전송되었습니다.`); 
           toggleComp(document.getElementById('input-phone').dataset.timeKey);
           closeQuoteModal();
         } else { 
-          alert(`⚠️ [발송 실패]\n${result.error || '이메일 발송에 실패했습니다. SendGrid 설정을 확인해주세요.'}`); 
+          alert(`[발송 실패]\n${result.error || '이메일 발송에 실패했습니다. SendGrid 설정을 확인해주세요.'}`); 
         }
       } catch(e) { 
-        alert("⚠️ 이메일 전송 중 통신 오류: " + e.message); 
+        alert("이메일 전송 중 통신 오류가 발생했습니다: " + e.message); 
       } finally {
         btn.disabled = false; 
         btn.innerHTML = origHtml;
