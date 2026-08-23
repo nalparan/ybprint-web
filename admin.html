@@ -20,16 +20,30 @@
     @keyframes liveDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
     .live-indicator { animation: liveDot 2s infinite ease-in-out; }
 
-    /* 청년인쇄사 정식 A4 1:1 출력 규격 (210mm x 297mm 단일 페이지 최적화) */
+    /* 청년인쇄사 정식 A4 1:1 출력 규격 (794px * 1123px, 1:1.414 단일 페이지 완벽 비율) */
+    .quote-paper-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+      background: #E2E8F0;
+    }
     .quote-paper {
       background: #FFFFFF;
       font-family: 'Malgun Gothic', "Pretendard Variable", 'Noto Sans KR', sans-serif;
       color: #000000;
-      line-height: 1.3;
-      width: 750px;
-      max-width: 100%;
+      width: 794px;
+      min-height: 1123px;
+      height: 1123px;
       box-sizing: border-box;
+      padding: 48px 45px;
       margin: 0 auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border: 1px solid #CBD5E1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .excel-table {
       border: 1.5px solid #000000 !important;
@@ -39,9 +53,11 @@
     }
     .excel-table th, .excel-table td {
       border: 1px solid #000000 !important;
-      padding: 2.5px 4px !important;
-      font-size: 10px;
-      height: 19px;
+      padding: 3.5px 6px !important;
+      font-size: 11px;
+      height: 24px;
+      line-height: 1.35;
+      vertical-align: middle;
       word-break: break-all;
     }
     .excel-table th {
@@ -180,7 +196,7 @@
         </div>
         <div onclick="goToStep(2)" class="flex-1 flex items-center cursor-pointer">
           <div id="step-dot-2" class="w-7 h-7 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xs">2</div>
-          <span id="step-text-2" class="ml-2 font-bold text-gray-500 text-sm">② 정식 견적서 검증 & 즉시 출력/발송 (1,000원 절사)</span>
+          <span id="step-text-2" class="ml-2 font-bold text-gray-500 text-sm">② 정식 A4 견적서 검증 & 즉시 출력/발송 (1,000원 절사)</span>
         </div>
       </div>
 
@@ -245,14 +261,14 @@
           </div>
         </div>
 
-        <!-- STEP 2: 정식 A4 1:1 서식 뷰 (검증 & 즉시 출력/발송) -->
+        <!-- STEP 2: 정식 A4 1:1.414 서식 뷰 (검증 & 즉시 출력/발송) -->
         <div id="quote-step-2-content" style="display: none;">
           <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 text-xs text-blue-800 font-medium flex items-center justify-between">
-            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>실제 청년인쇄사 대표직인 및 A4 1:1 규격 서식이 적용되었습니다.</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>정규 A4 비율(794px × 1123px)과 실물 직인 날인이 적용되었습니다.</span>
             <span class="font-bold font-mono-code text-blue-900" id="preview-badge-total"></span>
           </div>
-          <div class="flex justify-center w-full overflow-x-auto pb-4">
-            <div id="quote-printable-area" class="quote-paper p-6 rounded-lg bg-white border border-gray-400 shadow-sm">
+          <div class="quote-paper-wrapper">
+            <div id="quote-printable-area" class="quote-paper">
               <!-- 견적서 렌더링 영역 -->
             </div>
           </div>
@@ -522,7 +538,7 @@
 
       return matched.map((r, idx) => {
         const firstCell = idx === 0 
-          ? `<td rowspan="${count}" class="text-center font-bold bg-slate-50 text-gray-900 align-middle text-[10px] border border-black">${categoryName}</td>`
+          ? `<td rowspan="${count}" class="text-center font-bold bg-slate-50 text-gray-900 align-middle text-[11px] border border-black">${categoryName}</td>`
           : '';
 
         return `
@@ -533,7 +549,7 @@
             <td class="text-center font-mono-code border border-black">${r.qtyStr !== '' ? Number(r.qtyStr).toLocaleString() : ''}</td>
             <td class="text-right font-mono-code border border-black">${r.priceStr !== '' ? Number(r.priceStr).toLocaleString() : ''}</td>
             <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
-            <td class="text-center text-gray-600 text-[9px] border border-black">${r.rem}</td>
+            <td class="text-center text-gray-600 text-[10px] border border-black">${r.rem}</td>
           </tr>
         `;
       }).join('');
@@ -551,62 +567,64 @@
       // 💡 [저장소의 stamp.png 직접 연동 및 44x44 정비율 배치]
       const stamp = `
         <span style="position:relative; display:inline-block; vertical-align:middle;">
-          <strong style="font-weight:900; font-size:11.5px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
-          <img src="${STAMP_SRC}" style="position:absolute; left:26px; top:-12px; width:44px; height:44px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
+          <strong style="font-weight:900; font-size:12px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
+          <img src="${STAMP_SRC}" style="position:absolute; left:28px; top:-12px; width:44px; height:44px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
         </span>
       `;
 
-      // 💡 [제목 밑줄 제거 및 상단 4열 테이블 정합 레이아웃]
+      // 💡 [상단 헤더 정보 박스: 글자 잘림 완벽 해결 및 칼정렬]
       const headerBox = `
-        <div class="text-center mb-3">
-          <h1 class="text-2xl font-black tracking-[0.7em] inline-block pb-0.5 px-10">견 &nbsp; 적 &nbsp; 서</h1>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2 mb-2 text-[10px] leading-tight">
-          <!-- 좌측: 수신처 -->
-          <div class="border border-black p-2 bg-white flex flex-col justify-between">
-            <div class="flex items-center"><span class="w-14 font-bold shrink-0">수 &nbsp; &nbsp; 신 :</span> <span class="font-black text-blue-950 text-xs truncate">${org}</span></div>
-            <div class="flex items-center"><span class="w-14 font-bold shrink-0">발 &nbsp; &nbsp; 신 :</span> <span class="font-bold">청년인쇄사</span></div>
-            <div class="flex items-center"><span class="w-14 font-bold shrink-0">일 &nbsp; &nbsp; 자 :</span> <span class="font-mono-code">${ds}</span></div>
-            <div class="flex items-center"><span class="w-14 font-bold shrink-0">제 &nbsp; &nbsp; 목 :</span> <span class="truncate">인쇄 및 제본 제작 견적의 件</span></div>
+        <div>
+          <div class="text-center mb-6 pt-1">
+            <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
           </div>
 
-          <!-- 우측: 공급자 정보 (4열 micro-table 적용으로 대표/이메일 세로선 1:1 완벽 정렬) -->
-          <div class="border border-black p-2 bg-white">
-            <div class="flex justify-between font-bold text-[10.5px] border-b border-gray-300 pb-0.5 mb-1">
-              <span>청 년 인 쇄 사</span>
-              <span class="font-mono-code">등록번호: 119-22-03638</span>
+          <div class="grid grid-cols-2 gap-3 mb-3 text-[11px] leading-relaxed">
+            <!-- 좌측: 수신처 -->
+            <div class="border border-black p-3 bg-white flex flex-col justify-between" style="min-height: 96px;">
+              <div class="flex items-center"><span class="w-16 font-bold shrink-0">수 &nbsp; &nbsp; 신 :</span> <span class="font-black text-blue-950 text-sm truncate">${org}</span></div>
+              <div class="flex items-center"><span class="w-16 font-bold shrink-0">발 &nbsp; &nbsp; 신 :</span> <span class="font-bold">청년인쇄사</span></div>
+              <div class="flex items-center"><span class="w-16 font-bold shrink-0">일 &nbsp; &nbsp; 자 :</span> <span class="font-mono-code">${ds}</span></div>
+              <div class="flex items-center"><span class="w-16 font-bold shrink-0">제 &nbsp; &nbsp; 목 :</span> <span class="truncate font-medium">인쇄 및 제본 제작 견적의 件</span></div>
             </div>
-            <table style="width:100%; border-collapse:collapse; font-size:10px; line-height:1.4;">
-              <tr>
-                <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
-                <td style="width:80px; vertical-align:middle;">청년인쇄사</td>
-                <td style="width:48px; font-weight:bold; vertical-align:middle;">대 &nbsp; 표 :</td>
-                <td style="vertical-align:middle;">${stamp}</td>
-              </tr>
-              <tr>
-                <td style="font-weight:bold; vertical-align:middle;">소 재 지 :</td>
-                <td colspan="3" style="vertical-align:middle;" class="truncate">세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</td>
-              </tr>
-              <tr>
-                <td style="font-weight:bold; vertical-align:middle;">직통전화 :</td>
-                <td style="font-family:'Fira Code', monospace; vertical-align:middle;">044-862-4803</td>
-                <td style="font-weight:bold; vertical-align:middle;">E-mail :</td>
-                <td style="font-family:'Fira Code', monospace; vertical-align:middle;" class="truncate">admin@ybprint.co.kr</td>
-              </tr>
-            </table>
-          </div>
-        </div>
 
-        <!-- 합계금액 바 -->
-        <div class="border border-black bg-slate-100 px-3 py-1.5 flex justify-between items-center mb-1.5 font-bold text-[10.5px]">
-          <div class="flex items-center gap-2">
-            <span>합계금액 :</span>
-            <span class="font-black text-black text-xs">일금 ${numToKor(total)} 정</span>
-            <span class="text-[9.5px] font-bold text-blue-900 bg-white border border-blue-400 shadow-xs px-2 py-0.5 rounded font-mono-code">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
+            <!-- 우측: 공급자 정보 (4열 micro-table 적용으로 세로선 1:1 완벽 정렬) -->
+            <div class="border border-black p-3 bg-white flex flex-col justify-between" style="min-height: 96px;">
+              <div class="flex justify-between font-bold text-xs border-b border-gray-300 pb-1 mb-1">
+                <span>청 년 인 쇄 사</span>
+                <span class="font-mono-code">등록번호: 119-22-03638</span>
+              </div>
+              <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.5;">
+                <tr>
+                  <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
+                  <td style="width:82px; vertical-align:middle;">청년인쇄사</td>
+                  <td style="width:48px; font-weight:bold; vertical-align:middle;">대 &nbsp; 표 :</td>
+                  <td style="vertical-align:middle;">${stamp}</td>
+                </tr>
+                <tr>
+                  <td style="font-weight:bold; vertical-align:middle;">소 재 지 :</td>
+                  <td colspan="3" style="vertical-align:middle; font-size:10px;" class="truncate">세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</td>
+                </tr>
+                <tr>
+                  <td style="font-weight:bold; vertical-align:middle;">직통전화 :</td>
+                  <td style="font-family:'Fira Code', monospace; vertical-align:middle;">044-862-4803</td>
+                  <td style="font-weight:bold; vertical-align:middle;">E-mail :</td>
+                  <td style="font-family:'Fira Code', monospace; vertical-align:middle;" class="truncate">admin@ybprint.co.kr</td>
+                </tr>
+              </table>
+            </div>
           </div>
-          <div class="font-mono-code text-xs font-black">
-            ( ₩ <span>${total.toLocaleString()}</span> )
+
+          <!-- 합계금액 바 -->
+          <div class="border border-black bg-slate-100 px-4 py-2 flex justify-between items-center mb-3 font-bold text-xs">
+            <div class="flex items-center gap-3">
+              <span>합계금액 :</span>
+              <span class="font-black text-black text-sm">일금 ${numToKor(total)} 정</span>
+              <span class="text-[11px] font-bold text-blue-900 bg-white border border-blue-400 shadow-xs px-2.5 py-0.5 rounded font-mono-code">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
+            </div>
+            <div class="font-mono-code text-sm font-black">
+              ( ₩ <span>${total.toLocaleString()}</span> )
+            </div>
           </div>
         </div>
       `;
@@ -620,28 +638,30 @@
         }
 
         tableHTML = `
-          <table class="excel-table text-center mb-1.5">
-            <thead><tr><th>품명</th><th class="w-20">규격</th><th class="w-16">수량</th><th class="w-16">면수</th><th>사양</th></tr></thead>
-            <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / 무선제본</td></tr></tbody>
-          </table>
-          <table class="excel-table text-left">
-            <thead><tr><th class="w-24 text-center">항목</th><th>산출내역 및 사양</th><th class="w-24 text-right">금액(원)</th><th class="w-32 text-center">비고</th></tr></thead>
-            <tbody>
-              ${paddedRows.slice(0, 20).map(r => `
-                <tr>
-                  <td class="text-center font-bold border border-black">${r.mid || r.type}</td>
-                  <td class="font-mono-code text-[9.5px] border border-black pl-1.5">${r.name}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9px] border border-black">${r.rem}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-            <tfoot class="font-bold">
-              <tr><td colspan="2" class="text-center py-0.5 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center border border-black">-</td></tr>
-              <tr><td colspan="2" class="text-center py-0.5 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center border border-black">-</td></tr>
-              <tr class="bg-slate-100"><td colspan="2" class="text-center py-0.5 text-xs border border-black">총 견적합계 (VAT 포함)</td><td class="text-right py-0.5 text-blue-900 font-mono-code text-xs font-black border border-black">${total.toLocaleString()}</td><td class="text-center border border-black">-</td></tr>
-            </tfoot>
-          </table>
+          <div class="flex-1 flex flex-col justify-start">
+            <table class="excel-table text-center mb-2">
+              <thead><tr><th>품명</th><th class="w-20">규격</th><th class="w-16">수량</th><th class="w-16">면수</th><th>사양</th></tr></thead>
+              <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / 무선제본</td></tr></tbody>
+            </table>
+            <table class="excel-table text-left">
+              <thead><tr><th class="w-28 text-center">항목</th><th>산출내역 및 사양</th><th class="w-28 text-right">금액(원)</th><th class="w-36 text-center">비고</th></tr></thead>
+              <tbody>
+                ${paddedRows.slice(0, 20).map(r => `
+                  <tr>
+                    <td class="text-center font-bold border border-black">${r.mid || r.type}</td>
+                    <td class="font-mono-code text-[10px] border border-black pl-2">${r.name}</td>
+                    <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                    <td class="text-center text-gray-600 text-[10px] border border-black">${r.rem}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+              <tfoot class="font-bold">
+                <tr><td colspan="2" class="text-center py-1 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center border border-black">-</td></tr>
+                <tr><td colspan="2" class="text-center py-1 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center border border-black">-</td></tr>
+                <tr class="bg-slate-100"><td colspan="2" class="text-center py-1 text-xs border border-black">총 견적합계 (VAT 포함)</td><td class="text-right py-1 text-blue-900 font-mono-code text-sm font-black border border-black">${total.toLocaleString()}</td><td class="text-center border border-black">-</td></tr>
+              </tfoot>
+            </table>
+          </div>
         `;
       } 
       else if (tmpl === '디지털일반') {
@@ -651,31 +671,33 @@
         const otherGroupHtml = renderSectionGroup7Col('기타', rows, 5);
 
         tableHTML = `
-          <table class="excel-table text-left">
-            <thead>
-              <tr>
-                <th class="w-12">항목</th>
-                <th class="w-16">내역</th>
-                <th>규격 / 세부항목</th>
-                <th class="w-12 text-center">수량</th>
-                <th class="w-16 text-right">단가</th>
-                <th class="w-20 text-right">공급가액</th>
-                <th class="w-32 text-center">비고</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${planGroupHtml}
-              ${designGroupHtml}
-              ${produceGroupHtml}
-              ${otherGroupHtml}
-            </tbody>
-            <tfoot class="font-bold">
-              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-              <tr class="bg-slate-100"><td colspan="5" class="text-center py-0.5 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-0.5 text-blue-900 font-mono-code text-xs font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-            </tfoot>
-          </table>
+          <div class="flex-1 flex flex-col justify-start">
+            <table class="excel-table text-left">
+              <thead>
+                <tr>
+                  <th class="w-14">항목</th>
+                  <th class="w-20">내역</th>
+                  <th>규격 / 세부항목</th>
+                  <th class="w-14 text-center">수량</th>
+                  <th class="w-20 text-right">단가</th>
+                  <th class="w-24 text-right">공급가액</th>
+                  <th class="w-36 text-center">비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${planGroupHtml}
+                ${designGroupHtml}
+                ${produceGroupHtml}
+                ${otherGroupHtml}
+              </tbody>
+              <tfoot class="font-bold">
+                <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-sm font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+              </tfoot>
+            </table>
+          </div>
         `;
       } 
       else {
@@ -698,118 +720,120 @@
         while (otherRows.length < 5) otherRows.push({ mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
 
         tableHTML = `
-          <table class="excel-table text-left">
-            <thead>
-              <tr>
-                <th class="w-12">항목</th>
-                <th class="w-16">내역</th>
-                <th>규격 / 세부항목</th>
-                <th class="w-12 text-center">수량</th>
-                <th class="w-16 text-right">단가</th>
-                <th class="w-20 text-right">공급가액</th>
-                <th class="w-32 text-center">비고</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- 1) 기획 5행 -->
-              ${planRows.slice(0, 5).map((r, idx) => `
+          <div class="flex-1 flex flex-col justify-start">
+            <table class="excel-table text-left">
+              <thead>
                 <tr>
-                  ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[10px]">기획</td>` : ''}
-                  <td class="text-center font-bold border border-black">${r.mid}</td>
-                  <td class="font-mono-code text-[9px] border border-black">${r.name}</td>
-                  <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
-                  <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9px] border border-black">${r.rem}</td>
+                  <th class="w-14">항목</th>
+                  <th class="w-20">내역</th>
+                  <th>규격 / 세부항목</th>
+                  <th class="w-14 text-center">수량</th>
+                  <th class="w-20 text-right">단가</th>
+                  <th class="w-24 text-right">공급가액</th>
+                  <th class="w-36 text-center">비고</th>
                 </tr>
-              `).join('')}
+              </thead>
+              <tbody>
+                <!-- 1) 기획 5행 -->
+                ${planRows.slice(0, 5).map((r, idx) => `
+                  <tr>
+                    ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">기획</td>` : ''}
+                    <td class="text-center font-bold border border-black">${r.mid}</td>
+                    <td class="font-mono-code text-[9.5px] border border-black">${r.name}</td>
+                    <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
+                    <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
+                    <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                    <td class="text-center text-gray-600 text-[9.5px] border border-black">${r.rem}</td>
+                  </tr>
+                `).join('')}
 
-              <!-- 2) 디자인 5행 -->
-              ${designRows.slice(0, 5).map((r, idx) => `
+                <!-- 2) 디자인 5행 -->
+                ${designRows.slice(0, 5).map((r, idx) => `
+                  <tr>
+                    ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">디자인</td>` : ''}
+                    <td class="text-center font-bold border border-black">${r.mid}</td>
+                    <td class="font-mono-code text-[9.5px] border border-black">${r.name}</td>
+                    <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
+                    <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
+                    <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                    <td class="text-center text-gray-600 text-[9.5px] border border-black">${r.rem}</td>
+                  </tr>
+                `).join('')}
+
+                <!-- 3) 제작 6행 (용지 2행, CTP 2행, 인쇄 2행) -->
                 <tr>
-                  ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[10px]">디자인</td>` : ''}
-                  <td class="text-center font-bold border border-black">${r.mid}</td>
-                  <td class="font-mono-code text-[9px] border border-black">${r.name}</td>
-                  <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
-                  <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9px] border border-black">${r.rem}</td>
+                  <td rowspan="6" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">제작</td>
+                  <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">용지</td>
+                  <td class="font-bold border border-black text-[10px] pl-1.5">${paperRows[0].name}</td>
+                  <td class="text-center font-mono-code border border-black">${paperRows[0].qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${paperRows[0].priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${paperRows[0].amt > 0 ? paperRows[0].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${paperRows[0].rem}</td>
                 </tr>
-              `).join('')}
-
-              <!-- 3) 제작 6행 (용지 2행, CTP 2행, 인쇄 2행) -->
-              <tr>
-                <td rowspan="6" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[10px]">제작</td>
-                <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[10px]">용지</td>
-                <td class="font-bold border border-black text-[9.5px] pl-1.5">${paperRows[0].name}</td>
-                <td class="text-center font-mono-code border border-black">${paperRows[0].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${paperRows[0].priceStr}</td>
-                <td class="text-right font-mono-code font-bold border border-black">${paperRows[0].amt > 0 ? paperRows[0].amt.toLocaleString() : ''}</td>
-                <td class="text-center text-gray-600 text-[9px] border border-black">${paperRows[0].rem}</td>
-              </tr>
-              <tr>
-                <td class="font-bold border border-black text-[9.5px] pl-1.5">${paperRows[1].name}</td>
-                <td class="text-center font-mono-code border border-black">${paperRows[1].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${paperRows[1].priceStr}</td>
-                <td class="text-right font-mono-code font-bold border border-black">${paperRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
-                <td class="text-center text-gray-600 text-[9px] border border-black">${paperRows[1].rem}</td>
-              </tr>
-              <tr>
-                <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[10px]">CTP</td>
-                <td class="font-bold border border-black text-[9.5px] pl-1.5">${ctpRows[0].name}</td>
-                <td class="text-center font-mono-code border border-black">${ctpRows[0].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${ctpRows[0].priceStr}</td>
-                <td class="text-right font-mono-code font-bold border border-black">${ctpRows[0].amt > 0 ? paperRows[0].amt.toLocaleString() : ''}</td>
-                <td class="text-center text-gray-600 text-[9px] border border-black">${ctpRows[0].rem}</td>
-              </tr>
-              <tr>
-                <td class="font-bold border border-black text-[9.5px] pl-1.5">${ctpRows[1].name}</td>
-                <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
-                <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
-                <td class="text-center text-gray-600 text-[9px] border border-black">${ctpRows[1].rem}</td>
-              </tr>
-              <tr>
-                <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[10px]">인쇄</td>
-                <td class="font-bold border border-black text-[9.5px] pl-1.5">${printRows[0].name}</td>
-                <td class="text-center font-mono-code border border-black">${printRows[0].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${printRows[0].priceStr}</td>
-                <td class="text-right font-mono-code font-bold border border-black">${printRows[0].amt > 0 ? printRows[0].amt.toLocaleString() : ''}</td>
-                <td class="text-center text-gray-600 text-[9px] border border-black">${printRows[0].rem}</td>
-              </tr>
-              <tr>
-                <td class="font-bold border border-black text-[9.5px] pl-1.5">${printRows[1].name}</td>
-                <td class="text-center font-mono-code border border-black">${printRows[1].qtyStr}</td>
-                <td class="text-right font-mono-code border border-black">${printRows[1].priceStr}</td>
-                <td class="text-right font-mono-code font-bold border border-black">${printRows[1].amt > 0 ? printRows[1].amt.toLocaleString() : ''}</td>
-                <td class="text-center text-gray-600 text-[9px] border border-black">${printRows[1].rem}</td>
-              </tr>
-
-              <!-- 4) 기타 5행 (코팅, 제본, 관리비, 배송, 빈칸) -->
-              ${otherRows.slice(0, 5).map((r, idx) => `
                 <tr>
-                  ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[10px]">기타</td>` : ''}
-                  <td class="text-center font-bold border border-black text-[10px]">${r.mid}</td>
-                  <td class="font-bold border border-black text-[9.5px] pl-1.5">${r.name}</td>
-                  <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
-                  <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
-                  <td class="text-center text-gray-600 text-[9px] border border-black">${r.rem}</td>
+                  <td class="font-bold border border-black text-[10px] pl-1.5">${paperRows[1].name}</td>
+                  <td class="text-center font-mono-code border border-black">${paperRows[1].qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${paperRows[1].priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${paperRows[1].amt > 0 ? paperRows[1].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${paperRows[1].rem}</td>
                 </tr>
-              `).join('')}
-            </tbody>
-            <tfoot class="font-bold">
-              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-              <tr><td colspan="5" class="text-center py-0.5 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-              <tr class="bg-slate-100"><td colspan="5" class="text-center py-0.5 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-0.5 text-blue-900 font-mono-code text-xs font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-            </tfoot>
-          </table>
+                <tr>
+                  <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">CTP</td>
+                  <td class="font-bold border border-black text-[10px] pl-1.5">${ctpRows[0].name}</td>
+                  <td class="text-center font-mono-code border border-black">${ctpRows[0].qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${ctpRows[0].priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[0].amt > 0 ? ctpRows[0].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[0].rem}</td>
+                </tr>
+                <tr>
+                  <td class="font-bold border border-black text-[10px] pl-1.5">${ctpRows[1].name}</td>
+                  <td class="text-center font-mono-code border border-black">${ctpRows[1].qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${ctpRows[1].priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[1].amt > 0 ? ctpRows[1].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[1].rem}</td>
+                </tr>
+                <tr>
+                  <td rowspan="2" class="text-center font-bold bg-slate-50/70 border border-black align-middle text-[11px]">인쇄</td>
+                  <td class="font-bold border border-black text-[10px] pl-1.5">${printRows[0].name}</td>
+                  <td class="text-center font-mono-code border border-black">${printRows[0].qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${printRows[0].priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${printRows[0].amt > 0 ? printRows[0].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${printRows[0].rem}</td>
+                </tr>
+                <tr>
+                  <td class="font-bold border border-black text-[10px] pl-1.5">${printRows[1].name}</td>
+                  <td class="text-center font-mono-code border border-black">${printRows[1].qtyStr}</td>
+                  <td class="text-right font-mono-code border border-black">${printRows[1].priceStr}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${printRows[1].amt > 0 ? printRows[1].amt.toLocaleString() : ''}</td>
+                  <td class="text-center text-gray-600 text-[9.5px] border border-black">${printRows[1].rem}</td>
+                </tr>
+
+                <!-- 4) 기타 5행 (코팅, 제본, 관리비, 배송, 빈칸) -->
+                ${otherRows.slice(0, 5).map((r, idx) => `
+                  <tr>
+                    ${idx === 0 ? `<td rowspan="5" class="text-center font-bold bg-slate-50 text-gray-900 align-middle border border-black text-[11px]">기타</td>` : ''}
+                    <td class="text-center font-bold border border-black text-[11px]">${r.mid}</td>
+                    <td class="font-bold border border-black text-[10px] pl-1.5">${r.name}</td>
+                    <td class="text-center font-mono-code border border-black">${r.qtyStr}</td>
+                    <td class="text-right font-mono-code border border-black">${r.priceStr}</td>
+                    <td class="text-right font-mono-code font-bold border border-black">${r.amt > 0 ? r.amt.toLocaleString() : ''}</td>
+                    <td class="text-center text-gray-600 text-[9.5px] border border-black">${r.rem}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+              <tfoot class="font-bold">
+                <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-sm font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+              </tfoot>
+            </table>
+          </div>
         `;
       }
 
       const footerNotice = `
-        <div class="mt-2 text-[9px] text-gray-500 space-y-0.5 leading-tight">
+        <div class="mt-4 text-[10px] text-gray-500 space-y-0.5 leading-tight pb-1">
           <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
         </div>
       `;
@@ -854,7 +878,7 @@
       const fileName = `청년인쇄사_견적서_${org}.jpg`;
 
       const canvas = await html2canvas(el, {
-        scale: 2.2,
+        scale: 2,
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false
@@ -894,7 +918,7 @@
             new ClipboardItem({ 'image/png': pngBlob })
           ]);
 
-          alert("A4 정규 규격 견적서 이미지가 클립보드에 복사되었습니다.\n\n카카오톡 대화창에서 [ Ctrl + V ]를 누르면 이미지가 바로 첨부됩니다.");
+          alert("정규 A4 견적서 이미지가 클립보드에 복사되었습니다.\n\n카카오톡 대화창에서 [ Ctrl + V ]를 누르면 이미지가 바로 첨부됩니다.");
           toggleComp(document.getElementById('input-phone').dataset.timeKey);
         } else {
           const a = document.createElement('a');
@@ -954,7 +978,7 @@
       step2.style.left = '-9999px';
 
       const opt = { 
-        margin: [6, 8, 6, 8], 
+        margin: [8, 8, 8, 8], 
         filename: fileName, 
         image: { type: 'jpeg', quality: 0.98 }, 
         html2canvas: { scale: 2, useCORS: true, logging: false }, 
