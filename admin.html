@@ -343,7 +343,7 @@
 
   <script>
     lucide.createIcons();
-    const API_URL = "https://ybprint-backend-1.onrender.com/inquiries";
+    const API_URL = "https://ybprint-backend.onrender.com/inquiries";
     let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [], manualInquiries = [];
     let currentQuoteStep = 1;
 
@@ -425,7 +425,7 @@
         const isComp = completedItems.includes(time);
         const isManual = item.is_manual || item.file_name === "전화 접수";
 
-        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend-1.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : (isManual ? '<span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">전화 접수</span>' : '<span class="text-xs text-gray-400">첨부 없음</span>');
+        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : (isManual ? '<span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">전화 접수</span>' : '<span class="text-xs text-gray-400">첨부 없음</span>');
         
         let pMatch = text.match(/(\d+)\s*p/i) || item.spec?.match(/(\d+)\s*p/i);
         let qMatch = text.match(/(\d+)\s*부/);
