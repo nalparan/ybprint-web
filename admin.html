@@ -20,13 +20,13 @@
     @keyframes liveDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
     .live-indicator { animation: liveDot 2s infinite ease-in-out; }
 
-    /* 청년인쇄사 정식 A4 1:1 출력 규격 (794px * 1123px, 1:1.414 단일 페이지 완벽 비율) */
+    /* 청년인쇄사 정식 A4 1:1 출력 규격 (외곽선/그림자 제거, A4 완벽 중앙 배치) */
     .quote-paper-wrapper {
       width: 100%;
       overflow-x: auto;
       display: flex;
       justify-content: center;
-      padding: 20px 0;
+      padding: 15px 0;
       background: #E2E8F0;
     }
     .quote-paper {
@@ -34,13 +34,11 @@
       font-family: 'Malgun Gothic', "Pretendard Variable", 'Noto Sans KR', sans-serif;
       color: #000000;
       width: 794px;
-      min-height: 1123px;
-      height: 1123px;
+      min-height: 1120px;
+      height: 1120px;
       box-sizing: border-box;
-      padding: 48px 45px;
+      padding: 45px 42px 35px 42px;
       margin: 0 auto;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      border: 1px solid #CBD5E1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -53,10 +51,10 @@
     }
     .excel-table th, .excel-table td {
       border: 1px solid #000000 !important;
-      padding: 3.5px 6px !important;
+      padding: 3px 5px !important;
       font-size: 11px;
-      height: 24px;
-      line-height: 1.35;
+      height: 23px;
+      line-height: 1.3;
       vertical-align: middle;
       word-break: break-all;
     }
@@ -87,6 +85,12 @@
         <span class="w-2.5 h-2.5 rounded-full bg-[#00B46B] live-indicator shadow-[0_0_8px_#00B46B]"></span>
         <span class="text-xs font-mono-code font-bold text-[#4E5968]" id="server-status-label">Render Live</span>
       </div>
+
+      <!-- 전화/수기 견적 작성 버튼 -->
+      <button onclick="openManualQuoteModal()" class="flex items-center gap-1.5 px-4 py-2 bg-[#00B46B] hover:bg-[#009257] text-white rounded-xl text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer">
+        <i data-lucide="phone-call" class="w-4 h-4"></i>
+        <span>+ 전화/수기 견적</span>
+      </button>
       
       <!-- 메인 홈 이동 버튼 -->
       <a href="/" class="flex items-center justify-center w-10 h-10 bg-white hover:bg-[#F2F4F6] rounded-xl border border-[#E5E8EB] transition-all cursor-pointer shadow-xs" title="메인 홈페이지로 이동">
@@ -174,7 +178,7 @@
     </div>
   </main>
 
-  <!-- 견적 발송 메인 모달 (2단계 슬림 개편) -->
+  <!-- 견적 발송 메인 모달 -->
   <div id="quote-modal" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-5xl rounded-3xl flex flex-col shadow-2xl h-[94vh] sm:h-[90vh] overflow-hidden">
       
@@ -191,7 +195,7 @@
       <div class="flex items-center px-6 py-3.5 bg-gray-50 border-b shrink-0 select-none">
         <div onclick="goToStep(1)" class="flex-1 flex items-center cursor-pointer">
           <div id="step-dot-1" class="w-7 h-7 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-xs shadow-md">1</div>
-          <span id="step-text-1" class="ml-2 font-extrabold text-[#191F28] text-sm">① 견적 세부 작성</span>
+          <span id="step-text-1" class="ml-2 font-extrabold text-[#191F28] text-sm">① 세부 작성 & 단가 수기 조정</span>
           <div class="flex-1 h-px bg-gray-200 mx-3"></div>
         </div>
         <div onclick="goToStep(2)" class="flex-1 flex items-center cursor-pointer">
@@ -202,29 +206,48 @@
 
       <div class="flex-1 overflow-y-auto p-5 sm:p-6 bg-gray-50 relative">
         
-        <!-- STEP 1: 세부 작성 화면 -->
+        <!-- STEP 1: 세부 작성 및 수기 입력 화면 -->
         <div id="quote-step-1-content" class="space-y-4" style="display: block;">
-          <div class="flex gap-4">
-            <div class="flex-1 bg-white p-4 rounded-xl border">
-              <label class="text-xs font-bold text-gray-500 block mb-1">수신 고객 / 기관명</label>
-              <input type="text" id="input-org" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-gray-50" readonly>
-              <input type="hidden" id="input-phone">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-6 gap-3">
+            <div class="lg:col-span-2 bg-white p-3.5 rounded-xl border">
+              <label class="text-xs font-bold text-gray-500 block mb-1">수신 고객 / 기관명 (직접 수정 가능)</label>
+              <input type="text" id="input-org" placeholder="예: 영신여고 / 대덕연구원 김팀장" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
             </div>
-            <div class="w-40 bg-white p-4 rounded-xl border">
-              <label class="text-xs font-bold text-gray-500 block mb-1">제작 부수 (부)</label>
-              <input type="number" id="input-qty" min="1" value="100" class="w-full text-sm font-bold border rounded-lg px-3 py-2 font-mono-code" oninput="onTemplateChange()">
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
+              <label class="text-xs font-bold text-gray-500 block mb-1">연락처 / 이메일 (자동 하이픈)</label>
+              <input type="text" id="input-phone" oninput="formatPhoneInput(this)" placeholder="010-0000-0000 또는 메일" class="w-full text-sm font-bold border rounded-lg px-3 py-2 bg-white focus:border-blue-500 focus:outline-none font-mono-code">
             </div>
-            <div class="w-40 bg-white p-4 rounded-xl border">
-              <label class="text-xs font-bold text-gray-500 block mb-1">원고 페이지</label>
-              <input type="number" id="input-page" min="1" value="26" class="w-full text-sm font-bold border rounded-lg px-3 py-2 font-mono-code" oninput="onTemplateChange()">
-            </div>
-            <div class="flex-1 bg-white p-4 rounded-xl border border-blue-200">
-              <label class="text-xs font-bold text-gray-500 block mb-1">견적서 서식 선택</label>
-              <select id="input-template" class="w-full text-sm font-bold border rounded-lg px-3 py-2 text-blue-700 bg-blue-50 focus:outline-none" onchange="onTemplateChange()">
-                <option value="디지탈 일반">디지탈 일반</option>
-                <option value="디지탈 상세">디지탈 상세</option>
-                <option value="옵셋 일반">옵셋 일반</option>
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border border-blue-100">
+              <label class="text-xs font-bold text-blue-800 block mb-1">제본 형태 선택</label>
+              <select id="input-binding" class="w-full text-sm font-bold border rounded-lg px-2 py-2 bg-blue-50 text-blue-700 focus:outline-none" onchange="onTemplateChange()">
+                <option value="무선제본" data-price="3300">무선제본 (책자)</option>
+                <option value="중철제본" data-price="1500">중철제본 (스템플러)</option>
+                <option value="스프링제본" data-price="3000">스프링제본 (트윈링)</option>
+                <option value="양장제본" data-price="15000">양장제본 (하드커버)</option>
               </select>
+            </div>
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
+              <label class="text-xs font-bold text-gray-500 block mb-1">제작 부수 (부)</label>
+              <input type="number" id="input-qty" min="1" value="100" class="w-full text-sm font-bold border rounded-lg px-3 py-2 font-mono-code focus:border-blue-500 focus:outline-none" oninput="onTemplateChange()">
+            </div>
+            <div class="lg:col-span-1 bg-white p-3.5 rounded-xl border">
+              <label class="text-xs font-bold text-gray-500 block mb-1">원고 페이지 (p)</label>
+              <input type="number" id="input-page" min="1" value="26" class="w-full text-sm font-bold border rounded-lg px-3 py-2 font-mono-code focus:border-blue-500 focus:outline-none" oninput="onTemplateChange()">
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-blue-200">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-blue-900">견적서 서식 선택 :</label>
+                <select id="input-template" class="text-sm font-bold border rounded-lg px-3 py-1.5 text-blue-700 bg-blue-50 focus:outline-none" onchange="onTemplateChange()">
+                  <option value="디지탈 일반">디지탈 일반</option>
+                  <option value="디지탈 상세">디지탈 상세</option>
+                  <option value="옵셋 일반">옵셋 일반</option>
+                </select>
+              </div>
+              <span class="text-xs text-gray-400 font-medium">※ 표 안의 수량 및 단가(원) 칸을 직접 클릭하여 자유롭게 금액을 수정할 수 있습니다.</span>
             </div>
           </div>
 
@@ -243,7 +266,7 @@
                     <th class="py-2.5 px-3 text-center w-20">내역</th>
                     <th class="py-2.5 px-3">규격 / 세부항목</th>
                     <th class="py-2.5 px-3 text-center w-20">수량</th>
-                    <th class="py-2.5 px-3 text-right w-24">단가(원)</th>
+                    <th class="py-2.5 px-3 text-right w-24">단가(원) - 수정가능</th>
                     <th class="py-2.5 px-3 text-right w-28">공급가액</th>
                     <th class="py-2.5 px-3 w-36">비고</th>
                     <th class="py-2.5 px-3 text-center w-12">삭제</th>
@@ -264,7 +287,7 @@
         <!-- STEP 2: 정식 A4 1:1.414 서식 뷰 (검증 & 즉시 출력/발송) -->
         <div id="quote-step-2-content" style="display: none;">
           <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 text-xs text-blue-800 font-medium flex items-center justify-between">
-            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>정규 A4 비율(794px × 1123px)과 실물 직인 날인이 적용되었습니다.</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i>정규 A4 비율(794px × 1120px)과 실물 직인 날인이 적용되었습니다.</span>
             <span class="font-bold font-mono-code text-blue-900" id="preview-badge-total"></span>
           </div>
           <div class="quote-paper-wrapper">
@@ -276,7 +299,7 @@
 
       </div>
 
-      <!-- 하단 액션 버튼 바 -->
+      <!-- 하단 액션 버튼 바 (카톡 멘트 복사 버튼 추가) -->
       <div class="p-4 border-t bg-white flex justify-between items-center shrink-0">
         <button id="btn-prev" onclick="goToStep(1)" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hidden transition-colors hover:bg-gray-200 cursor-pointer">이전 단계</button>
         <div class="flex-1"></div>
@@ -287,17 +310,29 @@
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
         
-        <!-- 2단계 전용: 4종 다중 출력 액션 버튼 -->
+        <!-- 2단계 전용: 5종 다중 출력 액션 버튼 -->
         <div id="action-buttons" class="hidden flex flex-wrap items-center gap-2">
-          <button onclick="copyJpgToClipboard()" id="btn-copy" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-700 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
-            <i data-lucide="copy" class="w-4 h-4"></i> 견적서 이미지 복사 (카톡용)
+          <!-- 1. 이미지 복사 -->
+          <button onclick="copyJpgToClipboard()" id="btn-copy" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-700 transition-all flex items-center gap-1.5 text-sm cursor-pointer" title="카카오톡에 견적서 이미지를 붙여넣습니다.">
+            <i data-lucide="copy" class="w-4 h-4"></i> 견적서 이미지 복사
           </button>
+          
+          <!-- 2. 카톡 멘트 복사 (신규) -->
+          <button onclick="copyKakaoMessage()" id="btn-copy-msg" class="px-4 py-2.5 bg-[#FEE500] text-[#191919] hover:bg-[#FDD835] rounded-xl font-bold shadow-md transition-all flex items-center gap-1.5 text-sm cursor-pointer" title="카카오톡 대화창에 보낼 요약 안내 문구를 복사합니다.">
+            <i data-lucide="message-circle" class="w-4 h-4 text-[#191919]"></i> 카톡 멘트 복사
+          </button>
+
+          <!-- 3. JPG 저장 -->
           <button onclick="downloadJPG()" id="btn-download-jpg" class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
             <i data-lucide="image" class="w-4 h-4"></i> JPG 저장
           </button>
+
+          <!-- 4. PDF 저장 -->
           <button onclick="downloadPDF()" id="btn-download" class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
             <i data-lucide="download" class="w-4 h-4"></i> PDF 저장
           </button>
+
+          <!-- 5. 고객 메일 발송 -->
           <button onclick="sendEmail()" id="btn-email" class="px-4 py-2.5 bg-green-600 text-white rounded-xl font-bold shadow-md hover:bg-green-700 transition-all flex items-center gap-1.5 text-sm cursor-pointer">
             <i data-lucide="mail" class="w-4 h-4"></i> 고객 메일 발송
           </button>
@@ -309,18 +344,45 @@
   <script>
     lucide.createIcons();
     const API_URL = "https://ybprint-backend.onrender.com/inquiries";
-    let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [];
+    let inquiries = [], displayedInquiries = [], deletedItems = [], completedItems = [], manualInquiries = [];
     let currentQuoteStep = 1;
 
     // 💡 [저장소에 업로드된 실물 직인 파일 경로 직접 연결]
     const STAMP_SRC = "/stamp.png";
 
-    const PRICE = { bw: 50, cover: 1700, coat: 2200, bind: 3300 };
+    const PRICE = { bw: 50, cover: 1700, coat: 2200 };
 
     try {
       deletedItems = JSON.parse(localStorage.getItem('yb_deleted_items')) || [];
       completedItems = JSON.parse(localStorage.getItem('yb_completed_items')) || [];
+      manualInquiries = JSON.parse(localStorage.getItem('yb_manual_inquiries')) || [];
     } catch(e) {}
+
+    // 💡 [전화번호 입력 시 자동 하이픈 포맷터 (이메일은 제외)]
+    function formatPhoneInput(input) {
+      let val = input.value;
+      if (val.includes('@') || /[a-zA-Z]/.test(val)) return;
+      let num = val.replace(/[^0-9]/g, '').substring(0, 11);
+      if (!num) { input.value = ''; return; }
+      
+      let res = '';
+      if (num.startsWith('02')) {
+        if (num.length <= 2) res = num;
+        else if (num.length <= 5) res = num.replace(/(\d{2})(\d+)/, '$1-$2');
+        else if (num.length <= 9) res = num.replace(/(\d{2})(\d{3})(\d+)/, '$1-$2-$3');
+        else res = num.replace(/(\d{2})(\d{4})(\d+)/, '$1-$2-$3');
+      } else if (num.startsWith('0')) {
+        if (num.length <= 3) res = num;
+        else if (num.length <= 6) res = num.replace(/(\d{3})(\d+)/, '$1-$2');
+        else if (num.length <= 10) res = num.replace(/(\d{3})(\d{3})(\d+)/, '$1-$2-$3');
+        else res = num.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+      } else if (num.length === 8) {
+        res = num.replace(/(\d{4})(\d{4})/, '$1-$2');
+      } else {
+        res = num;
+      }
+      input.value = res;
+    }
 
     async function fetchInquiries() {
       const icon = document.getElementById('refresh-icon');
@@ -329,13 +391,18 @@
         const res = await fetch(API_URL);
         const data = await res.json();
         const rawList = Array.isArray(data) ? data : (data.inquiries || []);
-        inquiries = rawList.filter(item => !deletedItems.includes(item.timestamp || item.created_at || item.time));
+        
+        const combined = [...manualInquiries, ...rawList];
+        inquiries = combined.filter(item => !deletedItems.includes(item.timestamp || item.created_at || item.time));
         displayedInquiries = [...inquiries].reverse();
         renderTable();
         document.getElementById('stat-today-count').innerText = inquiries.length;
         document.getElementById('stat-file-count').innerText = inquiries.filter(i => i.file_name && i.file_name !== "첨부파일 없음").length;
       } catch(e) {
-        document.getElementById('inquiry-table-body').innerHTML = `<tr><td colspan="7" class="text-center py-10 text-red-500">서버 연결 지연 (Render 부팅 대기중...)</td></tr>`;
+        const combined = [...manualInquiries];
+        inquiries = combined.filter(item => !deletedItems.includes(item.timestamp || item.created_at || item.time));
+        displayedInquiries = [...inquiries].reverse();
+        renderTable();
       } finally {
         if(icon) setTimeout(() => icon.classList.remove('animate-spin'), 500);
       }
@@ -354,10 +421,11 @@
         const org = item.org || item.name || "-";
         const phone = item.phone || "-";
         const text = item.inquiry || "내용 없음";
-        const files = item.file_name && item.file_name !== "첨부파일 없음" ? item.file_name.split(',') : [];
+        const files = item.file_name && item.file_name !== "첨부파일 없음" && item.file_name !== "전화 접수" ? item.file_name.split(',') : [];
         const isComp = completedItems.includes(time);
+        const isManual = item.is_manual || item.file_name === "전화 접수";
 
-        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : '<span class="text-xs text-gray-400">첨부 없음</span>';
+        let fileHtml = files.length > 0 ? files.map(f => `<a href="https://ybprint-backend.onrender.com/download/${encodeURIComponent(f.trim())}" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg text-xs font-bold border"><i data-lucide="download" class="w-3 h-3"></i> ${f.trim()}</a>`).join('') : (isManual ? '<span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">전화 접수</span>' : '<span class="text-xs text-gray-400">첨부 없음</span>');
         
         let pMatch = text.match(/(\d+)\s*p/i) || item.spec?.match(/(\d+)\s*p/i);
         let qMatch = text.match(/(\d+)\s*부/);
@@ -388,25 +456,90 @@
     }
 
     function toggleComp(t){ completedItems.includes(t) ? completedItems=completedItems.filter(x=>x!==t) : completedItems.push(t); localStorage.setItem('yb_completed_items', JSON.stringify(completedItems)); renderTable(); }
-    function deleteItem(t){ if(confirm("삭제하시겠습니까?")){ deletedItems.push(t); localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); fetchInquiries(); } }
+    function deleteItem(t){ 
+      if(confirm("삭제하시겠습니까?")){ 
+        deletedItems.push(t); 
+        localStorage.setItem('yb_deleted_items', JSON.stringify(deletedItems)); 
+        manualInquiries = manualInquiries.filter(item => (item.timestamp||item.created_at||item.time) !== t);
+        localStorage.setItem('yb_manual_inquiries', JSON.stringify(manualInquiries));
+        fetchInquiries(); 
+      } 
+    }
+
+    // 💡 [전화/수기 견적 작성 모달 열기]
+    function openManualQuoteModal() {
+      document.getElementById('input-org').value = '';
+      document.getElementById('input-phone').value = '';
+      document.getElementById('input-phone').dataset.timeKey = 'manual_' + Date.now();
+      document.getElementById('input-phone').dataset.isManual = 'true';
+      document.getElementById('input-qty').value = 100;
+      document.getElementById('input-page').value = 26;
+      document.getElementById('input-binding').value = '무선제본';
+      document.getElementById('input-template').value = '디지탈 일반';
+      onTemplateChange();
+      goToStep(1);
+      document.getElementById('quote-modal').classList.remove('hidden');
+    }
 
     function openQuoteModal(org, phone, qty, page, timeKey) {
       document.getElementById('input-org').value = decodeURIComponent(org);
       document.getElementById('input-phone').value = decodeURIComponent(phone);
       document.getElementById('input-phone').dataset.timeKey = timeKey;
+      document.getElementById('input-phone').dataset.isManual = 'false';
       document.getElementById('input-qty').value = qty;
       document.getElementById('input-page').value = page;
+      document.getElementById('input-binding').value = '무선제본';
       onTemplateChange();
       goToStep(1);
       document.getElementById('quote-modal').classList.remove('hidden');
     }
+    
     function closeQuoteModal() { document.getElementById('quote-modal').classList.add('hidden'); }
 
+    // 전화/수기 작성 건 저장 함수
+    function recordManualInquiry() {
+      const isManual = document.getElementById('input-phone').dataset.isManual;
+      if (isManual === 'true') {
+        const org = document.getElementById('input-org').value || '전화 고객';
+        const phone = document.getElementById('input-phone').value || '-';
+        const qty = document.getElementById('input-qty').value;
+        const page = document.getElementById('input-page').value;
+        const binding = document.getElementById('input-binding').value;
+        const tmpl = document.getElementById('input-template').value;
+        const total = document.getElementById('val-total').innerText;
+
+        const dt = new Date();
+        const timeStr = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+        
+        const newRecord = {
+          time: timeStr,
+          timestamp: timeStr,
+          org: org,
+          phone: phone,
+          spec: `${tmpl} / ${qty}부 / ${page}p / ${binding}`,
+          inquiry: `[전화 견적] 총 ${total} (VAT 포함)`,
+          file_name: '전화 접수',
+          is_manual: true
+        };
+
+        manualInquiries.push(newRecord);
+        localStorage.setItem('yb_manual_inquiries', JSON.stringify(manualInquiries));
+        document.getElementById('input-phone').dataset.isManual = 'false';
+        fetchInquiries();
+      }
+    }
+
+    // 💡 [동기화 핵심] 서식 또는 제본 형태 변경 시 테이블 갱신
     function onTemplateChange() {
       const tmpl = document.getElementById('input-template').value;
       const q = parseInt(document.getElementById('input-qty').value)||100;
       const p = parseInt(document.getElementById('input-page').value)||26;
       const tp = q * p;
+      
+      const bindingSelect = document.getElementById('input-binding');
+      const bindingText = bindingSelect.options[bindingSelect.selectedIndex].value;
+      const bindingPrice = parseInt(bindingSelect.options[bindingSelect.selectedIndex].dataset.price) || 3300;
+
       document.getElementById('quote-tbody').innerHTML = '';
 
       if (tmpl === '디지탈 일반') {
@@ -416,15 +549,15 @@
         addRow('제작', '칼라출력', '표지 (315*468 / 단면)', q, PRICE.cover, '표지/단면/스노우250g');
         addRow('제작', '흑백출력', `본문 (210*297 / ${p}p)`, tp, PRICE.bw, `${p}p x ${q}부/모조80g`);
         addRow('제작', '코팅', '표지 단면 무광', q, PRICE.coat, '표지 단면무광');
-        addRow('제작', '제본', '무선 책제본', q, PRICE.bind, '무선 책제본');
+        addRow('제작', '제본', bindingText, q, bindingPrice, bindingText);
         addRow('제작', '', '', '', '', '');
 
         addRow('기타', '배송', '안전 직배송', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', ''); addRow('기타', '', '', '', '', '');
       } 
       else if (tmpl === '디지탈 상세') {
-        const coverAndBind = PRICE.cover + PRICE.coat + PRICE.bind;
-        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), '표지칼라/본문흑백/무선제본');
+        const coverAndBind = PRICE.cover + PRICE.coat + bindingPrice;
+        addRow('본문 및 제본', '본문 및 제본', `[(( ${q}부 x ${p}페이지) x ${PRICE.bw}원) + (${q}부 x ${coverAndBind.toLocaleString()}원)]`, 1, (tp*PRICE.bw)+(q*coverAndBind), `표지칼라/본문흑백/${bindingText}`);
         addRow('배송', '직배송', '세종청사/공공기관 안전 직배송', 1, 0, '당일 안전 직배송');
         
         for (let i = 3; i <= 20; i++) {
@@ -443,7 +576,7 @@
         addRow('제작', '인쇄', '내지 본인쇄 (옵셋 4도 양면)', 4, 18000, '옵셋 본인쇄');
 
         addRow('기타', '코팅', '표지 단면 무광코팅', q, PRICE.coat, '표지 단면무광');
-        addRow('기타', '제본', '옵셋 무선 책제본', q, PRICE.bind, '옵셋 책제본');
+        addRow('기타', '제본', `옵셋 ${bindingText}`, q, bindingPrice, `옵셋 ${bindingText}`);
         addRow('기타', '관리비', '일반관리비 (12% 지대제외)', 1, 0, '재료비제외 12% 자동산출');
         addRow('기타', '배송', '납품 배송 (안전 직배송)', 1, 0, '당일 안전 직배송');
         addRow('기타', '', '', '', '', '');
@@ -460,7 +593,7 @@
         <td class="p-1"><input type="text" class="i-m w-full border rounded p-1 text-center font-bold text-xs bg-gray-50" value="${m}" oninput="calculateAll()"></td>
         <td class="p-1"><input type="text" class="i-n w-full border rounded p-1 text-xs font-bold" value="${n}" oninput="calculateAll()"></td>
         <td class="p-1"><input type="text" class="i-q w-full border rounded p-1 text-center text-xs font-mono-code" value="${qVal}" oninput="calculateAll()"></td>
-        <td class="p-1"><input type="text" class="i-p w-full border rounded p-1 text-right text-xs font-mono-code" value="${pVal}" oninput="calculateAll()"></td>
+        <td class="p-1"><input type="text" class="i-p w-full border border-blue-300 rounded p-1 text-right text-xs font-mono-code font-bold bg-white focus:bg-blue-50 focus:border-blue-600 focus:outline-none" value="${pVal}" oninput="calculateAll()"></td>
         <td class="p-1"><input type="text" class="i-a w-full bg-gray-100 border rounded p-1 text-right text-xs font-bold font-mono-code" readonly></td>
         <td class="p-1"><input type="text" class="i-r w-full border rounded p-1 text-xs text-gray-500" value="${r}" oninput="calculateAll()"></td>
         <td class="p-1 text-center"><button class="text-red-400 hover:text-red-600 font-bold cursor-pointer" onclick="this.closest('tr').remove(); calculateAll()">✕</button></td>
@@ -560,6 +693,9 @@
       const tmpl = document.getElementById('input-template').value;
       const q = parseInt(document.getElementById('input-qty').value) || 100;
       const p = document.getElementById('input-page').value;
+      const bindingSelect = document.getElementById('input-binding');
+      const bindingText = bindingSelect ? bindingSelect.value : '무선제본';
+      
       const dt = new Date();
       const ds = `${dt.getFullYear()}년 ${String(dt.getMonth()+1).padStart(2,'0')}월 ${String(dt.getDate()).padStart(2,'0')}일`;
       const unitPrice = q > 0 ? Math.round(total / q) : total;
@@ -567,65 +703,74 @@
       // 💡 [저장소의 stamp.png 직접 연동 및 44x44 정비율 배치]
       const stamp = `
         <span style="position:relative; display:inline-block; vertical-align:middle;">
-          <strong style="font-weight:900; font-size:12px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
-          <img src="${STAMP_SRC}" style="position:absolute; left:28px; top:-12px; width:44px; height:44px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
+          <strong style="font-weight:900; font-size:11.5px; letter-spacing:2px; vertical-align:middle;">임 형 택</strong>
+          <img src="${STAMP_SRC}" style="position:absolute; left:26px; top:-12px; width:44px; height:44px; object-fit:contain; pointer-events:none;" alt="청년인쇄사 직인">
         </span>
       `;
 
-      // 💡 [상단 헤더 정보 박스: 글자 잘림 완벽 해결 및 칼정렬]
+      // 💡 [순수 100% Table 구조 - PDF 변환 시 글자 겹침 및 좌측 세로선 원천 차단]
       const headerBox = `
-        <div>
-          <div class="text-center mb-6 pt-1">
-            <h1 class="text-3xl font-black tracking-[0.8em] pl-3 text-black">견 &nbsp; 적 &nbsp; 서</h1>
+        <div style="width:100%;">
+          <div style="text-align:center; margin-bottom:14px;">
+            <h1 style="font-size:26px; font-weight:900; letter-spacing:0.8em; padding-left:12px; color:#000000; margin:0; line-height:1.2;">견 &nbsp; 적 &nbsp; 서</h1>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 mb-3 text-[11px] leading-relaxed">
-            <!-- 좌측: 수신처 -->
-            <div class="border border-black p-3 bg-white flex flex-col justify-between" style="min-height: 96px;">
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">수 &nbsp; &nbsp; 신 :</span> <span class="font-black text-blue-950 text-sm truncate">${org}</span></div>
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">발 &nbsp; &nbsp; 신 :</span> <span class="font-bold">청년인쇄사</span></div>
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">일 &nbsp; &nbsp; 자 :</span> <span class="font-mono-code">${ds}</span></div>
-              <div class="flex items-center"><span class="w-16 font-bold shrink-0">제 &nbsp; &nbsp; 목 :</span> <span class="truncate font-medium">인쇄 및 제본 제작 견적의 件</span></div>
-            </div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:8px;">
+            <tr>
+              <!-- 좌측: 수신처 (49%) -->
+              <td style="width:49%; vertical-align:top; border:1px solid #000000; padding:8px 10px; background:#FFFFFF;">
+                <table style="width:100%; border-collapse:collapse; font-size:11px; line-height:1.5;">
+                  <tr><td style="width:55px; font-weight:bold;">수 &nbsp; &nbsp; 신 :</td><td style="font-weight:900; color:#1e3a8a; font-size:12px;" class="truncate">${org}</td></tr>
+                  <tr><td style="font-weight:bold;">발 &nbsp; &nbsp; 신 :</td><td style="font-weight:bold;">청년인쇄사</td></tr>
+                  <tr><td style="font-weight:bold;">일 &nbsp; &nbsp; 자 :</td><td style="font-family:'Fira Code', monospace;">${ds}</td></tr>
+                  <tr><td style="font-weight:bold;">제 &nbsp; &nbsp; 목 :</td><td class="truncate">인쇄 및 제본 제작 견적의 件</td></tr>
+                </table>
+              </td>
 
-            <!-- 우측: 공급자 정보 (4열 micro-table 적용으로 세로선 1:1 완벽 정렬) -->
-            <div class="border border-black p-3 bg-white flex flex-col justify-between" style="min-height: 96px;">
-              <div class="flex justify-between font-bold text-xs border-b border-gray-300 pb-1 mb-1">
-                <span>청 년 인 쇄 사</span>
-                <span class="font-mono-code">등록번호: 119-22-03638</span>
-              </div>
-              <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.5;">
-                <tr>
-                  <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
-                  <td style="width:82px; vertical-align:middle;">청년인쇄사</td>
-                  <td style="width:48px; font-weight:bold; vertical-align:middle;">대 &nbsp; 표 :</td>
-                  <td style="vertical-align:middle;">${stamp}</td>
-                </tr>
-                <tr>
-                  <td style="font-weight:bold; vertical-align:middle;">소 재 지 :</td>
-                  <td colspan="3" style="vertical-align:middle; font-size:10px;" class="truncate">세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</td>
-                </tr>
-                <tr>
-                  <td style="font-weight:bold; vertical-align:middle;">직통전화 :</td>
-                  <td style="font-family:'Fira Code', monospace; vertical-align:middle;">044-862-4803</td>
-                  <td style="font-weight:bold; vertical-align:middle;">E-mail :</td>
-                  <td style="font-family:'Fira Code', monospace; vertical-align:middle;" class="truncate">admin@ybprint.co.kr</td>
-                </tr>
-              </table>
-            </div>
-          </div>
+              <!-- 가운데 여백 (2%) -->
+              <td style="width:2%;"></td>
+
+              <!-- 우측: 공급자 정보 (49%) -->
+              <td style="width:49%; vertical-align:top; border:1px solid #000000; padding:8px 10px; background:#FFFFFF;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:11px; border-bottom:1px solid #e2e8f0; padding-bottom:2px; margin-bottom:3px;">
+                  <span>청 년 인 쇄 사</span>
+                  <span style="font-family:'Fira Code', monospace;">등록번호: 119-22-03638</span>
+                </div>
+                <table style="width:100%; border-collapse:collapse; font-size:10.5px; line-height:1.45;">
+                  <tr>
+                    <td style="width:52px; font-weight:bold; vertical-align:middle;">상 &nbsp; &nbsp; 호 :</td>
+                    <td style="width:78px; vertical-align:middle;">청년인쇄사</td>
+                    <td style="width:44px; font-weight:bold; vertical-align:middle;">대 &nbsp; 표 :</td>
+                    <td style="vertical-align:middle;">${stamp}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold; vertical-align:middle;">소 재 지 :</td>
+                    <td colspan="3" style="vertical-align:middle; font-size:9.5px;" class="truncate">세종특별자치시 갈매로 364, 118호 (대우푸르지오시티1차)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold; vertical-align:middle;">직통전화 :</td>
+                    <td style="font-family:'Fira Code', monospace; vertical-align:middle;">044-862-4803</td>
+                    <td style="font-weight:bold; vertical-align:middle;">E-mail :</td>
+                    <td style="font-family:'Fira Code', monospace; vertical-align:middle;" class="truncate">admin@ybprint.co.kr</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
 
           <!-- 합계금액 바 -->
-          <div class="border border-black bg-slate-100 px-4 py-2 flex justify-between items-center mb-3 font-bold text-xs">
-            <div class="flex items-center gap-3">
-              <span>합계금액 :</span>
-              <span class="font-black text-black text-sm">일금 ${numToKor(total)} 정</span>
-              <span class="text-[11px] font-bold text-blue-900 bg-white border border-blue-400 shadow-xs px-2.5 py-0.5 rounded font-mono-code">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
-            </div>
-            <div class="font-mono-code text-sm font-black">
-              ( ₩ <span>${total.toLocaleString()}</span> )
-            </div>
-          </div>
+          <table style="width:100%; border-collapse:collapse; border:1px solid #000000; background:#f1f5f9; margin-bottom:8px;">
+            <tr>
+              <td style="padding:6px 12px; font-weight:bold; font-size:11.5px; vertical-align:middle;">
+                <span>합계금액 :</span>
+                <span style="font-weight:900; color:#000000; font-size:12.5px; margin-left:6px;">일금 ${numToKor(total)} 정</span>
+                <span style="font-size:10.5px; font-weight:bold; color:#1e3a8a; background:#FFFFFF; border:1px solid #93c5fd; padding:1px 8px; border-radius:4px; font-family:'Fira Code', monospace; margin-left:8px;">[ 1부당 단가 : ₩ ${unitPrice.toLocaleString()} (VAT포함) ]</span>
+              </td>
+              <td style="padding:6px 12px; text-align:right; font-family:'Fira Code', monospace; font-size:13px; font-weight:900; vertical-align:middle;">
+                ( ₩ <span>${total.toLocaleString()}</span> )
+              </td>
+            </tr>
+          </table>
         </div>
       `;
 
@@ -638,10 +783,10 @@
         }
 
         tableHTML = `
-          <div class="flex-1 flex flex-col justify-start">
-            <table class="excel-table text-center mb-2">
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:start;">
+            <table class="excel-table text-center mb-1.5">
               <thead><tr><th>품명</th><th class="w-20">규격</th><th class="w-16">수량</th><th class="w-16">면수</th><th>사양</th></tr></thead>
-              <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / 무선제본</td></tr></tbody>
+              <tbody><tr><td class="font-bold">교육 교재 제작</td><td class="font-mono-code">210*297 (A4)</td><td class="font-mono-code font-bold">${q}부</td><td class="font-mono-code">${p}p</td><td class="text-left font-medium">표지칼라 / 본문흑백 / ${bindingText}</td></tr></tbody>
             </table>
             <table class="excel-table text-left">
               <thead><tr><th class="w-28 text-center">항목</th><th>산출내역 및 사양</th><th class="w-28 text-right">금액(원)</th><th class="w-36 text-center">비고</th></tr></thead>
@@ -671,7 +816,7 @@
         const otherGroupHtml = renderSectionGroup7Col('기타', rows, 5);
 
         tableHTML = `
-          <div class="flex-1 flex flex-col justify-start">
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:start;">
             <table class="excel-table text-left">
               <thead>
                 <tr>
@@ -694,7 +839,7 @@
                 <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">소 &nbsp; &nbsp; 계</td><td class="text-right font-mono-code border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
                 <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">절 &nbsp; &nbsp; 사</td><td class="text-right font-mono-code border border-black">${cutAmount.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
                 <tr><td colspan="5" class="text-center py-1 bg-slate-50 border border-black">(VAT 제외) 금액 합계</td><td class="text-right font-mono-code font-bold border border-black">${sub.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
-                <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-xs font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
+                <tr class="bg-slate-100"><td colspan="5" class="text-center py-1 font-black text-xs border border-black">(VAT 포함) 총 견적금액</td><td class="text-right py-1 text-blue-900 font-mono-code text-sm font-black border border-black">${total.toLocaleString()}</td><td class="text-center text-gray-400 border border-black">-</td></tr>
               </tfoot>
             </table>
           </div>
@@ -720,7 +865,7 @@
         while (otherRows.length < 5) otherRows.push({ mid: '', name: '', qtyStr: '', priceStr: '', amt: 0, rem: '' });
 
         tableHTML = `
-          <div class="flex-1 flex flex-col justify-start">
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:start;">
             <table class="excel-table text-left">
               <thead>
                 <tr>
@@ -782,7 +927,7 @@
                   <td class="font-bold border border-black text-[10px] pl-1.5">${ctpRows[0].name}</td>
                   <td class="text-center font-mono-code border border-black">${ctpRows[0].qtyStr}</td>
                   <td class="text-right font-mono-code border border-black">${ctpRows[0].priceStr}</td>
-                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[0].amt > 0 ? ctpRows[0].amt.toLocaleString() : ''}</td>
+                  <td class="text-right font-mono-code font-bold border border-black">${ctpRows[0].amt > 0 ? paperRows[0].amt.toLocaleString() : ''}</td>
                   <td class="text-center text-gray-600 text-[9.5px] border border-black">${ctpRows[0].rem}</td>
                 </tr>
                 <tr>
@@ -833,8 +978,8 @@
       }
 
       const footerNotice = `
-        <div class="mt-4 text-[10px] text-gray-500 space-y-0.5 leading-tight pb-1">
-          <p>※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
+        <div style="margin-top:12px; font-size:10px; color:#4b5563; line-height:1.4; padding-bottom:2px;">
+          <p style="margin:0;">※ 본 견적서는 발행일로부터 15일간 유효합니다.</p>
         </div>
       `;
 
@@ -872,9 +1017,41 @@
       });
     }
 
+    // 💡 [카카오톡 안내 멘트 복사 기능]
+    function copyKakaoMessage() {
+      const org = document.getElementById('input-org').value || '고객';
+      const tmpl = document.getElementById('input-template').value;
+      const q = document.getElementById('input-qty').value;
+      const p = document.getElementById('input-page').value;
+      const bindingSelect = document.getElementById('input-binding');
+      const bindingText = bindingSelect ? bindingSelect.value : '무선제본';
+      const total = document.getElementById('val-total').innerText;
+      const numTotal = parseInt(total.replace(/[^0-9]/g, '')) || 0;
+      const unitPrice = q > 0 ? Math.round(numTotal / parseInt(q)) : numTotal;
+
+      const kakaoMsg = `[청년인쇄사] 견적 안내드립니다.
+
+■ 수신처 : ${org} 담당자님
+■ 제작 사양 : ${tmpl} (${q}부 / ${p}p / ${bindingText})
+■ 총 견적금액 : ${total} (VAT 포함)
+■ 1부당 단가 : ₩ ${unitPrice.toLocaleString()}원
+
+※ 세부 공정 내역은 첨부해 드린 정식 견적서 이미지를 확인해 주시기 바랍니다.
+※ 법인카드 결제 및 세금계산서 후불 정산이 가능합니다.
+☎ 직통 문의: 044-862-4803`;
+
+      navigator.clipboard.writeText(kakaoMsg).then(() => {
+        alert("카카오톡 안내 문구가 복사되었습니다!\n\n카카오톡 대화창에서 [ Ctrl + V ]로 전송하세요.");
+        recordManualInquiry();
+        toggleComp(document.getElementById('input-phone').dataset.timeKey);
+      }).catch(() => {
+        prompt("아래 텍스트를 복사하여 카카오톡에 붙여넣으세요:", kakaoMsg);
+      });
+    }
+
     async function getJpgBlob() {
       const el = document.getElementById('quote-printable-area');
-      const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_');
+      const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_') || '견적서';
       const fileName = `청년인쇄사_견적서_${org}.jpg`;
 
       const canvas = await html2canvas(el, {
@@ -919,6 +1096,7 @@
           ]);
 
           alert("정규 A4 견적서 이미지가 클립보드에 복사되었습니다.\n\n카카오톡 대화창에서 [ Ctrl + V ]를 누르면 이미지가 바로 첨부됩니다.");
+          recordManualInquiry();
           toggleComp(document.getElementById('input-phone').dataset.timeKey);
         } else {
           const a = document.createElement('a');
@@ -926,6 +1104,7 @@
           a.download = fileName;
           a.click();
           alert("견적서 이미지가 다운로드되었습니다.");
+          recordManualInquiry();
           toggleComp(document.getElementById('input-phone').dataset.timeKey);
         }
       } catch (e) {
@@ -935,6 +1114,7 @@
         a.download = fileName;
         a.click();
         alert("견적서 이미지가 저장되었습니다.");
+        recordManualInquiry();
         toggleComp(document.getElementById('input-phone').dataset.timeKey);
       } finally {
         btn.disabled = false;
@@ -956,6 +1136,7 @@
         a.href = dataUrl;
         a.download = fileName;
         a.click();
+        recordManualInquiry();
         toggleComp(document.getElementById('input-phone').dataset.timeKey);
       } catch(e) { 
         alert("JPG 저장에 실패했습니다."); 
@@ -967,27 +1148,20 @@
     }
 
     async function getPdfBase64() {
-      const step2 = document.getElementById('quote-step-2-content');
       const el = document.getElementById('quote-printable-area');
-      const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_');
+      const org = document.getElementById('input-org').value.replace(/[^a-zA-Z0-9가-힣]/g,'_') || '견적서';
       const fileName = `청년인쇄사_견적서_${org}.pdf`;
 
-      const origDisplay = step2.style.display;
-      step2.style.display = 'block';
-      step2.style.position = 'absolute';
-      step2.style.left = '-9999px';
-
       const opt = { 
-        margin: [8, 8, 8, 8], 
+        margin: [0, 0, 0, 0], 
         filename: fileName, 
         image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { scale: 2, useCORS: true, logging: false }, 
+        html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 }, 
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
       };
       const worker = html2pdf().set(opt).from(el);
       const pdfBase64String = await worker.outputPdf('datauristring');
       
-      step2.style.position = ''; step2.style.left = ''; step2.style.display = origDisplay;
       return { base64: pdfBase64String.split('base64,')[1], fileName, worker };
     }
 
@@ -997,6 +1171,7 @@
       try {
         const { worker } = await getPdfBase64();
         worker.save();
+        recordManualInquiry();
         toggleComp(document.getElementById('input-phone').dataset.timeKey);
         setTimeout(closeQuoteModal, 1500);
       } catch(e) { alert("PDF 저장 실패"); }
@@ -1016,7 +1191,7 @@
 
       try {
         const { base64, fileName } = await getPdfBase64();
-        const org = document.getElementById('input-org').value;
+        const org = document.getElementById('input-org').value || '고객';
         const total = document.getElementById('val-total').innerText;
 
         const html = `<div style="font-family:sans-serif; max-width:600px; padding:20px; border:1px solid #e5e7eb; border-radius:8px;">
@@ -1040,6 +1215,7 @@
 
         if (res.ok && result.success) { 
           alert(`🎉 발송 성공! (${toEmail.trim()})\n요약 본문과 정식 PDF 견적서가 정상 첨부되어 전송되었습니다.`); 
+          recordManualInquiry();
           toggleComp(document.getElementById('input-phone').dataset.timeKey);
           closeQuoteModal();
         } else { 
