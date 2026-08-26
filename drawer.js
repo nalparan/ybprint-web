@@ -9,8 +9,8 @@ window.addEventListener('drop', function(e) {
   if (files.length > 0) { toggleDrawer(true); processFiles(files); }
 }, false);
 
-// Render 백엔드 웜업
-const RENDER_BACKEND_URL = "https://ybprint-backend-1.onrender.com";
+// Render 백엔드 웜업 (진짜 백엔드 주소로 연결)
+const RENDER_BACKEND_URL = "https://ybprint-backend.onrender.com";
 let isWarmingUp = false;
 function wakeUpBackend() {
   if (isWarmingUp) return;
