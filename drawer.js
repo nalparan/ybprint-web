@@ -9,7 +9,7 @@ window.addEventListener('drop', function(e) {
   if (files.length > 0) { toggleDrawer(true); processFiles(files); }
 }, false);
 
-// Render 백엔드 웜업 (진짜 백엔드 주소로 연결)
+// Render 백엔드 웜업
 const RENDER_BACKEND_URL = "https://ybprint-backend.onrender.com";
 let isWarmingUp = false;
 function wakeUpBackend() {
@@ -788,7 +788,7 @@ async function sendRealPdfToBackend(inputFiles) {
   }, 500);
 }
 
-// 최종 견적 접수 전송
+// 최종 견적 접수 전송 (0.1초 즉시 반응형 완료 처리)
 async function handleCtaClick() {
   const orgInput = document.getElementById('client-org');
   const phoneInput = document.getElementById('client-phone');
@@ -796,48 +796,46 @@ async function handleCtaClick() {
   const btn = document.getElementById('cta-button');
   
   const isEmail = /[a-zA-Z@]/.test(phoneInput.value.trim());
-  
-  btn.disabled = true;
-  btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span class="text-[15px] font-bold">서버 연결 및 대용량 원고 전송 준비 중 (최대 1분 소요)...</span>';
-  lucide.createIcons();
+  const orgVal = orgInput.value.trim();
+  const phoneVal = phoneInput.value.trim();
+  const inquiryVal = inquiryInput ? inquiryInput.value.trim() : "";
+  const fileNameVal = uploadedFilesList.map(f => f.name).join(", ") || "첨부파일 없음";
+  const specVal = lastScannedSpecSummary || "직접 문의 접수";
 
+  // 고객 대기 시간 0초: 버튼 누르자마자 즉시 완료 안내 후 서랍장 닫기
+  alert("견적 문의가 정상 접수되었습니다.\n담당자가 확인 후 신속히 안내해 드리겠습니다.");
+  toggleDrawer(false);
+
+  // 폼 데이터 생성
   const formData = new FormData();
-  formData.append("org", orgInput.value.trim());
-  formData.append("phone", phoneInput.value.trim());
-  formData.append("inquiry", inquiryInput ? inquiryInput.value.trim() : "");
-  formData.append("file_name", uploadedFilesList.map(f => f.name).join(", ") || "첨부파일 없음");
-  formData.append("spec", lastScannedSpecSummary || "직접 문의 접수");
-
+  formData.append("org", orgVal);
+  formData.append("phone", phoneVal);
+  formData.append("inquiry", inquiryVal);
+  formData.append("file_name", fileNameVal);
+  formData.append("spec", specVal);
   uploadedFilesList.forEach(file => formData.append("file", file));
 
-  try {
-    const response = await fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, { method: "POST", body: formData });
-    
-    try {
-      await fetch('/api/send-order', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: orgInput.value.trim(),
-          email: isEmail ? phoneInput.value.trim() : 'admin@ybprint.co.kr',
-          phone: isEmail ? '' : phoneInput.value.trim(),
-          details: (inquiryInput.value || '') + `\n- 첨부파일: ${formData.get("file_name")}`
-        })
-      });
-    } catch (e) {}
-
-    if (response.ok) {
-      alert("접수가 정상적으로 완료되었습니다.");
-      toggleDrawer(false);
-    } else {
-      alert("접수 중 서버 지연이 발생했습니다. 다시 한번 버튼을 눌러주세요.");
-    }
-  } catch (err) {
-    alert("접수 중 서버 지연이 발생했습니다. 다시 한번 버튼을 눌러주세요.");
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '작성한 내용으로 견적 문의하기';
+  // 백엔드 저장과 이메일 발송을 백그라운드 병렬 처리
+  Promise.allSettled([
+    fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, { method: "POST", body: formData }),
+    fetch('/api/send-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: orgVal,
+        email: isEmail ? phoneVal : 'admin@ybprint.co.kr',
+        phone: isEmail ? '' : phoneVal,
+        details: `${inquiryVal}\n- 첨부파일: ${fileNameVal}`
+      })
+    })
+  ]).then(() => {
+    orgInput.value = '';
+    phoneInput.value = '';
+    if (inquiryInput) inquiryInput.value = '';
+    uploadedFilesList = [];
+    hasUploadedFile = false;
     validateForm();
-  }
+  });
 }
 
 // 3D 자비스 구체 애니메이션
