@@ -6,7 +6,9 @@
   <title>청년인쇄사</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   
+  <!-- ========================================== -->
   <!-- 카카오톡 / SNS 링크 미리보기 (Open Graph 메타태그) -->
+  <!-- ========================================== -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.ybprint.co.kr">
   <meta property="og:title" content="청년인쇄사 | 세종청사 전담 인쇄 · AI 원고 검수">
@@ -26,15 +28,17 @@
 
   <style>
     /* ========================================== */
-    /* GNB 라이트 모드 (섹션 02 등 밝은 배경 진입 시) */
+    /* GNB 라이트 모드 (하드웨어 가속 최적화) */
     /* ========================================== */
     .gnb {
-      transition: background-color 0.3s ease, border-color 0.3s ease;
+      transform: translateZ(0);
+      will-change: background-color, border-color;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
     }
     .gnb.is-light {
-      background: rgba(255, 255, 255, 0.88) !important;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.92) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
     }
     .gnb.is-light .logo-img {
@@ -64,11 +68,13 @@
       background: #e4e4e7;
       position: relative;
       overflow: hidden;
+      transform: translateZ(0);
     }
     .towards-line-progress {
       width: 0%;
       height: 100%;
       background: #09090b;
+      will-change: width;
     }
 
     /* 카카오톡 플로팅 버튼 */
@@ -86,10 +92,11 @@
       align-items: center;
       z-index: 9980;
       text-decoration: none;
+      transform: translateZ(0);
       transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
     }
     .kakao-floating-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) translateZ(0);
       box-shadow: 0 12px 28px rgba(0,0,0,0.3);
     }
     .kakao-floating-btn svg {
@@ -432,31 +439,37 @@
     </svg>
   </a>
 
-  <!-- [스크립트] GNB 테마 전환 & 섹션 02 프로그레스 바 -->
+  <!-- [초고속 최적화 스크립트] 60FPS 스크롤 렌더링 & GNB 테마 전환 -->
   <script>
-    // 1. 섹션 02(흰색 영역) 진입 시 GNB 라이트 모드 동적 전환
+    // 1. GNB 테마 전환 최적화 (브라우저 프레임 단위 쓰로틀링으로 끊김 방지)
+    let gnbTicking = false;
     function handleGnbTheme() {
-      const gnb = document.getElementById('mainHeader');
-      const sec2 = document.getElementById('ai-check');
-      if (!gnb || !sec2) return;
-
-      const gnbHeight = gnb.offsetHeight || 70;
-      const rect = sec2.getBoundingClientRect();
-
-      // 섹션 02 영역이 GNB와 겹칠 때만 라이트 모드 적용
-      if (rect.top <= gnbHeight && rect.bottom >= gnbHeight) {
-        gnb.classList.add('is-light');
-      } else {
-        gnb.classList.remove('is-light');
+      if (!gnbTicking) {
+        window.requestAnimationFrame(() => {
+          const gnb = document.getElementById('mainHeader');
+          const sec2 = document.getElementById('ai-check');
+          if (gnb && sec2) {
+            const rect = sec2.getBoundingClientRect();
+            // 섹션 02와 GNB가 맞닿거나 겹칠 때 라이트 모드 전환
+            if (rect.top <= 70 && rect.bottom >= 70) {
+              gnb.classList.add('is-light');
+            } else {
+              gnb.classList.remove('is-light');
+            }
+          }
+          gnbTicking = false;
+        });
+        gnbTicking = true;
       }
     }
 
     window.addEventListener('scroll', handleGnbTheme, { passive: true });
     window.addEventListener('resize', handleGnbTheme, { passive: true });
 
-    // 2. 섹션 02 게이지 애니메이션
+    // 2. 섹션 02 게이지 애니메이션 (화면에 보일 때만 가동하여 CPU/GPU 절약)
     let towardsLoopTimeout = null;
     let towardsAnimationId = null;
+    let isSectionInView = false;
 
     function getIrregularProgress(timeFraction) {
       if (timeFraction < 0.4) {
@@ -471,6 +484,8 @@
     }
 
     function runTowardsLoop() {
+      if (!isSectionInView) return; // 화면 밖이면 애니메이션 계산 중단
+
       const numEl = document.getElementById('giant-percent-num');
       const progressEl = document.getElementById('towards-line-progress');
       const statusEl = document.getElementById('towards-status-text');
@@ -487,6 +502,7 @@
       const startTime = performance.now();
 
       function step(now) {
+        if (!isSectionInView) return;
         const elapsed = now - startTime;
         const t = Math.min(elapsed / duration, 1);
         
@@ -513,7 +529,7 @@
         } else {
           numEl.textContent = "100";
           progressEl.style.width = "100%";
-          towardsLoopTimeout = setTimeout(runTowardsLoop, 1500);
+          towardsLoopTimeout = setTimeout(runTowardsLoop, 2000);
         }
       }
 
@@ -521,6 +537,7 @@
     }
 
     function restartTowardsLine() {
+      isSectionInView = true;
       runTowardsLoop();
     }
 
@@ -528,21 +545,20 @@
       handleGnbTheme();
 
       const sectionAi = document.getElementById('ai-check');
-      let isTriggered = false;
-
       if ('IntersectionObserver' in window && sectionAi) {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
-            if (entry.isIntersecting && !isTriggered) {
-              isTriggered = true;
+            if (entry.isIntersecting) {
+              isSectionInView = true;
               runTowardsLoop();
-              observer.unobserve(entry.target);
+            } else {
+              isSectionInView = false; // 시야를 벗어나면 애니메이션 루프 중단
+              if (towardsAnimationId) cancelAnimationFrame(towardsAnimationId);
+              if (towardsLoopTimeout) clearTimeout(towardsLoopTimeout);
             }
           });
-        }, { threshold: 0.25 });
+        }, { threshold: 0.15 });
         observer.observe(sectionAi);
-      } else {
-        setTimeout(runTowardsLoop, 600);
       }
     });
   </script>
