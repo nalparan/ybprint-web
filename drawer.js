@@ -788,7 +788,7 @@ async function sendRealPdfToBackend(inputFiles) {
   }, 500);
 }
 
-// 최종 견적 접수 전송 (0.1초 즉시 반응형 완료 처리)
+// 최종 견적 접수 전송 (0.1초 즉시 반응형 완료 처리 + 텔레그램 연동)
 async function handleCtaClick() {
   const orgInput = document.getElementById('client-org');
   const phoneInput = document.getElementById('client-phone');
@@ -815,7 +815,16 @@ async function handleCtaClick() {
   formData.append("spec", specVal);
   uploadedFilesList.forEach(file => formData.append("file", file));
 
-  // 백엔드 저장과 이메일 발송을 백그라운드 병렬 처리
+  // 텔레그램 알림 메시지 조합
+  const telegramText = 
+    `🔔 [청년인쇄사] 새 견적 문의 접수!\n\n` +
+    `👤 고객/기관: ${orgVal}\n` +
+    `📞 연락처: ${phoneVal}\n` +
+    `📝 문의내용: ${inquiryVal || '(내용 없음 - 파일 접수)'}\n` +
+    `📎 첨부파일: ${fileNameVal}\n` +
+    `📐 검수사양: ${specVal}`;
+
+  // 백엔드 저장, 이메일 발송, 텔레그램 알림 병렬 전송
   Promise.allSettled([
     fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, { method: "POST", body: formData }),
     fetch('/api/send-order', {
@@ -826,6 +835,14 @@ async function handleCtaClick() {
         email: isEmail ? phoneVal : 'admin@ybprint.co.kr',
         phone: isEmail ? '' : phoneVal,
         details: `${inquiryVal}\n- 첨부파일: ${fileNameVal}`
+      })
+    }),
+    fetch('https://api.telegram.org/bot8973853530:AAEYORrlf_W0ms_BmaQuYcM84Trmhd7PGXA/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: '8662785838',
+        text: telegramText
       })
     })
   ]).then(() => {
