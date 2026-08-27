@@ -6,9 +6,7 @@
   <title>청년인쇄사</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   
-  <!-- ========================================== -->
   <!-- 카카오톡 / SNS 링크 미리보기 (Open Graph 메타태그) -->
-  <!-- ========================================== -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.ybprint.co.kr">
   <meta property="og:title" content="청년인쇄사 | 세종청사 전담 인쇄 · AI 원고 검수">
@@ -23,13 +21,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;800;900&family=Urbanist:wght@200;300;400;500;600;800&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- 분리된 공통 스타일시트 -->
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* ========================================== */
     /* GNB 라이트 모드 (하드웨어 가속 최적화) */
-    /* ========================================== */
     .gnb {
       transform: translateZ(0);
       will-change: background-color, border-color;
@@ -41,68 +36,26 @@
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
     }
-    .gnb.is-light .logo-img {
-      filter: brightness(0) !important; /* 로고 검은색 전환 */
-    }
-    .gnb.is-light .gnb-nav a {
-      color: #18181b !important; /* 메뉴 글씨 검은색 전환 */
-    }
-    .gnb.is-light .gnb-nav a:hover {
-      color: #2563eb !important;
-    }
-    .gnb.is-light .gnb-phone-badge {
-      background: rgba(0, 0, 0, 0.05) !important;
-      border-color: rgba(0, 0, 0, 0.15) !important;
-    }
-    .gnb.is-light .phone-label {
-      color: #71717a !important;
-    }
-    .gnb.is-light .phone-num {
-      color: #09090b !important;
-    }
+    .gnb.is-light .logo-img { filter: brightness(0) !important; }
+    .gnb.is-light .gnb-nav a { color: #18181b !important; }
+    .gnb.is-light .gnb-nav a:hover { color: #2563eb !important; }
+    .gnb.is-light .gnb-phone-badge { background: rgba(0, 0, 0, 0.05) !important; border-color: rgba(0, 0, 0, 0.15) !important; }
+    .gnb.is-light .phone-label { color: #71717a !important; }
+    .gnb.is-light .phone-num { color: #09090b !important; }
 
-    /* 섹션 02 극한 슬림 게이지 라인 (2px) */
-    .towards-line-track {
-      width: 100%;
-      height: 2px;
-      background: #e4e4e7;
-      position: relative;
-      overflow: hidden;
-      transform: translateZ(0);
-    }
-    .towards-line-progress {
-      width: 0%;
-      height: 100%;
-      background: #09090b;
-      will-change: width;
-    }
+    /* 게이지 라인 */
+    .towards-line-track { width: 100%; height: 2px; background: #e4e4e7; position: relative; overflow: hidden; transform: translateZ(0); }
+    .towards-line-progress { width: 0%; height: 100%; background: #09090b; will-change: width; }
 
     /* 카카오톡 플로팅 버튼 */
     .kakao-floating-btn {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      width: 60px;
-      height: 60px;
-      background-color: #FEE500;
-      border-radius: 50%;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9980;
-      text-decoration: none;
-      transform: translateZ(0);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px;
+      background-color: #FEE500; border-radius: 50%; box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      display: flex; justify-content: center; align-items: center; z-index: 9980; text-decoration: none;
+      transform: translateZ(0); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
     }
-    .kakao-floating-btn:hover {
-      transform: scale(1.1) translateZ(0);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
-    }
-    .kakao-floating-btn svg {
-      width: 34px;
-      height: 34px;
-    }
+    .kakao-floating-btn:hover { transform: scale(1.1) translateZ(0); box-shadow: 0 12px 28px rgba(0,0,0,0.3); }
+    .kakao-floating-btn svg { width: 34px; height: 34px; }
   </style>
 </head>
 <body>
@@ -264,14 +217,16 @@
   <!-- 서랍장 백드롭 -->
   <div id="drawer-backdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9990] hidden transition-opacity duration-300"></div>
 
-  <!-- 서랍장 패널 -->
-  <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-500 ease-out">
+  <!-- 서랍장 패널 (드래그 & 애니메이션 손 탭 탑재) -->
+  <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left is-closed transition-transform duration-300 ease-out">
     
+    <!-- 💡 손 흔들기 및 유혹 애니메이션 탭 버튼 -->
     <button id="drawer-index-tab" 
-            onclick="toggleDrawer(true)"
+            type="button"
             title="AI 원고 검수 및 빠른 견적 서랍장 열기" 
-            class="absolute -left-10 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3 py-5 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2.5 cursor-grab active:cursor-grabbing transition-colors duration-200 group z-30 select-none">
-      <span class="text-xs font-black [writing-mode:vertical-rl] tracking-widest text-slate-100 group-hover:text-white py-2 pointer-events-none">끌어당겨보세요</span>
+            class="drawer-tab-btn drawer-tab-nudge absolute -left-12 top-1/2 -translate-y-1/2 bg-[#7A5734] hover:bg-[#C49A6C] text-white px-3.5 py-6 rounded-l-2xl shadow-2xl border-l-2 border-t-2 border-b-2 border-white/30 flex flex-col items-center gap-2 cursor-grab active:cursor-grabbing select-none z-30">
+      <span class="wave-hand-icon text-xl leading-none">👋</span>
+      <span class="text-xs font-black [writing-mode:vertical-rl] tracking-widest text-slate-100 py-1 pointer-events-none">끌어당겨보세요</span>
     </button>
     
     <div class="px-8 py-5 flex justify-between items-center shrink-0 top-header-bg text-white z-20 shadow-md">
@@ -439,9 +394,8 @@
     </svg>
   </a>
 
-  <!-- [초고속 최적화 스크립트] 60FPS 스크롤 렌더링 & GNB 테마 전환 -->
+  <!-- GNB 최적화 스크립트 -->
   <script>
-    // 1. GNB 테마 전환 최적화 (브라우저 프레임 단위 쓰로틀링으로 끊김 방지)
     let gnbTicking = false;
     function handleGnbTheme() {
       if (!gnbTicking) {
@@ -450,7 +404,6 @@
           const sec2 = document.getElementById('ai-check');
           if (gnb && sec2) {
             const rect = sec2.getBoundingClientRect();
-            // 섹션 02와 GNB가 맞닿거나 겹칠 때 라이트 모드 전환
             if (rect.top <= 70 && rect.bottom >= 70) {
               gnb.classList.add('is-light');
             } else {
@@ -466,26 +419,19 @@
     window.addEventListener('scroll', handleGnbTheme, { passive: true });
     window.addEventListener('resize', handleGnbTheme, { passive: true });
 
-    // 2. 섹션 02 게이지 애니메이션 (화면에 보일 때만 가동하여 CPU/GPU 절약)
+    // 섹션 02 게이지 애니메이션
     let towardsLoopTimeout = null;
     let towardsAnimationId = null;
     let isSectionInView = false;
 
     function getIrregularProgress(timeFraction) {
-      if (timeFraction < 0.4) {
-        return 0.3 * Math.pow(timeFraction / 0.4, 2);
-      } else if (timeFraction < 0.6) {
-        let p = (timeFraction - 0.4) / 0.2;
-        return 0.3 + (0.5 * p);
-      } else {
-        let p = (timeFraction - 0.6) / 0.4;
-        return 0.8 + (0.2 * (1 - Math.pow(1 - p, 4)));
-      }
+      if (timeFraction < 0.4) return 0.3 * Math.pow(timeFraction / 0.4, 2);
+      if (timeFraction < 0.6) return 0.3 + (0.5 * ((timeFraction - 0.4) / 0.2));
+      return 0.8 + (0.2 * (1 - Math.pow(1 - ((timeFraction - 0.6) / 0.4), 4)));
     }
 
     function runTowardsLoop() {
-      if (!isSectionInView) return; // 화면 밖이면 애니메이션 계산 중단
-
+      if (!isSectionInView) return;
       const numEl = document.getElementById('giant-percent-num');
       const progressEl = document.getElementById('towards-line-progress');
       const statusEl = document.getElementById('towards-status-text');
@@ -505,7 +451,6 @@
         if (!isSectionInView) return;
         const elapsed = now - startTime;
         const t = Math.min(elapsed / duration, 1);
-        
         const val = getIrregularProgress(t);
         const currentVal = Math.floor(val * 100);
 
@@ -513,37 +458,26 @@
         progressEl.style.width = (val * 100) + '%';
 
         if (statusEl) {
-          if (currentVal < 30) {
-            statusEl.textContent = "원고 확인 중 (여백 및 치수 실측)...";
-          } else if (currentVal < 80) {
-            statusEl.textContent = "정부표준문서 규격 정합도 분석 중...";
-          } else if (currentVal < 100) {
-            statusEl.textContent = "인쇄 최적화 규격 자동 보정 중...";
-          } else {
-            statusEl.textContent = "정부표준문서 규격 100% 최적화 완료";
-          }
+          if (currentVal < 30) statusEl.textContent = "원고 확인 중 (여백 및 치수 실측)...";
+          else if (currentVal < 80) statusEl.textContent = "정부표준문서 규격 정합도 분석 중...";
+          else if (currentVal < 100) statusEl.textContent = "인쇄 최적화 규격 자동 보정 중...";
+          else statusEl.textContent = "정부표준문서 규격 100% 최적화 완료";
         }
 
-        if (t < 1) {
-          towardsAnimationId = requestAnimationFrame(step);
-        } else {
+        if (t < 1) towardsAnimationId = requestAnimationFrame(step);
+        else {
           numEl.textContent = "100";
           progressEl.style.width = "100%";
           towardsLoopTimeout = setTimeout(runTowardsLoop, 2000);
         }
       }
-
       towardsAnimationId = requestAnimationFrame(step);
     }
 
-    function restartTowardsLine() {
-      isSectionInView = true;
-      runTowardsLoop();
-    }
+    function restartTowardsLine() { isSectionInView = true; runTowardsLoop(); }
 
     document.addEventListener('DOMContentLoaded', () => {
       handleGnbTheme();
-
       const sectionAi = document.getElementById('ai-check');
       if ('IntersectionObserver' in window && sectionAi) {
         const observer = new IntersectionObserver((entries) => {
@@ -552,7 +486,7 @@
               isSectionInView = true;
               runTowardsLoop();
             } else {
-              isSectionInView = false; // 시야를 벗어나면 애니메이션 루프 중단
+              isSectionInView = false;
               if (towardsAnimationId) cancelAnimationFrame(towardsAnimationId);
               if (towardsLoopTimeout) clearTimeout(towardsLoopTimeout);
             }
@@ -563,7 +497,7 @@
     });
   </script>
 
-  <!-- 분리된 전용 스크립트 연결 -->
+  <!-- 전용 드래그 & 알림 스크립트 -->
   <script src="drawer.js" defer></script>
 </body>
 </html>
