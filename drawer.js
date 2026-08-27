@@ -788,7 +788,7 @@ async function sendRealPdfToBackend(inputFiles) {
   }, 500);
 }
 
-// 최종 견적 접수 전송 (0.1초 즉시 반응형 완료 처리 + 텔레그램 연동 1줄 추가)
+// 최종 견적 접수 전송 (0.1초 즉시 반응형 완료 처리 + 텔레그램 연동)
 async function handleCtaClick() {
   const orgInput = document.getElementById('client-org');
   const phoneInput = document.getElementById('client-phone');
@@ -815,7 +815,7 @@ async function handleCtaClick() {
   formData.append("spec", specVal);
   uploadedFilesList.forEach(file => formData.append("file", file));
 
-  // 💡 [텔레그램 전용] 알림 메시지 조합
+  // 텔레그램 알림 메시지 조합
   const telegramText = 
     `🔔 [청년인쇄사] 새 견적 문의 접수!\n\n` +
     `👤 고객/기관: ${orgVal}\n` +
@@ -824,7 +824,7 @@ async function handleCtaClick() {
     `📎 첨부파일: ${fileNameVal}\n` +
     `📐 검수사양: ${specVal}`;
 
-  // 백엔드 저장, 이메일 발송, 텔레그램 알림을 백그라운드 병렬 처리 (기존 코드 완벽 유지 + 텔레그램 fetch만 1줄 추가)
+  // 백엔드 저장, 이메일 발송, 텔레그램 알림 병렬 전송
   Promise.allSettled([
     fetch(`${RENDER_BACKEND_URL}/submit-inquiry`, { method: "POST", body: formData }),
     fetch('/api/send-order', {
@@ -837,8 +837,14 @@ async function handleCtaClick() {
         details: `${inquiryVal}\n- 첨부파일: ${fileNameVal}`
       })
     }),
-    // 👇 방금 발급받으신 텔레그램 알림 발송 코드 1줄 (기존 기능에 전혀 영향 없음)
-    fetch('https://api.telegram.org/bot8973853530:AAEYORrlf_W0ms_BmaQuYcM84Trmhd7PGXA/sendMessage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: '8662785838', text: telegramText }) })
+    fetch('https://api.telegram.org/bot8973853530:AAEYORrlf_W0ms_BmaQuYcM84Trmhd7PGXA/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: '8662785838',
+        text: telegramText
+      })
+    })
   ]).then(() => {
     orgInput.value = '';
     phoneInput.value = '';
