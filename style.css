@@ -1,4 +1,363 @@
 /* =================================================================
+   청년인쇄사 통합 스타일시트 (Global Stylesheet)
+   ================================================================= */
+
+@charset "UTF-8";
+
+/* 기본 초기화 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* =================================================================
+   상단 GNB 네비게이션
+   ================================================================= */
+.gnb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5vw;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translateZ(0);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  transition: filter 0.25s ease;
+}
+
+.gnb-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.gnb-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  list-style: none;
+}
+
+.gnb-nav a {
+  color: #f4f4f5;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.gnb-nav a:hover {
+  color: #3b82f6;
+}
+
+.gnb-phone-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.gnb-phone-badge:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.phone-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #a1a1aa;
+  letter-spacing: 0.05em;
+  font-family: 'Urbanist', sans-serif;
+}
+
+.phone-num {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: 'Urbanist', sans-serif;
+}
+
+/* =================================================================
+   히어로 섹션
+   ================================================================= */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000000;
+  text-align: center;
+}
+
+.slideshow-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 900px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.sub-title {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  color: #d4d4d8;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 36px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+}
+
+/* =================================================================
+   섹션 02 : AI 프로세서
+   ================================================================= */
+.processor-section {
+  background: #ffffff;
+  padding: 140px 0 100px;
+  color: #09090b;
+  position: relative;
+}
+
+.sec2-title {
+  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: #09090b;
+}
+
+/* =================================================================
+   갤러리 섹션
+   ================================================================= */
+.mellow-gallery-section {
+  background: #000000;
+  padding: 90px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.mellow-marquee-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  padding: 0 20px;
+}
+
+.mellow-card {
+  position: relative;
+  width: 280px;
+  height: 380px;
+  border-radius: 18px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #18181b;
+}
+
+.mellow-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.mellow-card:hover img {
+  transform: scale(1.06);
+}
+
+.mellow-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0) 65%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+}
+
+/* =================================================================
+   CTA 섹션 및 푸터
+   ================================================================= */
+.cta-section {
+  position: relative;
+  background: #09090b;
+  padding: 130px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.cta-parallax-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(37, 99, 235, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.info-label {
+  display: inline-block;
+  width: 90px;
+  color: #71717a;
+  font-weight: 600;
+}
+
+.info-value {
+  color: #d4d4d8;
+  font-weight: 500;
+}
+
+/* =================================================================
+   서랍장 패널 (Drawer) 스타일 & 물리 위치 제어
+   ================================================================= */
+.drawer-bg {
+  background-color: #ffffff;
+}
+
+.top-header-bg {
+  background-color: #0f172a;
+}
+
+.brand-key-bg {
+  background-color: #1e293b;
+}
+
+.drawer-shadow {
+  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.35);
+}
+
+.text-title {
+  color: #0f172a;
+}
+
+.text-muted {
+  color: #64748b;
+}
+
+/* 닫힌 상태 (화면 오른쪽 밖으로 숨김) */
+#drawer-panel.is-closed {
+  transform: translateX(100%);
+}
+
+/* AI 터미널 및 리포트 박스 */
+.terminal-box {
+  background: #090d16;
+  border: 1px solid #1e293b;
+}
+
+.terminal-header {
+  background: #111827;
+  border-bottom: 1px solid #1e293b;
+}
+
+.badge-blink {
+  animation: badgeBlink 1.6s infinite ease-in-out;
+}
+
+@keyframes badgeBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* =================================================================
    손 흔들기(Wave) 및 서랍장 탭 넛지(Nudge) 유혹 애니메이션
    ================================================================= */
 @keyframes handWave {
@@ -17,7 +376,6 @@
   animation: handWave 2.4s infinite ease-in-out;
 }
 
-/* 서랍장이 닫혀있을 때 4.5초마다 탭이 왼쪽으로 살짝 튀어나오는 효과 */
 @keyframes tabNudgeEffect {
   0%, 75%, 100% { transform: translate(0, -50%); }
   80% { transform: translate(-14px, -50%); }
@@ -30,7 +388,6 @@
   animation: tabNudgeEffect 4.5s infinite ease-in-out;
 }
 
-/* 드래그 중일 때 텍스트 선택 방지 */
 .drawer-tab-btn {
   user-select: none;
   -webkit-user-select: none;
