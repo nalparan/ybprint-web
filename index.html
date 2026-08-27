@@ -12,7 +12,7 @@
   <meta property="og:description" content="어떤 원고든 1초 만에 정부표준문서 규격 자동 실측 및 교정. 실시간 온라인 견적 요청.">
   <meta property="og:image" content="https://www.ybprint.co.kr/og-image.png">
 
-  <!-- CDN 리소스 -->
+  <!-- Tailwind, Lucide, Pretendard, Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -184,9 +184,9 @@
   <!-- 서랍장 패널 -->
   <aside id="drawer-panel" class="fixed top-0 right-0 h-full w-full sm:w-[680px] md:w-[740px] max-w-[100vw] drawer-bg z-[9999] drawer-shadow flex flex-col text-title text-left">
     
-    <!-- 서랍장 손잡이 탭 -->
-    <button id="drawer-index-tab" onclick="toggleDrawer()" type="button" title="AI 원고 검수 및 빠른 견적 서랍장 열기">
-      <span class="tab-vertical-text">끌어당겨보세요</span>
+    <!-- 서랍장 탭 버튼 -->
+    <button id="drawer-index-tab" onclick="toggleDrawer()" type="button" title="서랍장 열기">
+      <span class="tab-text">끌어당겨보세요</span>
     </button>
     
     <div class="px-8 py-5 flex justify-between items-center shrink-0 top-header-bg text-white z-20 shadow-md">
@@ -302,31 +302,22 @@
     </svg>
   </a>
 
-  <!-- 스크립트 연결 -->
+  <!-- 기본 제어 스크립트 -->
   <script>
-    // GNB 라이트 모드 전환 (부드러운 스크롤)
-    let gnbTicking = false;
     function handleGnbTheme() {
-      if (!gnbTicking) {
-        window.requestAnimationFrame(() => {
-          const gnb = document.getElementById('mainHeader');
-          const sec2 = document.getElementById('ai-check');
-          if (gnb && sec2) {
-            const rect = sec2.getBoundingClientRect();
-            if (rect.top <= 74 && rect.bottom >= 74) {
-              gnb.classList.add('is-light');
-            } else {
-              gnb.classList.remove('is-light');
-            }
-          }
-          gnbTicking = false;
-        });
-        gnbTicking = true;
+      const gnb = document.getElementById('mainHeader');
+      const sec2 = document.getElementById('ai-check');
+      if (gnb && sec2) {
+        const rect = sec2.getBoundingClientRect();
+        if (rect.top <= 74 && rect.bottom >= 74) {
+          gnb.classList.add('is-light');
+        } else {
+          gnb.classList.remove('is-light');
+        }
       }
     }
     window.addEventListener('scroll', handleGnbTheme, { passive: true });
 
-    // 섹션 02 게이지 애니메이션
     let isSec2Active = false;
     function runTowardsLoop() {
       const numEl = document.getElementById('giant-percent-num');
