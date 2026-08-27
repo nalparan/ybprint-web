@@ -1,5 +1,5 @@
 // =================================================================
-// 청년인쇄사 서랍장 물리 드래그 엔진 & AI 실시간 분석 & 텔레그램 알림
+// 청년인쇄사 서랍장 제어 & 텔레그램 알림 시스템
 // =================================================================
 
 const TELEGRAM_CONFIG = {
@@ -10,7 +10,7 @@ const TELEGRAM_CONFIG = {
 let uploadedFiles = [];
 let isDrawerOpen = false;
 
-// 💡 서랍장 개폐 토글 함수
+// 서랍장 열기/닫기 제어
 function toggleDrawer(open) {
   const drawer = document.getElementById('drawer-panel');
   const backdrop = document.getElementById('drawer-backdrop');
@@ -18,132 +18,32 @@ function toggleDrawer(open) {
 
   isDrawerOpen = (open !== undefined) ? open : !isDrawerOpen;
 
-  // 부드러운 전환 효과 복구
-  drawer.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-
   if (isDrawerOpen) {
-    drawer.classList.remove('is-closed');
-    drawer.style.transform = 'translateX(0px)';
+    drawer.classList.add('is-open');
     backdrop.classList.remove('hidden');
     setTimeout(() => backdrop.classList.add('opacity-100'), 10);
   } else {
-    drawer.classList.add('is-closed');
-    drawer.style.transform = 'translateX(100%)';
+    drawer.classList.remove('is-open');
     backdrop.classList.remove('opacity-100');
     setTimeout(() => backdrop.classList.add('hidden'), 350);
   }
 }
 
-// =================================================================
-// 💡 마우스 & 모바일 터치 실시간 드래그 제스처 엔진
-// =================================================================
-function initDrawerDragGesture() {
-  const tab = document.getElementById('drawer-index-tab');
-  const drawer = document.getElementById('drawer-panel');
-  if (!tab || !drawer) return;
-
-  let isDragging = false;
-  let startX = 0;
-  let currentTranslateX = 0;
-  let hasMoved = false;
-
-  function onPointerDown(e) {
-    isDragging = true;
-    hasMoved = false;
-    startX = e.clientX || (e.touches && e.touches[0].clientX);
-    
-    // 드래그 중에는 즉각적인 반응을 위해 transition 임시 해제
-    drawer.style.transition = 'none';
-    tab.style.cursor = 'grabbing';
-  }
-
-  function onPointerMove(e) {
-    if (!isDragging) return;
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const deltaX = clientX - startX;
-
-    if (Math.abs(deltaX) > 4) {
-      hasMoved = true;
-    }
-
-    if (!isDrawerOpen) {
-      // 닫힌 상태에서 왼쪽으로 당길 때
-      if (deltaX < 0) {
-        const panelWidth = drawer.offsetWidth;
-        currentTranslateX = Math.max(0, panelWidth + deltaX);
-        drawer.style.transform = `translateX(${currentTranslateX}px)`;
-      }
-    } else {
-      // 열린 상태에서 오른쪽으로 밀 때
-      if (deltaX > 0) {
-        currentTranslateX = deltaX;
-        drawer.style.transform = `translateX(${currentTranslateX}px)`;
-      }
-    }
-  }
-
-  function onPointerUp(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    tab.style.cursor = 'grab';
-
-    drawer.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
-
-    if (!hasMoved) {
-      // 드래그하지 않고 단순 클릭/탭했을 때
-      toggleDrawer(!isDrawerOpen);
-      return;
-    }
-
-    const clientX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : e.clientX;
-    const deltaX = clientX - startX;
-
-    if (!isDrawerOpen) {
-      // 40px 이상 왼쪽으로 당기면 열림
-      if (deltaX < -40) {
-        toggleDrawer(true);
-      } else {
-        toggleDrawer(false);
-      }
-    } else {
-      // 40px 이상 오른쪽으로 밀면 닫힘
-      if (deltaX > 40) {
-        toggleDrawer(false);
-      } else {
-        toggleDrawer(true);
-      }
-    }
-  }
-
-  // 마우스 이벤트
-  tab.addEventListener('mousedown', onPointerDown);
-  window.addEventListener('mousemove', onPointerMove);
-  window.addEventListener('mouseup', onPointerUp);
-
-  // 모바일 터치 이벤트
-  tab.addEventListener('touchstart', onPointerDown, { passive: true });
-  window.addEventListener('touchmove', onPointerMove, { passive: true });
-  window.addEventListener('touchend', onPointerUp, { passive: true });
-}
-
-// 백엔드 깨우기
-function wakeUpBackend() {}
-
-// 파일 드래그 & 드롭 이벤트
+// 파일 드롭존
 function handleDragOver(e) {
-  e.preventDefault(); e.stopPropagation();
+  e.preventDefault();
   const zone = document.getElementById('file-dropzone');
   if (zone) zone.classList.add('border-blue-500', 'bg-blue-50/50');
 }
 
 function handleDragLeave(e) {
-  e.preventDefault(); e.stopPropagation();
+  e.preventDefault();
   const zone = document.getElementById('file-dropzone');
   if (zone) zone.classList.remove('border-blue-500', 'bg-blue-50/50');
 }
 
 function handleFileDrop(e) {
-  e.preventDefault(); e.stopPropagation();
+  e.preventDefault();
   const zone = document.getElementById('file-dropzone');
   if (zone) zone.classList.remove('border-blue-500', 'bg-blue-50/50');
   if (e.dataTransfer && e.dataTransfer.files.length > 0) processFiles(e.dataTransfer.files);
@@ -153,14 +53,13 @@ function handleFileSelect(e) {
   if (e.target && e.target.files.length > 0) processFiles(e.target.files);
 }
 
-// 파일 접수 및 가상 AI 분석 시뮬레이션
 function processFiles(files) {
   uploadedFiles = Array.from(files);
   const dropTitle = document.getElementById('drop-title');
   const dropSub = document.getElementById('drop-sub');
   
   if (dropTitle) dropTitle.textContent = `${uploadedFiles[0].name} (${(uploadedFiles[0].size / (1024 * 1024)).toFixed(1)}MB)`;
-  if (dropSub) dropSub.textContent = "원고가 안전하게 업로드되었습니다. AI 검수를 진행합니다.";
+  if (dropSub) dropSub.textContent = "원고가 안전하게 업로드되었습니다.";
 
   runAiDiagnostics(uploadedFiles[0].name);
   validateForm();
@@ -173,8 +72,6 @@ function runAiDiagnostics(fileName) {
   const subText = document.getElementById('ai-sub-text');
   const reportContainer = document.getElementById('ai-report-dual-container');
   const summaryBody = document.getElementById('rpt-summary-body');
-  const terminalBody = document.getElementById('terminal-console-body');
-  const diagSignal = document.getElementById('ai-diagnostic-signal');
 
   let progress = 0;
   const interval = setInterval(() => {
@@ -192,7 +89,6 @@ function runAiDiagnostics(fileName) {
       clearInterval(interval);
       if (statusText) statusText.textContent = "청년인쇄사 AI 원고 정밀 진단 완료";
       if (subText) subText.textContent = "정부표준문서 규격에 맞춘 인쇄 권장안이 생성되었습니다.";
-      if (diagSignal) diagSignal.classList.remove('hidden');
       document.getElementById('ai-step-box-3')?.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
 
       if (reportContainer) reportContainer.classList.remove('hidden');
@@ -201,20 +97,14 @@ function runAiDiagnostics(fileName) {
           <p class="text-sm text-slate-800">· <strong>파일 명칭:</strong> ${fileName}</p>
           <p class="text-sm text-slate-800">· <strong>권장 판형:</strong> 국배판 (A4, 210×297mm) / 마스터 인쇄 최적화</p>
           <p class="text-sm text-slate-800">· <strong>여백 진단:</strong> 상하좌우 안전 여백 15mm 자동 보정 기준 충족</p>
-          <p class="text-sm text-blue-700 font-semibold mt-1">※ 청년인쇄사 출력실에서 인쇄 전 최종 색감 및 재단선을 재검수합니다.</p>
         `;
       }
-      if (terminalBody) {
-        terminalBody.innerHTML = `[AI_ENGINE] File parsed: ${fileName}\n[ANALYSIS] Margin: Safe / Resolution: 300DPI Checked\n[RESULT] Ready for instant printing pipeline.`;
-      }
     }
-  }, 120);
+  }, 100);
 }
 
-function handleTextInput(el) { validateForm(); }
-function handlePhoneOrEmailInput(el) { validateForm(); }
-
-function validateForm(showError = false) {
+// 폼 유효성 검사
+function validateForm() {
   const orgInput = document.getElementById('client-org');
   const phoneInput = document.getElementById('client-phone');
   const ctaBtn = document.getElementById('cta-button');
@@ -223,10 +113,7 @@ function validateForm(showError = false) {
   const orgVal = orgInput ? orgInput.value.trim() : '';
   const phoneVal = phoneInput ? phoneInput.value.trim() : '';
 
-  const isValidOrg = orgVal.length >= 2;
-  const isValidPhone = phoneVal.length >= 8;
-
-  if (isValidOrg && isValidPhone) {
+  if (orgVal.length >= 2 && phoneVal.length >= 8) {
     if (ctaBtn) {
       ctaBtn.disabled = false;
       ctaBtn.classList.remove('cursor-not-allowed', 'bg-white/40', 'text-white/80');
@@ -274,7 +161,7 @@ async function sendTelegramNotification(org, phone, inquiry, fileName) {
   }
 }
 
-// 최종 견적 요청 제출 버튼 클릭 핸들러
+// 최종 견적 요청 제출 버튼 클릭
 async function handleCtaClick() {
   const orgInput = document.getElementById('client-org');
   const phoneInput = document.getElementById('client-phone');
@@ -292,10 +179,9 @@ async function handleCtaClick() {
   if (ctaBtn) ctaBtn.disabled = true;
   if (ctaText) ctaText.textContent = "견적 요청 전송 중...";
 
-  // 텔레그램 알림 발송
   await sendTelegramNotification(org, phone, inquiry, fileName);
 
-  alert(`[견적 요청 완료]\n\n${org} 고객님의 요청이 정상적으로 접수되었습니다.\n담당자가 확인 후 신속히 연락드리겠습니다.`);
+  alert(`[견적 요청 완료]\n\n${org} 고객님의 요청이 정상적으로 접수되었습니다.\n신속히 연락드리겠습니다.`);
 
   if (orgInput) orgInput.value = '';
   if (phoneInput) phoneInput.value = '';
@@ -320,26 +206,6 @@ function toggleFaq(item) {
   }
 }
 
-// 관리자 모달
-function toggleAdminModal(show) {
-  const modal = document.getElementById('adminCommandModal');
-  if (!modal) return;
-  if (show) modal.classList.remove('hidden');
-  else modal.classList.add('hidden');
-}
-
-function submitAdminAuth() {
-  const input = document.getElementById('adminCommandInput');
-  if (input && input.value === '1234') {
-    alert('관리자 모드로 진입합니다.');
-    toggleAdminModal(false);
-  } else {
-    alert('인증 비밀번호가 일치하지 않습니다.');
-  }
-}
-
-// 초기화
 document.addEventListener('DOMContentLoaded', () => {
   if (window.lucide) window.lucide.createIcons();
-  initDrawerDragGesture(); // 드래그 제스처 등록
 });
