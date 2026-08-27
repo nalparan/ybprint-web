@@ -6,9 +6,7 @@
   <title>청년인쇄사</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   
-  <!-- ========================================== -->
   <!-- 카카오톡 / SNS 링크 미리보기 (Open Graph 메타태그) -->
-  <!-- ========================================== -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.ybprint.co.kr">
   <meta property="og:title" content="청년인쇄사 | 세종청사 전담 인쇄 · AI 원고 검수">
@@ -27,6 +25,38 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    /* ========================================== */
+    /* GNB 라이트 모드 (섹션 02 등 밝은 배경 진입 시) */
+    /* ========================================== */
+    .gnb {
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .gnb.is-light {
+      background: rgba(255, 255, 255, 0.88) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    }
+    .gnb.is-light .logo-img {
+      filter: brightness(0) !important; /* 로고 검은색 전환 */
+    }
+    .gnb.is-light .gnb-nav a {
+      color: #18181b !important; /* 메뉴 글씨 검은색 전환 */
+    }
+    .gnb.is-light .gnb-nav a:hover {
+      color: #2563eb !important;
+    }
+    .gnb.is-light .gnb-phone-badge {
+      background: rgba(0, 0, 0, 0.05) !important;
+      border-color: rgba(0, 0, 0, 0.15) !important;
+    }
+    .gnb.is-light .phone-label {
+      color: #71717a !important;
+    }
+    .gnb.is-light .phone-num {
+      color: #09090b !important;
+    }
+
     /* 섹션 02 극한 슬림 게이지 라인 (2px) */
     .towards-line-track {
       width: 100%;
@@ -402,8 +432,29 @@
     </svg>
   </a>
 
-  <!-- [섹션 02] 프로그레스 바 전용 스크립트 -->
+  <!-- [스크립트] GNB 테마 전환 & 섹션 02 프로그레스 바 -->
   <script>
+    // 1. 섹션 02(흰색 영역) 진입 시 GNB 라이트 모드 동적 전환
+    function handleGnbTheme() {
+      const gnb = document.getElementById('mainHeader');
+      const sec2 = document.getElementById('ai-check');
+      if (!gnb || !sec2) return;
+
+      const gnbHeight = gnb.offsetHeight || 70;
+      const rect = sec2.getBoundingClientRect();
+
+      // 섹션 02 영역이 GNB와 겹칠 때만 라이트 모드 적용
+      if (rect.top <= gnbHeight && rect.bottom >= gnbHeight) {
+        gnb.classList.add('is-light');
+      } else {
+        gnb.classList.remove('is-light');
+      }
+    }
+
+    window.addEventListener('scroll', handleGnbTheme, { passive: true });
+    window.addEventListener('resize', handleGnbTheme, { passive: true });
+
+    // 2. 섹션 02 게이지 애니메이션
     let towardsLoopTimeout = null;
     let towardsAnimationId = null;
 
@@ -474,6 +525,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      handleGnbTheme();
+
       const sectionAi = document.getElementById('ai-check');
       let isTriggered = false;
 
