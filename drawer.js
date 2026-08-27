@@ -1,16 +1,11 @@
 // =================================================================
-// 청년인쇄사 서랍장 제어 & 텔레그램 알림 시스템
+// 청년인쇄사 기본 서랍장 제어 스크립트
 // =================================================================
-
-const TELEGRAM_CONFIG = {
-  token: '8973853530:AAEYORrlf_W0ms_BmaQuYcM84Trmhd7PGXA',
-  chatId: '8662785838'
-};
 
 let uploadedFiles = [];
 let isDrawerOpen = false;
 
-// 서랍장 열기/닫기 제어
+// 서랍장 열기/닫기
 function toggleDrawer(open) {
   const drawer = document.getElementById('drawer-panel');
   const backdrop = document.getElementById('drawer-backdrop');
@@ -130,58 +125,18 @@ function validateForm() {
   }
 }
 
-// 텔레그램 실시간 알림 발송 함수
-async function sendTelegramNotification(org, phone, inquiry, fileName) {
-  const now = new Date();
-  const timeString = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 ${now.getHours()}시 ${now.getMinutes()}분`;
-
-  const message = 
-    `🔔 [청년인쇄사] 새로운 견적 요청 접수!\n\n` +
-    `👤 고객/기관: ${org}\n` +
-    `📞 연락처: ${phone}\n` +
-    `📝 문의내용: ${inquiry || '(내용 없음 - 파일 의뢰)'}\n` +
-    `📎 첨부파일: ${fileName || '없음 (텍스트 문의)'}\n` +
-    `⏰ 접수시각: ${timeString}`;
-
-  const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.token}/sendMessage`;
-
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CONFIG.chatId,
-        text: message
-      })
-    });
-    return res.ok;
-  } catch (error) {
-    console.error('Telegram notification failed:', error);
-    return false;
-  }
-}
-
-// 최종 견적 요청 제출 버튼 클릭
-async function handleCtaClick() {
+// 최종 견적 요청 버튼 클릭
+function handleCtaClick() {
   const orgInput = document.getElementById('client-org');
   const phoneInput = document.getElementById('client-phone');
   const inquiryInput = document.getElementById('text-inquiry');
-  const ctaBtn = document.getElementById('cta-button');
-  const ctaText = document.getElementById('cta-btn-text');
 
   const org = orgInput ? orgInput.value.trim() : '';
   const phone = phoneInput ? phoneInput.value.trim() : '';
-  const inquiry = inquiryInput ? inquiryInput.value.trim() : '';
-  const fileName = uploadedFiles.length > 0 ? uploadedFiles[0].name : '';
 
   if (!org || !phone) return;
 
-  if (ctaBtn) ctaBtn.disabled = true;
-  if (ctaText) ctaText.textContent = "견적 요청 전송 중...";
-
-  await sendTelegramNotification(org, phone, inquiry, fileName);
-
-  alert(`[견적 요청 완료]\n\n${org} 고객님의 요청이 정상적으로 접수되었습니다.\n신속히 연락드리겠습니다.`);
+  alert(`[견적 요청 완료]\n\n${org} 고객님의 요청이 접수되었습니다.\n담당자가 확인 후 빠르게 연락드리겠습니다.`);
 
   if (orgInput) orgInput.value = '';
   if (phoneInput) phoneInput.value = '';
