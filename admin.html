@@ -412,11 +412,17 @@
       input.value = res;
     }
 
+    // 💡 [핵심 수정] 브라우저 캐시 무시(무효화) 코드가 추가된 fetchInquiries
     async function fetchInquiries() {
       const icon = document.getElementById('refresh-icon');
       if(icon) icon.classList.add('animate-spin');
       try {
-        const res = await fetch(API_URL);
+        // 브라우저가 옛날 데이터를 기억하지 못하도록 URL 뒤에 타임스탬프를 붙이고, 강제로 새 데이터를 요구합니다.
+        const res = await fetch(API_URL + "?nocache=" + new Date().getTime(), {
+          method: 'GET',
+          cache: 'no-store'
+        });
+        
         const data = await res.json();
         const rawList = Array.isArray(data) ? data : (data.inquiries || []);
         
@@ -425,8 +431,9 @@
         displayedInquiries = [...inquiries].reverse();
         renderTable();
         document.getElementById('stat-today-count').innerText = inquiries.length;
-        document.getElementById('stat-file-count').innerText = inquiries.filter(i => i.file_name && i.file_name !== "첨부파일 없음").length;
+        document.getElementById('stat-file-count').innerText = inquiries.filter(i => i.file_name && i.file_name !== "첨부파일 없음" && i.file_name !== "전화 접수").length;
       } catch(e) {
+        console.error("데이터 로드 에러:", e);
         const combined = [...manualInquiries];
         inquiries = combined.filter(item => !deletedItems.includes(item.timestamp || item.created_at || item.time));
         displayedInquiries = [...inquiries].reverse();
@@ -488,7 +495,6 @@
       lucide.createIcons();
     }
 
-    // 💡 [문의 상세보기 모달 열기/닫기]
     function openDetailModal(idx) {
       const item = displayedInquiries[idx];
       if (!item) return;
