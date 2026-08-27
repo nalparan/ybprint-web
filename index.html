@@ -16,6 +16,48 @@
 
   <!-- 분리된 공통 스타일시트 -->
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* 섹션 02 극한 슬림 게이지 라인 (2px) */
+    .towards-line-track {
+      width: 100%;
+      height: 2px;
+      background: #e4e4e7;
+      position: relative;
+      overflow: hidden;
+    }
+    .towards-line-progress {
+      width: 0%;
+      height: 100%;
+      background: #09090b;
+    }
+
+    /* 카카오톡 플로팅 버튼 */
+    .kakao-floating-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 60px;
+      height: 60px;
+      background-color: #FEE500;
+      border-radius: 50%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9980;
+      text-decoration: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    }
+    .kakao-floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+    }
+    .kakao-floating-btn svg {
+      width: 34px;
+      height: 34px;
+    }
+  </style>
 </head>
 <body>
 
@@ -59,7 +101,7 @@
     </div>
   </section>
 
-  <!-- AI 프로세서 섹션 -->
+  <!-- AI 프로세서 섹션 (섹션 02) -->
   <section class="processor-section" id="ai-check">
     <div class="px-[5vw] mb-20 text-left">
       <h2 class="sec2-title mb-6">원고를 확인하는 순간<span class="font-sans font-bold text-[#09090b]">,</span><br>표준이 됩니다</h2>
@@ -76,8 +118,8 @@
       </div>
       <div class="towards-line-track"><div id="towards-line-progress" class="towards-line-progress"></div></div>
       <div class="px-[5vw] flex justify-between items-center mt-6">
-        <span id="towards-status-text" class="font-bold tracking-tight text-zinc-900 text-base sm:text-xl">원고 확인 중</span>
-        <button onclick="restartTowardsLine()" class="text-xs font-mono text-zinc-400 hover:text-black underline cursor-pointer">RE-RUN DEMO ↺</button>
+        <span id="towards-status-text" class="font-bold tracking-tight text-zinc-900 text-base sm:text-xl">원고 확인 대기 중</span>
+        <button type="button" onclick="restartTowardsLine()" class="text-xs font-mono text-zinc-400 hover:text-black underline cursor-pointer">RE-RUN DEMO ↺</button>
       </div>
     </div>
   </section>
@@ -343,6 +385,118 @@
       </div>
     </div>
   </div>
+
+  <!-- ========================================== -->
+  <!-- 카카오톡 1:1 상담 플로팅 버튼 (안전한 홈 링크) -->
+  <!-- ========================================== -->
+  <a href="https://pf.kakao.com/_xoJrzG" target="_blank" rel="noopener noreferrer" class="kakao-floating-btn" title="카카오톡 1:1 상담">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 15C27.9 15 10 29.3 10 47c0 11.5 7.6 21.6 19.3 27.2-.6 2.3-2.2 7.8-2.6 9.3-.1.4-.2 1 .3 1.3.4.2.9.1 1.2 0 1.6-1.1 9.4-6.4 13.1-8.9 2.8.4 5.7.6 8.7.6 22.1 0 40-14.3 40-32S72.1 15 50 15z" fill="#3B1E1E"/>
+    </svg>
+  </a>
+
+  <!-- ========================================== -->
+  <!-- [섹션 02] 프로그레스 바 무한 롤링 & 불규칙 속도 제어 스크립트 -->
+  <!-- ========================================== -->
+  <script>
+    let towardsLoopTimeout = null;
+    let towardsAnimationId = null;
+
+    // 시간에 따른 불규칙 진행률 계산 함수 (0.0 ~ 1.0 반환)
+    function getIrregularProgress(timeFraction) {
+      if (timeFraction < 0.4) {
+        // 구간 1 (0~40% 시간): 원고 스캔 (0% -> 30%) - 천천히
+        return 0.3 * Math.pow(timeFraction / 0.4, 2);
+      } else if (timeFraction < 0.6) {
+        // 구간 2 (40~60% 시간): 규격 변환 (30% -> 80%) - 매우 빠름
+        let p = (timeFraction - 0.4) / 0.2;
+        return 0.3 + (0.5 * p);
+      } else {
+        // 구간 3 (60~100% 시간): 최적화 마무리 (80% -> 100%) - 매우 천천히
+        let p = (timeFraction - 0.6) / 0.4;
+        return 0.8 + (0.2 * (1 - Math.pow(1 - p, 4)));
+      }
+    }
+
+    function runTowardsLoop() {
+      const numEl = document.getElementById('giant-percent-num');
+      const progressEl = document.getElementById('towards-line-progress');
+      const statusEl = document.getElementById('towards-status-text');
+      if (!numEl || !progressEl) return;
+
+      if (towardsAnimationId) cancelAnimationFrame(towardsAnimationId);
+      if (towardsLoopTimeout) clearTimeout(towardsLoopTimeout);
+
+      // 애니메이션 리셋
+      numEl.textContent = "0";
+      progressEl.style.width = "0%";
+      if (statusEl) statusEl.textContent = "원고 확인 중 (여백 및 치수 실측)...";
+
+      const duration = 4000; // 전체 애니메이션 시간을 4.0초로 늘려 안정감 부여
+      const startTime = performance.now();
+
+      function step(now) {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / duration, 1);
+        
+        // 불규칙 속도 로직 적용
+        const val = getIrregularProgress(t);
+        const currentVal = Math.floor(val * 100);
+
+        numEl.textContent = currentVal;
+        progressEl.style.width = (val * 100) + '%';
+
+        // 상태 텍스트 분기
+        if (statusEl) {
+          if (currentVal < 30) {
+            statusEl.textContent = "원고 확인 중 (여백 및 치수 실측)...";
+          } else if (currentVal < 80) {
+            statusEl.textContent = "정부표준문서 규격 정합도 분석 중...";
+          } else if (currentVal < 100) {
+            statusEl.textContent = "인쇄 최적화 규격 자동 보정 중...";
+          } else {
+            statusEl.textContent = "정부표준문서 규격 100% 최적화 완료";
+          }
+        }
+
+        if (t < 1) {
+          towardsAnimationId = requestAnimationFrame(step);
+        } else {
+          numEl.textContent = "100";
+          progressEl.style.width = "100%";
+          // 100% 완료 후 1.5초 대기했다가 무한 반복
+          towardsLoopTimeout = setTimeout(runTowardsLoop, 1500);
+        }
+      }
+
+      towardsAnimationId = requestAnimationFrame(step);
+    }
+
+    function restartTowardsLine() {
+      runTowardsLoop();
+    }
+
+    // 스크롤 시 해당 섹션 진입 감지 후 애니메이션 시작
+    document.addEventListener('DOMContentLoaded', () => {
+      const sectionAi = document.getElementById('ai-check');
+      let isTriggered = false;
+
+      if ('IntersectionObserver' in window && sectionAi) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !isTriggered) {
+              isTriggered = true;
+              runTowardsLoop();
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.25 });
+        observer.observe(sectionAi);
+      } else {
+        setTimeout(runTowardsLoop, 600);
+      }
+    });
+  </script>
 
   <!-- 분리된 전용 스크립트 연결 -->
   <script src="drawer.js" defer></script>
