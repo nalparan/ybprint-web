@@ -387,9 +387,9 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 카카오톡 1:1 상담 플로팅 버튼 (정상 링크) -->
+  <!-- 카카오톡 1:1 상담 플로팅 버튼 (안전한 홈 링크) -->
   <!-- ========================================== -->
-  <a href="http://pf.kakao.com/_xoJrzG/chat" target="_blank" rel="noopener noreferrer" class="kakao-floating-btn" title="카카오톡 1:1 상담">
+  <a href="https://pf.kakao.com/_xoJrzG" target="_blank" rel="noopener noreferrer" class="kakao-floating-btn" title="카카오톡 1:1 상담">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <path d="M50 15C27.9 15 10 29.3 10 47c0 11.5 7.6 21.6 19.3 27.2-.6 2.3-2.2 7.8-2.6 9.3-.1.4-.2 1 .3 1.3.4.2.9.1 1.2 0 1.6-1.1 9.4-6.4 13.1-8.9 2.8.4 5.7.6 8.7.6 22.1 0 40-14.3 40-32S72.1 15 50 15z" fill="#3B1E1E"/>
     </svg>
@@ -470,6 +470,10 @@
       }
 
       towardsAnimationId = requestAnimationFrame(step);
+    }
+
+    function restartTowardsLine() {
+      runTowardsLoop();
     }
 
     // 스크롤 시 해당 섹션 진입 감지 후 애니메이션 시작
